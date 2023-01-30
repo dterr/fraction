@@ -6,7 +6,7 @@
 
 Member | Skills | Personal Traits | Desired Growth | Weaknesses
 --- | --- | --- | --- | ---
-Dominic | User testing, CAD, Statistical Data | Very sensitive to work environment | Programming | Programming
+Dominic | Talking to users, design documentation, computer vision | Prefers clan-based organizations | Industry-calibre coding practices | Modular system design
 Cat | Aesthetics and layout, building prototypes, AutoCAD | Disciplined | LaTeX, Planning Skills | Painting, Programming, Interpersonal communication
 Clarisse | AI, Machine Learning, Programming, GUI skills | Loves learning new programming languages | MatLAB | bad memory
 Clemente | Machine Learning, Audio recording, Signal processing, Statistical analysis | Strong opinions, very abstract thinker, Big PIcture guy | Rapid prototyping, project management | Sensitive to environments
