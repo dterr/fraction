@@ -7,7 +7,7 @@
 Member | Skills | Personal Traits | Desired Growth | Weaknesses
 --- | --- | --- | --- | ---
 Dominic | Talking to users, design documentation, computer vision | Prefers clan-based organizations | Industry-calibre coding practices | Modular system design
-Cat | Aesthetics and layout, building prototypes, AutoCAD | Disciplined | LaTeX, Planning Skills | Painting, Programming, Interpersonal communication
-Clarisse | AI, Machine Learning, Programming, GUI skills | Loves learning new programming languages | MatLAB | bad memory
-Clemente | Machine Learning, Audio recording, Signal processing, Statistical analysis | Strong opinions, very abstract thinker, Big PIcture guy | Rapid prototyping, project management | Sensitive to environments
-Jacob | Dynamics, Machining, Sales voice | Mediator, Delegator, Fun, Divergent Thinker | Management | Ideas require peer approval, short term memory
+Cat | Project management, anticipating time needed for a deliverable | Likes to think about ideas from multiple angles & anticipate reactions from a variety of stakeholders; finds value in a balanced use of pleasantries that doesn’t take away from and rather encourages efficiency | Programming  | Public speaking
+Clarisse | project management, data analysis, communication | mediator, enjoys learning new programming languages | programming, user testing | programming, UI/UX design
+Clemente | [INSERT SKILLS] | [INSERT PERSONAL TRAITS] | [INSERT DESIRED GROWTH] | [INSERT WEAKNESSES] 
+Jacob | [INSERT SKILLS] | [INSERT PERSONAL TRAITS] | [INSERT DESIRED GROWTH] | [INSERT WEAKNESSES] 
