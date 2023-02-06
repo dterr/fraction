@@ -1,15 +1,11 @@
 import * as express from "express";
 import * as mongodb from "mongodb";
-import * as dotenv from "dotenv";
+
 import { Bill } from "./bill";
-import {UploadedFile} from "express-fileupload";
+import {getOCR, sendSMS} from "./helpers";
 import { collections } from "./database";
 
 const fileUpload = require('express-fileupload');
-
-const fs = require("fs");
-const FormData = require('form-data');
-const axios = require('axios');
 
 export const billRouter = express.Router();
 billRouter.use(express.json());
@@ -19,56 +15,6 @@ billRouter.use(fileUpload({
         },
         abortOnLimit: true,
     }));
-
-dotenv.config();
-
-const { TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN, TWILIO_NUMBER, TABSCANNER_API_KEY } = process.env;
-const twilio_client = require('twilio')(TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN);
-
-function sleep(ms: Number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-
-function getOCR(ms: Number, filePath: String): any {
-  var data = new FormData();
-  //ex: server/src/upload/test.png
-  data.append('file', fs.createReadStream(filePath));
-  var config = {
-    method: 'post',
-    url: 'https://api.tabscanner.com/api/2/process',
-    headers: {
-     'apikey': TABSCANNER_API_KEY
-     // add language, resolution, etc
-    },
-    data : data
-  };
-
-  let token = await axios(config).then(function (response: any) {
-    return response.data.token;
-  }) .catch(function (error: any) {
-    console.log(error);
-  });
-
-  await sleep(ms);
-
-  var config2 = {
-    method: 'get',
-    url: `https://api.tabscanner.com/api/result/${token}`,
-    headers: {
-     'apikey': TABSCANNER_API_KEY
-    }
-  };
-
-  let receiptBody = await axios(config2).then(function (response: any) {
-    return response.data.result;
-  }) .catch(function (error: any) {
-    console.log(error);
-  });
-
-  return receiptBody;
-}
 
 // billRouter.get("/", async (_req, res) => {
 //    try {
@@ -125,13 +71,8 @@ billRouter.post("/", async (req, res) => {
 
            // Send SMS messages
            for (const phoneNumber in phoneNumbers){
-             twilio_client.messages
-              .create({
-                body: `http://localhost:5200/bills/${result.insertedId}`, // Link to generated ID - REPLACE WITH ACTUAL DOMAIN
-                to: `+1${phoneNumber}`, // Text this number like +12345678901
-                from: TWILIO_NUMBER, // From a valid Twilio number
-              })
-              .then((message: any) => console.log(message.sid));
+             // REPLACE WITH ACTUAL DOMAIN
+             await sendSMS(phoneNumber, `http://localhost:5200/bills/${result.insertedId}`)
            }
 
            // Redirect to link?
@@ -141,6 +82,15 @@ billRouter.post("/", async (req, res) => {
        }
    } catch (error) {
        console.error(error);
+       res.status(400).send(error.message);
+   }
+});
+
+// For other users providing info for their bill
+billRouter.post("/:id", async (req, res) => {
+   try {
+   } catch (error) {
+       console.error(error.message);
        res.status(400).send(error.message);
    }
 });
