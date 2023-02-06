@@ -22,12 +22,12 @@ const { TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN, TWILIO_NUMBER } = process.env;
 const twilio_client = require('twilio')(TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN);
 
 billRouter.get("/", async (_req, res) => {
-   try {
-       const bills = await collections.bills.find({}).toArray();
-       res.status(200).send(bills);
-   } catch (error) {
-       res.status(500).send(error.message);
-   }
+   // try {
+   //     const bills = await collections.bills.find({}).toArray();
+   //     res.status(200).send(bills);
+   // } catch (error) {
+   //     res.status(500).send(error.message);
+   // }
 });
 
 billRouter.get("/:id", async (req, res) => {
