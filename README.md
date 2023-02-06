@@ -24,4 +24,21 @@ Based on https://www.mongodb.com/languages/mean-stack-tutorial
 
 ## Twilio number
 
-18559195785
+
+### Set Up
+
+````md
+// Load environment variables from the .env file, where the ATLAS_URI is configured
+dotenv.config();
+
+const { TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN, TWILIO_NUMBER } = process.env;
+const client = require('twilio')(TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN);
+
+client.messages
+  .create({
+    body: <LINK TO GENERATED BILL>,
+    to: <PHONE NUMBER OF OTHER PEOPLE AT DINNER>, // Text this number like +12345678901
+    from: TWILIO_NUMBER, // From a valid Twilio number
+  })
+  .then((message) => console.log(message.sid));
+````
