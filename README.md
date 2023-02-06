@@ -16,3 +16,5 @@ Based on https://www.mongodb.com/languages/mean-stack-tutorial
 2. Add .env file in /server
 
 3. Add `ATLAS_URI = mongodb+srv://<username>:<password>@cs194.2dvr2.mongodb.net/?retryWrites=true&w=majority`
+
+4. Run the server by typing `npx ts-node src/server.ts` in the command line. You should see "Server running at http://localhost:5200"

@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
 import cors from "cors";
 import express from "express";
+import { billRouter } from "./bill.routes";
 import { connectToDatabase } from "./database";
 
 // Load environment variables from the .env file, where the ATLAS_URI is configured
@@ -18,10 +19,16 @@ connectToDatabase(ATLAS_URI)
        const app = express();
        app.use(cors());
 
+       app.use("/bills", billRouter);
+
        // start the Express server
        app.listen(5200, () => {
            console.log(`Server running at http://localhost:5200...`);
        });
+
+      //  app.get('/', function (req, res) {
+      //   res.render('index', {});
+      // });
 
    })
    .catch(error => console.error(error));
