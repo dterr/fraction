@@ -7,6 +7,10 @@ import { collections } from "./database";
 
 const fileUpload = require('express-fileupload');
 
+const fs = require("fs");
+const FormData = require('form-data');
+const axios = require('axios');
+
 export const billRouter = express.Router();
 billRouter.use(express.json());
 billRouter.use(fileUpload({
@@ -18,17 +22,61 @@ billRouter.use(fileUpload({
 
 dotenv.config();
 
-const { TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN, TWILIO_NUMBER } = process.env;
+const { TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN, TWILIO_NUMBER, TABSCANNER_API_KEY } = process.env;
 const twilio_client = require('twilio')(TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN);
 
-billRouter.get("/", async (_req, res) => {
-   // try {
-   //     const bills = await collections.bills.find({}).toArray();
-   //     res.status(200).send(bills);
-   // } catch (error) {
-   //     res.status(500).send(error.message);
-   // }
-});
+function sleep(ms: Number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+function getOCR(ms: Number, filePath: String): any {
+  var data = new FormData();
+  //ex: server/src/upload/test.png
+  data.append('file', fs.createReadStream(filePath));
+  var config = {
+    method: 'post',
+    url: 'https://api.tabscanner.com/api/2/process',
+    headers: {
+     'apikey': TABSCANNER_API_KEY
+     // add language, resolution, etc
+    },
+    data : data
+  };
+
+  let token = await axios(config).then(function (response: any) {
+    return response.data.token;
+  }) .catch(function (error: any) {
+    console.log(error);
+  });
+
+  await sleep(ms);
+
+  var config2 = {
+    method: 'get',
+    url: `https://api.tabscanner.com/api/result/${token}`,
+    headers: {
+     'apikey': TABSCANNER_API_KEY
+    }
+  };
+
+  let receiptBody = await axios(config2).then(function (response: any) {
+    return response.data.result;
+  }) .catch(function (error: any) {
+    console.log(error);
+  });
+
+  return receiptBody;
+}
+
+// billRouter.get("/", async (_req, res) => {
+//    try {
+//
+//    } catch (error) {
+//        res.status(500).send(error.message);
+//    }
+// });
 
 billRouter.get("/:id", async (req, res) => {
    try {
@@ -60,12 +108,14 @@ billRouter.post("/", async (req, res) => {
        if (/^image/.test(image.mimetype)) return res.sendStatus(400);
 
        // Move the uploaded image to our upload folder
-       image.mv(__dirname + '/upload/' + image.name);
+       let filePath = __dirname + '/upload/' + image.name
+       image.mv(filePath);
 
-       // Do OCR on the image path
+       // Do OCR on the image and get back JSON parse of image from OCR
+       let receiptBody = await getOCR(10000, filePath);
+
+       // Scrape relevant structure from receiptBody
        //
-
-       // Get back JSON parse of image from OCR
        const bill: Bill = {}
 
        const result = await collections.bills.insertOne(bill);
@@ -83,6 +133,8 @@ billRouter.post("/", async (req, res) => {
               })
               .then((message: any) => console.log(message.sid));
            }
+
+           // Redirect to link?
 
        } else {
            res.status(500).send("Failed to create a new bill.");
