@@ -27,7 +27,7 @@ Based on https://www.mongodb.com/languages/mean-stack-tutorial
 
 ### Set Up
 
-`
+````md
 // Load environment variables from the .env file, where the ATLAS_URI is configured
 dotenv.config();
 
@@ -41,4 +41,4 @@ client.messages
     from: TWILIO_NUMBER, // From a valid Twilio number
   })
   .then((message) => console.log(message.sid));
-`
+````
