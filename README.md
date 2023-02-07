@@ -20,25 +20,8 @@ Based on https://www.mongodb.com/languages/mean-stack-tutorial
 
 4. Run the server by typing `npx ts-node src/server.ts` in the command line. You should see "Server running at http://localhost:5200"
 
+## Services
 
-
-## Twilio number
-
-
-### Set Up
-
-````md
-// Load environment variables from the .env file, where the ATLAS_URI is configured
-dotenv.config();
-
-const { TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN, TWILIO_NUMBER } = process.env;
-const client = require('twilio')(TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN);
-
-client.messages
-  .create({
-    body: <LINK TO GENERATED BILL>,
-    to: <PHONE NUMBER OF OTHER PEOPLE AT DINNER>, // Text this number like +12345678901
-    from: TWILIO_NUMBER, // From a valid Twilio number
-  })
-  .then((message) => console.log(message.sid));
-````
+1. Database: [Mongo DB Atlas](https://www.mongodb.com/cloud/atlas/register) Cloud Cluser
+2. OCR (Optical Character Recognition): [TabScanner API](https://tabscanner.com/)
+3. SMS Texting: [Twilio API](https://www.twilio.com/en-us/messaging/channels/sms)
