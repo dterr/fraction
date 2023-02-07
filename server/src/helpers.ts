@@ -71,7 +71,6 @@ export function convertOCRToBill(receiptBody: any, tip: Number): Bill {
       } as Item)
     })
 
-
   let bill: Bill = {
     _orders: items,
     _tip: tip,
