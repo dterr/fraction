@@ -17,23 +17,6 @@ billRouter.use(fileUpload({
         abortOnLimit: true,
     }));
 
-billRouter.get("/:id", async (req, res) => {
-   try {
-       const query = { _id: new mongodb.ObjectId(req?.params?.id) };
-       const bill: Bill = await collections.bills.findOne(query);
-
-       if (bill) {
-           // Show all payees here
-           res.status(200).send({"orders": bill._orders, "payees": bill._payees);
-       } else {
-           res.status(404).send(`Failed to find a bill: ID ${id}`);
-       }
-
-   } catch (error) {
-       res.status(404).send(`Failed to find a bill: ID ${req?.params?.id}`);
-   }
-});
-
 billRouter.post("/", async (req, res) => {
    try {
        // Get the file that was set to our field named "image"
@@ -78,14 +61,22 @@ billRouter.post("/", async (req, res) => {
    }
 });
 
-// // For other users providing info for their bill
-// billRouter.post("/:id", async (req, res) => {
-//    try {
-//    } catch (error) {
-//        console.error(error.message);
-//        res.status(400).send(error.message);
-//    }
-// });
+billRouter.get("/:id", async (req, res) => {
+   try {
+       const query = { _id: new mongodb.ObjectId(req?.params?.id) };
+       const bill: Bill = await collections.bills.findOne(query);
+
+       if (bill) {
+           // Show all payees here
+           res.status(200).send({"orders": bill._orders, "payees": bill._payees);
+       } else {
+           res.status(404).send(`Failed to find a bill: ID ${id}`);
+       }
+
+   } catch (error) {
+       res.status(404).send(`Failed to find a bill: ID ${req?.params?.id}`);
+   }
+});
 
 billRouter.put("/:id", async (req, res) => {
    try {
