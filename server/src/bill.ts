@@ -1,13 +1,13 @@
 import * as mongodb from "mongodb";
 
 // Payees included in bill: their name, the list of items they got, and the total they owe
-interface Payee {
+export interface Payee {
   _name: String;
   _orders: Array<Number>; // Array of indices from _orders property in Bill
   _orderTotal: Number;
 }
 
-interface Item {
+export interface Item {
   _desc: String;
   _qty: Number;
   _price: Number;

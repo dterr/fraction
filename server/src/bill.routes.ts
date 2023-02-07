@@ -4,6 +4,7 @@ import * as mongodb from "mongodb";
 import {getOCR, sendSMS, convertOCRToBill} from "./helpers";
 import { collections } from "./database";
 import { Bill, Payee } from "./bill";
+import { UploadedFile } from "express-fileupload";
 
 const fileUpload = require('express-fileupload');
 
@@ -63,12 +64,13 @@ billRouter.post("/", async (req, res) => {
 
 billRouter.get("/:id", async (req, res) => {
    try {
-       const query = { _id: new mongodb.ObjectId(req?.params?.id) };
+       const id = req?.params?.id;
+       const query = { _id: new mongodb.ObjectId(id) };
        const bill: Bill = await collections.bills.findOne(query);
 
        if (bill) {
            // Show all payees here
-           res.status(200).send({"orders": bill._orders, "payees": bill._payees);
+           res.status(200).send({"orders": bill._orders, "payees": bill._payees});
        } else {
            res.status(404).send(`Failed to find a bill: ID ${id}`);
        }
@@ -89,7 +91,8 @@ billRouter.put("/:id", async (req, res) => {
          _orderTotal: req.body.orderTotal
        }
 
-       const query = { _id: new mongodb.ObjectId(req?.params?.id) };
+       const id = req?.params?.id;
+       const query = { _id: new mongodb.ObjectId(id) };
        const result = await collections.bills.updateOne(query, { $push: { "_payees": payee } });
 
        if (result && result.matchedCount) {

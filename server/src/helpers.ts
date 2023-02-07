@@ -1,5 +1,4 @@
 import * as dotenv from "dotenv";
-import {UploadedFile} from "express-fileupload";
 import { Item, Bill } from "./bill";
 
 const fs = require("fs");
@@ -11,14 +10,14 @@ dotenv.config();
 const { TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN, TWILIO_NUMBER, TABSCANNER_API_KEY } = process.env;
 const twilio_client = require('twilio')(TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN);
 
-function sleep(ms: Number) {
+function sleep(ms: any) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
 
 // Sends receipt for OCR and returns text body of receipt
-export async function getOCR(ms: Number, filePath: String): any {
+export async function getOCR(ms: Number, filePath: String): Promise<any> {
   var data = new FormData();
   //ex: server/src/upload/test.png
   data.append('file', fs.createReadStream(filePath));
@@ -64,11 +63,12 @@ export async function getOCR(ms: Number, filePath: String): any {
 export function convertOCRToBill(receiptBody: any): Bill {
   let items: Array<Item> = [];
 
-  for(const item in receiptBody.lineItems){
+  for(const currItem in receiptBody.lineItems){
+    let parsedItem = JSON.parse(currItem);
     let item: Item = {
-      _desc: item.desc,
-      _qty: item.qty,
-      _price: item.price
+      _desc: parsedItem.desc,
+      _qty: parsedItem.qty,
+      _price: parsedItem.price
     }
 
     items.push(item)
