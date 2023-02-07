@@ -3,10 +3,16 @@
 [View our Wiki here
 ](https://github.com/StanfordCS194/win2023-team15/wiki)
 
+## Stack
+
+MERN
+1. MongoDB
+2. Express.js
+3. React 
+4. Node.js
+
+
 ## Set Up
-
-Based on https://www.mongodb.com/languages/mean-stack-tutorial
-
 
 1. Installing Dependencies:  
 
