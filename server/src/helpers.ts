@@ -60,23 +60,21 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
 }
 
 // View TabScanner docs on results for more: https://docs.tabscanner.com/#documenter-4-2
-export function convertOCRToBill(receiptBody: any): Bill {
+export function convertOCRToBill(receiptBody: any, tip: Number): Bill {
   let items: Array<Item> = [];
 
-  for(const currItem in receiptBody.lineItems){
-    let parsedItem = JSON.parse(currItem);
-    let item: Item = {
-      _desc: parsedItem.desc,
-      _qty: parsedItem.qty,
-      _price: parsedItem.price
-    }
+  receiptBody.lineItems.forEach( (currItem: any) => {
+      items.push({
+        _desc: currItem.descClean,
+        _qty: currItem.qty,
+        _price: currItem.price
+      } as Item)
+    })
 
-    items.push(item)
-  }
 
   let bill: Bill = {
     _orders: items,
-    _tip: receiptBody.tip,
+    _tip: tip,
     _tax: receiptBody.tax,
     _total: receiptBody.total
   }
@@ -86,7 +84,7 @@ export function convertOCRToBill(receiptBody: any): Bill {
 
 // Sends SMS with link to specific receipt
 export async function sendSMS(phoneNumber: String, link: String) {
-  twilio_client.messages
+  await twilio_client.messages
    .create({
      body: link,
      to: `+1${phoneNumber}`, // Text this number like +12345678901
