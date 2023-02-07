@@ -1,5 +1,6 @@
 import * as dotenv from "dotenv";
 import {UploadedFile} from "express-fileupload";
+import { Item, Bill } from "./bill";
 
 const fs = require("fs");
 const FormData = require('form-data');
@@ -21,13 +22,15 @@ export async function getOCR(ms: Number, filePath: String): any {
   var data = new FormData();
   //ex: server/src/upload/test.png
   data.append('file', fs.createReadStream(filePath));
+
+  // View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-1
   var config = {
     method: 'post',
     url: 'https://api.tabscanner.com/api/2/process',
     headers: {
      'apikey': TABSCANNER_API_KEY
-     // add language, resolution, etc
     },
+    params: { region: 'us'},
     data : data
   };
 
@@ -39,6 +42,7 @@ export async function getOCR(ms: Number, filePath: String): any {
 
   await sleep(ms);
 
+  // View TabScanner docs on results for more: https://docs.tabscanner.com/#documenter-4-2
   var config2 = {
     method: 'get',
     url: `https://api.tabscanner.com/api/result/${token}`,
@@ -54,6 +58,30 @@ export async function getOCR(ms: Number, filePath: String): any {
   });
 
   return receiptBody;
+}
+
+// View TabScanner docs on results for more: https://docs.tabscanner.com/#documenter-4-2
+export function convertOCRToBill(receiptBody: any): Bill {
+  let items: Array<Item> = [];
+
+  for(const item in receiptBody.lineItems){
+    let item: Item = {
+      _desc: item.desc,
+      _qty: item.qty,
+      _price: item.price
+    }
+
+    items.push(item)
+  }
+
+  let bill: Bill = {
+    _orders: items,
+    _tip: receiptBody.tip,
+    _tax: receiptBody.tax,
+    _total: receiptBody.total
+  }
+
+  return bill
 }
 
 // Sends SMS with link to specific receipt

@@ -1,8 +1,7 @@
 import * as express from "express";
 import * as mongodb from "mongodb";
 
-import { Bill } from "./bill";
-import {getOCR, sendSMS} from "./helpers";
+import {getOCR, sendSMS, convertOCRToBill} from "./helpers";
 import { collections } from "./database";
 
 const fileUpload = require('express-fileupload');
@@ -16,13 +15,6 @@ billRouter.use(fileUpload({
         abortOnLimit: true,
     }));
 
-// billRouter.get("/", async (_req, res) => {
-//    try {
-//
-//    } catch (error) {
-//        res.status(500).send(error.message);
-//    }
-// });
 
 billRouter.get("/:id", async (req, res) => {
    try {
@@ -61,8 +53,7 @@ billRouter.post("/", async (req, res) => {
        let receiptBody = await getOCR(10000, filePath);
 
        // Scrape relevant structure from receiptBody
-       //
-       const bill: Bill = {}
+       const bill = convertOCRToBill(receiptBody);
 
        const result = await collections.bills.insertOne(bill);
 
@@ -89,6 +80,7 @@ billRouter.post("/", async (req, res) => {
 // For other users providing info for their bill
 billRouter.post("/:id", async (req, res) => {
    try {
+     // UPDATE PAYEES HERE WHEN PROVIDING NAME, ORDERS CLICKED THROUGH CHECKBOX
    } catch (error) {
        console.error(error.message);
        res.status(400).send(error.message);
