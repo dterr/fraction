@@ -15,14 +15,22 @@ MERN
 ## Set Up
 
 1. Installing Dependencies:  
-
-`npm install cors dotenv express mongodb twilio express-fileupload axios form-data`
-
-`npm install --save-dev typescript @types/cors @types/express @types/node ts-node`
+    ```
+    npm install cors dotenv express mongodb twilio express-fileupload axios form-data
+    npm install --save-dev typescript @types/cors @types/express @types/node ts-node
+    ```
 
 2. Add .env file in /server
 
-3. Add `ATLAS_URI = mongodb+srv://<username>:<password>@cs194.2dvr2.mongodb.net/?retryWrites=true&w=majority`
+3. Add to .env 
+
+    ```
+    ATLAS_URI = mongodb+srv://<username>:<password>@cs194.2dvr2.mongodb.net/?retryWrites=true&w=majority
+    TWILIO_SID_MAIN = <ASK JACOB>
+    TWILIO_TOKEN_MAIN = <ASK JACOB>
+    TWILIO_NUMBER = 18559195785
+    TABSCANNER_API_KEY = <ASK JACOB>
+    ```
 
 4. Run the server by typing `npx ts-node src/server.ts` in the command line. You should see "Server running at http://localhost:5200"
 
