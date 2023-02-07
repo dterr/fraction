@@ -3,11 +3,12 @@ import * as mongodb from "mongodb";
 
 import {getOCR, sendSMS, convertOCRToBill} from "./helpers";
 import { collections } from "./database";
-import { Payee } from "./bill";
+import { Bill, Payee } from "./bill";
 
 const fileUpload = require('express-fileupload');
 
 export const billRouter = express.Router();
+
 billRouter.use(express.json());
 billRouter.use(fileUpload({
         limits: {
@@ -16,17 +17,14 @@ billRouter.use(fileUpload({
         abortOnLimit: true,
     }));
 
-
 billRouter.get("/:id", async (req, res) => {
    try {
-       const id = req?.params?.id;
-       const query = { _id: new mongodb.ObjectId(id) };
-       const bill = await collections.bills.findOne(query);
-
-       // Show all options here
+       const query = { _id: new mongodb.ObjectId(req?.params?.id) };
+       const bill: Bill = await collections.bills.findOne(query);
 
        if (bill) {
-           res.status(200).send(bill);
+           // Show all payees here
+           res.status(200).send({"orders": bill._orders, "payees": bill._payees);
        } else {
            res.status(404).send(`Failed to find a bill: ID ${id}`);
        }
@@ -91,7 +89,6 @@ billRouter.post("/", async (req, res) => {
 
 billRouter.put("/:id", async (req, res) => {
    try {
-
        // Get name
        // Get orders and map to index
        // Get orders total from indices
