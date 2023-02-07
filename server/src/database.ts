@@ -23,27 +23,27 @@ async function applySchemaValidation(db: mongodb.Db) {
        $jsonSchema: {
            bsonType: "object",
 
-           // This is based on parsing from the OCR service
-           
-           // required: ["name", "position", "level"],
-           // additionalProperties: false,
-           // properties: {
-           //     _id: {},
-           //     name: {
-           //         bsonType: "string",
-           //         description: "'name' is required and is a string",
-           //     },
-           //     position: {
-           //         bsonType: "string",
-           //         description: "'position' is required and is a string",
-           //         minLength: 5
-           //     },
-           //     level: {
-           //         bsonType: "string",
-           //         description: "'level' is required and is one of 'junior', 'mid', or 'senior'",
-           //         enum: ["junior", "mid", "senior"],
-           //     },
-           // },
+           required: ["_orders", "_tip", "_tax", "_total"],
+           additionalProperties: true,
+           properties: {
+               _id: {},
+               _orders: {
+                   bsonType: "Array<Item>",
+                   description: "'_orders' is required and is a Array<Item>",
+               },
+               _tip: {
+                   bsonType: "Number",
+                   description: "'_tip' is required and is a Number",
+               },
+               _tax: {
+                   bsonType: "Number",
+                   description: "'_tax' is required and is a Number",
+               },
+               _total: {
+                   bsonType: "Number",
+                   description: "'_total' is required and is a Number",
+               },
+           },
        },
    };
 
