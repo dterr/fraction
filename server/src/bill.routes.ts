@@ -3,6 +3,7 @@ import * as mongodb from "mongodb";
 
 import {getOCR, sendSMS, convertOCRToBill} from "./helpers";
 import { collections } from "./database";
+import { Payee } from "./bill";
 
 const fileUpload = require('express-fileupload');
 
@@ -21,6 +22,8 @@ billRouter.get("/:id", async (req, res) => {
        const id = req?.params?.id;
        const query = { _id: new mongodb.ObjectId(id) };
        const bill = await collections.bills.findOne(query);
+
+       // Show all options here
 
        if (bill) {
            res.status(200).send(bill);
@@ -66,8 +69,8 @@ billRouter.post("/", async (req, res) => {
              await sendSMS(phoneNumber, `http://localhost:5200/bills/${result.insertedId}`)
            }
 
-           // Redirect to link?
-
+           // Redirect to generated link to view responses
+           res.redirect(`/${result.insertedId}`);
        } else {
            res.status(500).send("Failed to create a new bill.");
        }
@@ -77,29 +80,36 @@ billRouter.post("/", async (req, res) => {
    }
 });
 
-// For other users providing info for their bill
-billRouter.post("/:id", async (req, res) => {
-   try {
-     // UPDATE PAYEES HERE WHEN PROVIDING NAME, ORDERS CLICKED THROUGH CHECKBOX
-   } catch (error) {
-       console.error(error.message);
-       res.status(400).send(error.message);
-   }
-});
+// // For other users providing info for their bill
+// billRouter.post("/:id", async (req, res) => {
+//    try {
+//    } catch (error) {
+//        console.error(error.message);
+//        res.status(400).send(error.message);
+//    }
+// });
 
 billRouter.put("/:id", async (req, res) => {
    try {
-       const id = req?.params?.id;
-       const bill = req.body;
-       const query = { _id: new mongodb.ObjectId(id) };
-       const result = await collections.bills.updateOne(query, { $set: bill });
+
+       // Get name
+       // Get orders and map to index
+       // Get orders total from indices
+       const payee: Payee = {
+         _name: req.body.name,
+         _orders: req.body.orders,
+         _orderTotal: req.body.orderTotal
+       }
+
+       const query = { _id: new mongodb.ObjectId(req?.params?.id) };
+       const result = await collections.bills.updateOne(query, { $push: { "_payees": payee } });
 
        if (result && result.matchedCount) {
-           res.status(200).send(`Updated an bills: ID ${id}.`);
+           res.status(200).send(`Updated a bills payee: ID ${id}.`);
        } else if (!result.matchedCount) {
            res.status(404).send(`Failed to find a bill: ID ${id}`);
        } else {
-           res.status(304).send(`Failed to update a bill: ID ${id}`);
+           res.status(304).send(`Failed to update a bill payee: ID ${id}`);
        }
    } catch (error) {
        console.error(error.message);
