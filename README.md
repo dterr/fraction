@@ -3,6 +3,9 @@
 [View our Wiki here
 ](https://github.com/StanfordCS194/win2023-team15/wiki)
 
+[View our Rapid Prototype Summary here
+](https://docs.google.com/presentation/d/1GDyb13ec9v1C0KgXlOwE0DuArh_Dy2hFsdouI2vryrE/edit?usp=sharing)
+
 ## Stack
 
 MERN
