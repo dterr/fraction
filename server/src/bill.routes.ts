@@ -22,7 +22,7 @@ billRouter.post("/", async (req, res) => {
    try {
        // Get the file that was set to our field named "image"
        const image = req.files.image as UploadedFile
-       const { phoneNumbers, tip } = req.body;
+       const { tip } = req.body;
 
        // If no image submitted, exit
        if (!image) return res.sendStatus(400);
@@ -43,13 +43,7 @@ billRouter.post("/", async (req, res) => {
        const result = await collections.bills.insertOne(bill);
 
        if (result.acknowledged) {
-           res.status(201).send(`Created a new bill: ID ${result.insertedId}.`);
-
-           // Send SMS messages
-           phoneNumbers.forEach( async phoneNumber => {
-             // REPLACE WITH ACTUAL DOMAIN
-              await sendSMS(phoneNumber, `http://localhost:5200/bills/${result.insertedId}`)
-           });
+           res.status(201).send(`Created a new bill: ID ${result.insertedId}. Share this link with your friends: http://localhost:5200/bills/${result.insertedId}`);
        } else {
            res.status(500).send("Failed to create a new bill.");
        }
