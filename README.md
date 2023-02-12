@@ -6,6 +6,10 @@
 [View our Rapid Prototype Summary here
 ](https://docs.google.com/presentation/d/1GDyb13ec9v1C0KgXlOwE0DuArh_Dy2hFsdouI2vryrE/edit?usp=sharing)
 
+## Git Source Control Assignment
+Below is my name for the Git Source Control assigment.
+Clemente Farias Canepa
+
 ## Stack
 
 MERN
