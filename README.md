@@ -9,6 +9,7 @@
 ## Git Source Control Assignment
 Below is my name for the Git Source Control assigment.
 Clemente Farias Canepa
+[Dominic Reynaldo Terrones](./dom.com)
 
 ## Stack
 
