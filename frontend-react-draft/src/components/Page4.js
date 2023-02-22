@@ -12,7 +12,7 @@ class Page4 extends React.Component {
           <div className="App">
               <header className="App-header">
                 <p>
-                  Hello! Welcome to Page 4.
+                  Hello! Welcome to Page 4. Cat's working here
 
                   : )
                 </p>
