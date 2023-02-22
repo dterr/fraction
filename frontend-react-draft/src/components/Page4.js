@@ -86,7 +86,7 @@ class Page4 extends React.Component {
                 </div>
                 
                 <div>
-                  <Link to="/page6/"><button className="upload-button">Submit</button></Link> 
+                  <Link to="/page6/"><button>Submit</button></Link> 
                 </div>
 
 
