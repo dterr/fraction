@@ -55,4 +55,4 @@ We use Heroku for hosting.
 
 1. To run locally: `heroku local web`
 2. To push changes to heroku: `git push heroku main`
-3. **To open app: `heroku open`**
+3. **To open app:** `heroku open`
