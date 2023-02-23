@@ -48,3 +48,4 @@ MERN
 1. Database: [Mongo DB Atlas](https://www.mongodb.com/cloud/atlas/register) Cloud Cluser
 2. OCR (Optical Character Recognition): [TabScanner API](https://tabscanner.com/)
 3. SMS Texting: [Twilio API](https://www.twilio.com/en-us/messaging/channels/sms)
+4. Hosting Service: Heroku
