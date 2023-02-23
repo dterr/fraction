@@ -41,7 +41,7 @@ MERN
     TABSCANNER_API_KEY = <ASK JACOB>
     ```
 
-4. Run the server by typing `npx ts-node src/server.ts` in the command line. You should see `Server running at http://localhost:5200`
+4. Run the server by typing `npx ts-node src/server.ts` in the command line. You should see `Server running at http://localhost:5000`
 
 ## Services
 
