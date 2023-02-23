@@ -59,9 +59,13 @@ billRouter.get("/:id", async (req, res) => {
        const query = { _id: new mongodb.ObjectId(String(id)) };
        const bill: Bill = await collections.bills.findOne(query);
 
-       const taxAndTip: number = +bill._tax + +bill._tip;
        const payees = bill._payees;
 
+       const payeeOrders = payees.map(function(payee, index){
+         return (payee as Payee)._orders.map(i => (bill._orders[(i as number)] as Item)._desc)
+       });
+
+       const taxAndTip: number = +bill._tax + +bill._tip;
        const owedAmounts = payees.map(function(payee, index){
          let taxAndTipPortion = (payee._orderTotal as number) * taxAndTip / (bill._subTotal as number)
          return parseInt((+payee._orderTotal + +taxAndTipPortion).toFixed(2));
@@ -69,7 +73,7 @@ billRouter.get("/:id", async (req, res) => {
 
        if (bill) {
            // Show all payees here
-           res.status(200).send({"orders": bill._orders, "payees": payees, "owedAmounts": owedAmounts});
+           res.status(200).send({"orders": bill._orders, "payees": payees, "payeeOrders": payeeOrders, "owedAmounts": owedAmounts});
        } else {
            res.status(404).send(`Failed to find a bill: ID ${id}`);
        }
