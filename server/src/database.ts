@@ -39,9 +39,9 @@ async function applySchemaValidation(db: mongodb.Db) {
                    bsonType: "Number",
                    description: "'_tax' is required and is a Number",
                },
-               _total: {
+               _subTotal: {
                    bsonType: "Number",
-                   description: "'_total' is required and is a Number",
+                   description: "'_subTotal' is required and is a Number",
                },
            },
        },

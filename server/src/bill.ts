@@ -10,14 +10,16 @@ export interface Payee {
 export interface Item {
   _desc: String;
   _qty: Number;
-  _price: Number;
+  // If qty > 1 _pricePerItem is relevant
+  _pricePerItem: Number;
+  _totalPrice: Number;
 }
 
 export interface Bill {
    _orders: Array<Item>;
    _tip: Number;
    _tax: Number;
-   _total: Number;
+   _subTotal: Number;
    _payees?: Array<Payee>;
    _id?: mongodb.ObjectId;
 }
