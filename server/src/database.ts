@@ -23,7 +23,7 @@ async function applySchemaValidation(db: mongodb.Db) {
        $jsonSchema: {
            bsonType: "object",
 
-           required: ["_orders", "_tip", "_tax", "_total"],
+           required: ["_orders", "_tip", "_tax", "_subTotal"],
            additionalProperties: true,
            properties: {
                _id: {},
