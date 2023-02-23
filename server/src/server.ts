@@ -26,9 +26,10 @@ connectToDatabase(ATLAS_URI)
            console.log(`Server running at http://localhost:5200...`);
        });
 
-      //  app.get('/', function (req, res) {
-      //   res.render('index', {});
-      // });
+       app.get('/', function (req, res) {
+        // res.render('index', {});
+        res.status(201).send("Hello");
+      });
 
    })
    .catch(error => console.error(error));
