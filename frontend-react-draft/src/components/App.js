@@ -18,11 +18,11 @@ class App extends React.Component {
 
     if (this.uploadInput.files.length > 0) {
       const imageUp = new FormData();
-      imageUp.append("file", this.uploadInput.files[0]);
+      imageUp.append("receipt", this.uploadInput.files[0]);
       //imageUp.append("stub_photo", server/src/upload/test.png);
-      console.log(imageUp);
+      console.log(imageUp[0]);
       // processReceipt(imageUp);
-      axios.post("http://localhost:3000/api/receipt", imageUp).then(res => {
+      axios.post("/api/receipt", imageUp[0]).then(res => {
           console.log("Successful upload", res);
           //this.setState({uploaderOpen: false});
           //window.location.href=`#/photos/${this.props.curUser._id}`;
