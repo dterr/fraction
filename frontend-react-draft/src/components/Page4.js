@@ -10,7 +10,7 @@ class Page4 extends React.Component {
     this.state = {value: ''};
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleNameSubmit = this.handleNameSubmit.bind(this);
   }
 
   state = {
@@ -33,17 +33,32 @@ class Page4 extends React.Component {
     this.setState({value: event.target.value});
   }
 
-  handleSubmit(event) {
+  handleNameSubmit(event) {
     event.preventDefault();
     alert('Name: ' + this.state.value);
 
-    console.log({name:"Paul", orders:[]})
+    // TODO: send this name somewhere 
+    axios.post(/*TODO*/,{
+      name: name
+    })
+    .then((response) => {
+      console.log(response);
+    });
+
+    //console.log({name:this.state.value, orders:[]})
 
     /*axios.put("/7007", {name:"Paul", orders:[]}).then(res => {
       console.log("Success", res);
       window.location.href=`/page6/`;
     }).catch(err => console.log(`POST ERR: ${err}`));
     */
+  }
+
+  renderCheckboxes() {
+    var checked = axios.get(/*TODO*/);
+    checked.then(response => {
+      this.setState({checked: /*TODO*/});
+    }).catch(err => (err.status + "Failed"));
   }
 
   render() {
@@ -55,12 +70,14 @@ class Page4 extends React.Component {
                 <p>
                   What items did you order? Select them below.
                 </p>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleNameSubmit}>
                   <label>
                     Name:
                     <input type="text" value={this.state.value} onChange= {this.handleChange} />
                   </label>
-                
+                  <input type="submit" value="Submit" />
+
+
                 <div className="checkbox">
                   <label>
                     <input type="checkbox" id="grill_octopus" name="grill_octopus" value={label} checked={isChecked} onChange={this.toggleCheckboxChange}/>
@@ -93,31 +110,11 @@ class Page4 extends React.Component {
                   </label>
                 </div>
 
-                <input type="submit" value="Submit" />
-
-
                 </form>
-
-
-
-                {/* <form id="form-img-upload" accept="image/png, image/jpeg, image/jpg"> */}
-                {/* <input type="image" id="input-img-upload" multiple={false} /> */}
-                {/* <label id="label-img-upload" htmlFor="input-img-upload"> */}
-                  {/* <div> */}
-                    {/* <p id="form-img-text">Drop your image here or</p> */}
-                    {/* <Link to="/page6/"><button className="upload-button">Upload</button></Link> */}
-                  {/* </div>  */}
-                {/* </label> */}
-              {/* </form> */}
               </header>
           </div>
     );
   }
 }
-
-// Checkbox.propTypes = {
-  // label: PropTypes.string.isRequired,
-  // handleCheckboxChange: PropTypes.func.isRequired,
-// };
 
 export default Page4;
