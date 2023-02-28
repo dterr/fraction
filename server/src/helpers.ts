@@ -67,7 +67,8 @@ export function convertOCRToBill(receiptBody: any, tip: Number): Bill {
       items.push({
         _desc: currItem.descClean,
         _qty: currItem.qty,
-        _price: currItem.price
+        _pricePerItem: (currItem.lineTotal as number) / (currItem.qty as number),
+        _totalPrice: currItem.lineTotal
       } as Item)
     })
 
@@ -75,7 +76,7 @@ export function convertOCRToBill(receiptBody: any, tip: Number): Bill {
     _orders: items,
     _tip: tip,
     _tax: receiptBody.tax,
-    _total: receiptBody.total
+    _subTotal: receiptBody.subTotal
   }
 
   return bill

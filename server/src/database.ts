@@ -23,7 +23,7 @@ async function applySchemaValidation(db: mongodb.Db) {
        $jsonSchema: {
            bsonType: "object",
 
-           required: ["_orders", "_tip", "_tax", "_total"],
+           required: ["_orders", "_tip", "_tax", "_subTotal"],
            additionalProperties: true,
            properties: {
                _id: {},
@@ -39,9 +39,9 @@ async function applySchemaValidation(db: mongodb.Db) {
                    bsonType: "Number",
                    description: "'_tax' is required and is a Number",
                },
-               _total: {
+               _subTotal: {
                    bsonType: "Number",
-                   description: "'_total' is required and is a Number",
+                   description: "'_subTotal' is required and is a Number",
                },
            },
        },
