@@ -6,7 +6,7 @@ const endpoint = 'https://api.tabscanner.com/api/v2/process';
 
 var Receipt = require("./schema/receipt")
 
-const processReceipt = async (req) => {
+async function processReceipt(req) {
 //   const picture = req.uploadedphoto;
 //   const formData = new FormData();
 //   formData.append('file', fs.createReadStream(filePath));
@@ -47,4 +47,4 @@ const filterReceiptData = (data) => {
     return filteredData;
   };
 
-module.exports = processReceipt;
+  //export default processReceipt;
