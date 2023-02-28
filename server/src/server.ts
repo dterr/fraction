@@ -21,14 +21,20 @@ connectToDatabase(ATLAS_URI)
 
        app.use("/bills", billRouter);
 
+       let port = parseInt(process.env.PORT);
+       if (port == null || String(port) == "") {
+         port = 5200;
+       }
+
        // start the Express server
-       app.listen(5200, () => {
-           console.log(`Server running at http://localhost:5200...`);
+       app.listen(port, () => {
+           console.log(`Server running at http://localhost:${port}...`);
        });
 
-      //  app.get('/', function (req, res) {
-      //   res.render('index', {});
-      // });
+       app.get('/', function (req, res) {
+        // res.render('index', {});
+        res.status(201).send("Hello");
+      });
 
    })
    .catch(error => console.error(error));
