@@ -79,7 +79,9 @@ app.get('receipt/uniqueLink', function(request, response) {
 //Get user name from request.body
 app.post('/receipt/claimItems', function(request, response) {
   console.log("Received request" + JSON.stringify(request.body));
-  //Receipt.find()
+  Receipt.find({creatorName: request.body.receiptID}).select("creatorName lineItems").exec(function (err, receipt) {
+    
+  });
 });
 
 app.get('/receipt/listItems', function(request, response) {
