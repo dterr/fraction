@@ -1,6 +1,8 @@
 import './App.css';
 import { Link } from 'react-router-dom';
 import React from 'react';
+//import axios from 'axios';
+//onst axios = require('axios');
 
 class Page4 extends React.Component {
   constructor(props) {
@@ -32,8 +34,16 @@ class Page4 extends React.Component {
   }
 
   handleSubmit(event) {
-    alert('Name: ' + this.state.value);
     event.preventDefault();
+    alert('Name: ' + this.state.value);
+
+    console.log({name:"Paul", orders:[]})
+
+    /*axios.put("/7007", {name:"Paul", orders:[]}).then(res => {
+      console.log("Success", res);
+      window.location.href=`/page6/`;
+    }).catch(err => console.log(`POST ERR: ${err}`));
+    */
   }
 
   render() {
@@ -50,9 +60,7 @@ class Page4 extends React.Component {
                     Name:
                     <input type="text" value={this.state.value} onChange= {this.handleChange} />
                   </label>
-                  <input type="submit" value="Submit" />
-                </form>
-
+                
                 <div className="checkbox">
                   <label>
                     <input type="checkbox" id="grill_octopus" name="grill_octopus" value={label} checked={isChecked} onChange={this.toggleCheckboxChange}/>
@@ -84,10 +92,11 @@ class Page4 extends React.Component {
                     <label htmlFor="grey_goose">Grey Goose Lime</label>
                   </label>
                 </div>
-                
-                <div>
-                  <Link to="/page6/"><button>Submit</button></Link> 
-                </div>
+
+                <input type="submit" value="Submit" />
+
+
+                </form>
 
 
 
