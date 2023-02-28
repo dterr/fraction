@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { receiveMessageOnPort } = require('worker_threads');
 
 const apiKey = TABSCANNER_API_KEY;
 const endpoint = 'https://api.tabscanner.com/api/v2/process';
@@ -15,10 +16,32 @@ const processReceipt = async (filePath) => {
   };
 
   const response = await axios.post(endpoint, formData, config);
-  const { items, total } = filterReceiptData(response.data);
-  return { image: filePath, items, total };
+  const filteredData = filterReceiptData(response.data);
+  const newReceipt = new Receipt(filteredData);
+  await newReceipt.save();
+  console.log("Receipt saved to database:", newReceipt);
+  return newReceipt;
 };
 
-
+const filterReceiptData = (data) => {
+    const filteredData = {
+      establishment: data.establishment,
+      total: data.total,
+      subtotal: data.subtotal,
+      cash: data.cash,
+      change: data.change,
+      tax: data.tax,
+      tip: data.tip,
+      currency: data.currency,
+      lineItems: []
+    };
+  
+    for (const lineItem of data.lineItems) {
+      const { lineTotal, desc, qty, price, unit } = lineItem;
+      filteredData.lineItems.push({ lineTotal, desc, qty, price, unit });
+    }
+  
+    return filteredData;
+  };
 
 module.exports = processReceipt;
