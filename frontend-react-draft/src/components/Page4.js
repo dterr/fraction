@@ -1,14 +1,20 @@
 import './App.css';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import React from 'react';
 
 class Page4 extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {value: ''};
+    this.state = {
+      value: '',
+      username: '',
+      items: '',
+      receiptID: ''
+    };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleNameSubmit = this.handleNameSubmit.bind(this);
+    this.handleItemsSubmit = this.handleItemsSubmit.bind(this);
   }
 
   state = {
@@ -31,9 +37,25 @@ class Page4 extends React.Component {
     this.setState({value: event.target.value});
   }
 
-  handleSubmit(event) {
+  handleNameSubmit(event) {
     alert('Name: ' + this.state.value);
+    this.setState({username: event.state.value});
     event.preventDefault();
+  }
+
+  finishItemsSubmit(response) {
+    alert("Received " + JSON.stringify(response));
+    return <Redirect to="/page6/" />
+  }
+
+  //Assuming all items are stored in this.state.items
+  handleItemsSubmit(event) {
+    if (this.state.username === "") {
+      alert('No username found');
+    } else {
+      var submit = axios.post('/receipt/claimItems', {receiptID: this.state.receiptID, items: this.state.items});
+      submit.then(response => this.finishItemsSubmit(response)).catch(err => alert(err));
+    }
   }
 
   render() {
@@ -45,7 +67,7 @@ class Page4 extends React.Component {
                 <p>
                   What items did you order? Select them below.
                 </p>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleNameSubmit}>
                   <label>
                     Name:
                     <input type="text" value={this.state.value} onChange= {this.handleChange} />
@@ -86,7 +108,7 @@ class Page4 extends React.Component {
                 </div>
                 
                 <div>
-                  <Link to="/page6/"><button>Submit</button></Link> 
+                  <button onClick={this.handleItemsSubmit()}>Submit</button>
                 </div>
 
 

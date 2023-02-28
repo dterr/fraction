@@ -8,6 +8,7 @@ const upload = multer({ dest: 'uploads/' });
 
 const app = express();
 const port = 3000;
+var Receipt = require('./schema/receipt.js');
 
 app.use(express.static('public'));
 
@@ -69,6 +70,22 @@ app.post('/api/receipt', upload.single('receipt'), async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
+
+//Get receipt's index in mongo to generate unique link
+app.get('receipt/uniqueLink', function(request, response) {
+
+});
+
+//Get user name from request.body
+app.post('/receipt/claimItems', function(request, response) {
+  console.log("Received request" + JSON.stringify(request.body));
+  //Receipt.find()
+});
+
+app.get('/receipt/listItems', function(request, response) {
+
+});
+
 // var server = app.listen(port, function () {
 //     var port = server.address().port;
 //     console.log(path.join('Listening at http://localhost:', String(port) , ' exporting the directory ' , String(__dirname)));
