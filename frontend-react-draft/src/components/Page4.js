@@ -40,7 +40,13 @@ class Page4 extends React.Component {
   handleNameSubmit(event) {
     alert('Name: ' + this.state.value);
     this.setState({username: event.state.value});
-    event.preventDefault();
+  }
+
+  renderCheckboxes() {
+    var checked = axios.get(/*TODO*/);
+    checked.then(response => {
+      this.setState({checked: /*TODO*/});
+    }).catch(err => (err.status + "Failed"));
   }
 
   finishItemsSubmit(response) {
@@ -73,7 +79,7 @@ class Page4 extends React.Component {
                     <input type="text" value={this.state.value} onChange= {this.handleChange} />
                   </label>
                   <input type="submit" value="Submit" />
-                </form>
+
 
                 <div className="checkbox">
                   <label>
@@ -111,26 +117,11 @@ class Page4 extends React.Component {
                   <button onClick={this.handleItemsSubmit()}>Submit</button>
                 </div>
 
-
-
-                {/* <form id="form-img-upload" accept="image/png, image/jpeg, image/jpg"> */}
-                {/* <input type="image" id="input-img-upload" multiple={false} /> */}
-                {/* <label id="label-img-upload" htmlFor="input-img-upload"> */}
-                  {/* <div> */}
-                    {/* <p id="form-img-text">Drop your image here or</p> */}
-                    {/* <Link to="/page6/"><button className="upload-button">Upload</button></Link> */}
-                  {/* </div>  */}
-                {/* </label> */}
-              {/* </form> */}
+                </form>
               </header>
           </div>
     );
   }
 }
-
-// Checkbox.propTypes = {
-  // label: PropTypes.string.isRequired,
-  // handleCheckboxChange: PropTypes.func.isRequired,
-// };
 
 export default Page4;
