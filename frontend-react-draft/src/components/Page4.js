@@ -1,5 +1,5 @@
 import './App.css';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import React from 'react';
 //import axios from 'axios';
 //onst axios = require('axios');
@@ -7,10 +7,16 @@ import React from 'react';
 class Page4 extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {value: ''};
+    this.state = {
+      value: '',
+      username: '',
+      items: '',
+      receiptID: ''
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleNameSubmit = this.handleNameSubmit.bind(this);
+    this.handleItemsSubmit = this.handleItemsSubmit.bind(this);
   }
 
   state = {
@@ -34,24 +40,8 @@ class Page4 extends React.Component {
   }
 
   handleNameSubmit(event) {
-    event.preventDefault();
     alert('Name: ' + this.state.value);
-
-    // TODO: send this name somewhere 
-    axios.post(/*TODO*/,{
-      name: name
-    })
-    .then((response) => {
-      console.log(response);
-    });
-
-    //console.log({name:this.state.value, orders:[]})
-
-    /*axios.put("/7007", {name:"Paul", orders:[]}).then(res => {
-      console.log("Success", res);
-      window.location.href=`/page6/`;
-    }).catch(err => console.log(`POST ERR: ${err}`));
-    */
+    this.setState({username: event.state.value});
   }
 
   renderCheckboxes() {
@@ -59,6 +49,21 @@ class Page4 extends React.Component {
     checked.then(response => {
       this.setState({checked: /*TODO*/});
     }).catch(err => (err.status + "Failed"));
+  }
+
+  finishItemsSubmit(response) {
+    alert("Received " + JSON.stringify(response));
+    return <Redirect to="/page6/" />
+  }
+
+  //Assuming all items are stored in this.state.items
+  handleItemsSubmit(event) {
+    if (this.state.username === "") {
+      alert('No username found');
+    } else {
+      var submit = axios.post('/receipt/claimItems', {receiptID: this.state.receiptID, items: this.state.items});
+      submit.then(response => this.finishItemsSubmit(response)).catch(err => alert(err));
+    }
   }
 
   render() {
@@ -108,6 +113,10 @@ class Page4 extends React.Component {
                     {label}
                     <label htmlFor="grey_goose">Grey Goose Lime</label>
                   </label>
+                </div>
+                
+                <div>
+                  <button onClick={this.handleItemsSubmit()}>Submit</button>
                 </div>
 
                 </form>

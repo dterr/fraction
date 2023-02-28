@@ -1,4 +1,4 @@
-"use strict";
+
 const mongoose = require('mongoose');
 
 const lineItemSchema = new mongoose.Schema({
@@ -29,6 +29,10 @@ const lineItemSchema = new mongoose.Schema({
 });
 
 const receiptSchema = new mongoose.Schema({
+  creatorName: {
+    type: String,
+    required: true
+  },
   establishment: {
     type: String,
     required: true
