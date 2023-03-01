@@ -81,7 +81,7 @@ app.get('receipt/uniqueLink', function(request, response) {
 //Get user name from request.body
 app.post('/receipt/claimItems', function(request, response) {
   console.log("Received request" + JSON.stringify(request.body));
-  Receipt.find({creatorName: request.body.receiptID}).select("creatorName lineItems").exec(function (err, receipt) {
+  Receipt.find({creatorName: request.body.receiptID}).select("creatorName lineItems").then(function (err, receipt) {
     if (err || receipt.length === 0) {
       console.log("Could not find receipt with id: " + request.body.receiptID);
       response.status(400).send('Receipt not found');
