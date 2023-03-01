@@ -19,7 +19,7 @@ const processReceipt = async (req) => {
     //   const picture = req.uploadedphoto;
     //   const formData = new FormData();
     //   formData.append('file', fs.createReadStream(filePath));
-    const apiKey = "hardCoded rn";
+    const apiKey = "hardcoded";
     console.log("Inside processReceipt: \n");    
       const config = {
         headers: {
@@ -29,7 +29,6 @@ const processReceipt = async (req) => {
         },
       };
       const endpoint = 'https://api.tabscanner.com/api/v2/process';
-      console.log("Image:", req.file);
       const response = await axios.post(endpoint, req, config);
       console.log("Axios Response from API:", response);
       const filteredData = filterReceiptData(response.data);
