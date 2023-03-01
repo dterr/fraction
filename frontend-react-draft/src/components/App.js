@@ -2,42 +2,25 @@ import './App.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { processReceipt } from '../processReceipt.js';
+import DragDropFile from './dragUploader/DragImgUpload';
+import namePrompter from './namePrompter/namePrompter';
+import { Route, Routes } from 'react-router-dom';
 //const processReceipt = require('../processReceipt.js');
 
 class App extends React.Component {
+  
   constructor(props) {
     super(props);
+    this.state = {
+      uploadSuccess: false
+    };
   }
 
-  // Handle the upload of the image from button
-  // post it to the axios request
-  handleUpload = (e) => {
-    e.preventDefault();
-    console.log("Upload input", this.uploadInput.files);
-
-    if (this.uploadInput.files.length > 0) {
-      const imageUp = new FormData();
-      imageUp.append("file", this.uploadInput.files[0]);
-      //imageUp.append("stub_photo", server/src/upload/test.png);
-      console.log(imageUp);
-      //processReceipt(imageUp);
-      // processReceipt(imageUp);
-      
-      axios.post("/api/receipt", imageUp).then(res => {
-          console.log("Successful upload", res);
-          //this.setState({uploaderOpen: false});
-          //window.location.href=`#/photos/${this.props.curUser._id}`;
-        }).catch(err => console.log(`POST ERR: ${err.response.error}`));
-
-      /*
-      axios.post("/api/receipt", imageUp).then(res => {
-          console.log("Successful upload", res);
-          //this.setState({uploaderOpen: false});
-          //window.location.href=`#/photos/${this.props.curUser._id}`;
-        }).catch(err => console.log(`POST ERR: ${err.response.error}`));*/
-    }
-  };
+  uponUpload = () => {
+    this.setState({ uploadSuccess: true }, () => {
+      console.log(this.state)
+    });
+  }
 
   render() {
     return (
@@ -47,18 +30,14 @@ class App extends React.Component {
                   Hello! Welcome to Fraction.
 
                   : )
-                </p>
-
-                <form id="form-img-upload" accept="image/png, image/jpeg, image/jpg">
-                <input type="image" id="input-img-upload" multiple={false} />
-                <label id="label-img-upload" htmlFor="input-img-upload">
-                  <div>
-                    <p id="form-img-text">Drop your image here or</p>
-                    <input id="upload-photo" type="file" accept="image/*" ref={(domFileRef) => { this.uploadInput = domFileRef; }} />
-                    <Link to="/page3/"><button className="upload-button" onClick={this.handleUpload}>Upload</button></Link>
-                  </div> 
-                </label>
-              </form>
+                </p>     
+                <div>
+                <DragDropFile onUpload={this.uponUpload}/>
+                </div>      
+                  {this.state.uploadSuccess &&
+                    <Link path="/Page4"/>
+                  }
+                  
               </header>
           </div>
     );
