@@ -11,7 +11,8 @@ class Page4 extends React.Component {
       value: '',
       username: '',
       allItems: '',
-      receiptID: '1234'
+      receiptID: '63ff96c42670dc6a57886bc0'
+     
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -45,7 +46,7 @@ class Page4 extends React.Component {
     const{label} = this.props;
     return <div className="checkbox">
               <label>
-                <input type="checkbox" id={item.name} name={item.name} value={label} checked={item.isChecked} onChange={this.toggleCheckboxChange}/>
+                <input type="checkbox" id={item.desc} name={item.desc} value={label} checked={true} onChange={this.toggleCheckboxChange}/>
                 {label}
                 <label htmlFor="item">{item.name}</label>
               </label>
@@ -54,17 +55,19 @@ class Page4 extends React.Component {
 
   renderItems() {
     if (this.state.allItems === "") { //&& this.state.receiptID !== "") {
-      var allItems = axios.get("/receipt/listItems/" + this.state.receiptID);
+      var allItems = axios.get("http://localhost:5000/receipt/listItems/" + this.state.receiptID);
       allItems.then(response => {
-        this.setState({allItems: JSON.parse(response.data.items)})
+        console.log("This is the response" + JSON.stringify(response.data[0]));
+        this.setState({allItems: response.data[0].lineItems})
       }).catch(err => (err.status + ": Unable to get list items from receipt with id: " + this.state.receiptID));
     } else {
+      console.log(this.state.allItems);
       return this.state.allItems.map(item => this.renderItem(item));
     }
   }
     /*const{label} = this.props;
     const{isChecked} = this.state;
-    return <div> 
+    return <div>
             {this.renderItems}
               if (this.state.items.Empty) {
                 <label>
@@ -79,7 +82,7 @@ class Page4 extends React.Component {
                 <label htmlFor="item">item</label>
                 </label>
                 </div>
-              } 
+              }
           </div>*/
 
   // renderCheckboxes() {
@@ -119,14 +122,14 @@ class Page4 extends React.Component {
                     <input type="text" value={this.state.username} onChange= {this.handleChange} />
                   </label>
                   <input type="submit" value="Submit" />
-                  
+                 
                 {this.renderItems()}
-                
+               
                 <div>
                   <button onClick={this.handleItemsSubmit()}>Submit</button>
                 </div>
 
-                </form>
+    </form>
               </header>
           </div>
     );
