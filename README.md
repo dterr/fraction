@@ -21,6 +21,27 @@ MERN
 4. Node.js
 
 
+## Getting it running
+First thing is to make sure that the `.env` file lives in /server (and not /server/src).
+Populate that file with the tokens Jacob emailed us. We have a `dotenv` package that takes care of everything else.
+Also! Make sure you have all the dependencies installed
+```
+cd server/src
+npm install
+```
+
+1. Terminal Tab 1
+```
+cd frontend-react-draft  
+npm start
+```
+2. Terminal Tab 2
+```
+cd server
+npx ts-node src/server.ts
+```
+Make sure you do it in this order, or else you might get an error about an occupied port.
+
 ## Set Up
 
 1. Installing Dependencies:  
