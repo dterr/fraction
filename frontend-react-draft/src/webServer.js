@@ -2,18 +2,19 @@ const express = require('express');
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const axios = require('axios');
-
+const cors = require('cors');
 // const helpers = require('frontend-react-draft/server/src/helpers.ts');
 // const { convertOCRToBill } = require('../server/src/helpers.ts');
 // const processReceipt = require('./processReceipt.js');
 // const storeReceipt = require('./storeReceipt');
 
 const app = express();
-const port = 3000;
+const port = 3001;
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb+srv://chuddy:kuklinevalashki@cs194.2dvr2.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 var Receipt = require('./schema/receipt.js');
 
+app.use(cors());
 app.use(express.static('public'));
 
 /* HELPER FUNCTIONS */
