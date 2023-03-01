@@ -18,15 +18,24 @@ class App extends React.Component {
 
     if (this.uploadInput.files.length > 0) {
       const imageUp = new FormData();
-      imageUp.append("receipt", this.uploadInput.files[0]);
+      imageUp.append("file", this.uploadInput.files[0]);
       //imageUp.append("stub_photo", server/src/upload/test.png);
-      console.log(imageUp[0]);
+      console.log(imageUp);
+      //processReceipt(imageUp);
       // processReceipt(imageUp);
-      axios.post("/api/receipt", imageUp[0]).then(res => {
+      
+      axios.post("/api/receipt", imageUp).then(res => {
           console.log("Successful upload", res);
           //this.setState({uploaderOpen: false});
           //window.location.href=`#/photos/${this.props.curUser._id}`;
         }).catch(err => console.log(`POST ERR: ${err.response.error}`));
+
+      /*
+      axios.post("/api/receipt", imageUp).then(res => {
+          console.log("Successful upload", res);
+          //this.setState({uploaderOpen: false});
+          //window.location.href=`#/photos/${this.props.curUser._id}`;
+        }).catch(err => console.log(`POST ERR: ${err.response.error}`));*/
     }
   };
 
