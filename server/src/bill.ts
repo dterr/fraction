@@ -18,6 +18,8 @@ export interface Item {
 export interface Bill {
    _store: String,
    _total: Number,
+   _cash: Number,
+   _change: Number,
    _orders: Array<Item>;
    _tip: Number;
    _tax: Number;
