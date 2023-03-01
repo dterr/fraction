@@ -69,8 +69,8 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             // Save receipt to database
             const newReceipt = new ReceiptModel({
                   creatorName: req.body.name,
-                  establishment: "McDonalds",
-                  total: 100,
+                  establishment: bill._store,
+                  total: bill._total,
                   subtotal: bill._subTotal,
                   cash: 0,
                   change: 0,
@@ -91,7 +91,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
             await newReceipt.save();
             // Return response with success message
-            res.status(200).json({ message: "Receipt processed successfully!" });
+            res.status(200).json({ message: "Receipt processed successfully!" , receipt: newReceipt });
           } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Error processing receipt" });

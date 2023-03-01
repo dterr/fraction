@@ -73,6 +73,8 @@ export function convertOCRToBill(receiptBody: any, tip: Number): Bill {
     })
 
   let bill: Bill = {
+    _store: receiptBody.establishment,
+    _total: receiptBody.total,
     _orders: items,
     _tip: tip,
     _tax: receiptBody.tax,
