@@ -1,8 +1,7 @@
 import './App.css';
 import { Link, Redirect } from 'react-router-dom';
 import React from 'react';
-//import axios from 'axios';
-//onst axios = require('axios');
+import axios from 'axios';
 
 class Page4 extends React.Component {
   constructor(props) {
@@ -40,16 +39,43 @@ class Page4 extends React.Component {
   }
 
   handleNameSubmit(event) {
-    alert('Name: ' + this.state.value);
-    this.setState({username: event.state.value});
+    alert('Name: ' + this.state.username);
+    this.setState({username: event.state.username});
+
   }
 
-  renderCheckboxes() {
-    var checked = axios.get(/*TODO*/);
-    checked.then(response => {
-      this.setState({checked: /*TODO*/});
-    }).catch(err => (err.status + "Failed"));
+  renderItems() {
+    var allItems = axios.get("/receipt/claimItems" + this.state.items);
+    allItems.then(response => {
+      this.setState({allItems: this.state.items, isChecked:false})
+    }).catch(err => (err.status + " Failed"));
+    const{label} = this.props;
+    const{isChecked} = this.state;
+    return <div> 
+            {this.renderItems}
+              if (this.state.items.Empty) {
+                <label>
+                Uh-Oh.
+                </label>
+              }
+              for (item in this.state.items) {
+                <div className="checkbox">
+                <label>
+                <input type="checkbox" id="item" name="item" value={label} checked={isChecked} onChange={this.toggleCheckboxChange}/>
+                {label}
+                <label htmlFor="item">item</label>
+                </label>
+                </div>
+              } 
+          </div>
   }
+
+  // renderCheckboxes() {
+  //   var checked = axios.get(/*TODO*/);
+  //   checked.then(response => {
+  //     this.setState({checked: /*TODO*/});
+  //   }).catch(err => (err.status + "Failed"));
+  // }
 
   finishItemsSubmit(response) {
     alert("Received " + JSON.stringify(response));
@@ -67,8 +93,8 @@ class Page4 extends React.Component {
   }
 
   render() {
-    const{label} = this.props;
-    const{isChecked} = this.state;
+    //const{label} = this.props;
+    //const{isChecked} = this.state;
     return (
           <div className="App">
               <header className="App-header">
@@ -78,20 +104,25 @@ class Page4 extends React.Component {
                 <form onSubmit={this.handleNameSubmit}>
                   <label>
                     Name:
-                    <input type="text" value={this.state.value} onChange= {this.handleChange} />
+                    <input type="text" value={this.state.username} onChange= {this.handleChange} />
                   </label>
                   <input type="submit" value="Submit" />
+                  
+                  {this.renderItems()}
+                  
+                  
 
-
-                <div className="checkbox">
-                  <label>
-                    <input type="checkbox" id="grill_octopus" name="grill_octopus" value={label} checked={isChecked} onChange={this.toggleCheckboxChange}/>
-                    {label}
-                    <label htmlFor="grill_octopus">Grill Octopus</label>
-                  </label>
-                </div>
+                  {/* for (item in allItems) {
+                    <div className="checkbox">
+                    <label>
+                      <input type="checkbox" id="item" name="item" value={label} checked={isChecked} onChange={this.toggleCheckboxChange}/>
+                      {label}
+                      <label htmlFor="item">item</label>
+                    </label>
+                  </div>
+                  } */}
           
-                <div className="checkbox">
+                {/* <div className="checkbox">
                   <label>
                     <input type="checkbox" id="salmon_tartar" name="salmon_tartar" value={label} checked={isChecked} onChange={this.toggleCheckboxChange}/>
                     {label}
@@ -113,7 +144,7 @@ class Page4 extends React.Component {
                     {label}
                     <label htmlFor="grey_goose">Grey Goose Lime</label>
                   </label>
-                </div>
+                </div> */}
                 
                 <div>
                   <button onClick={this.handleItemsSubmit()}>Submit</button>
