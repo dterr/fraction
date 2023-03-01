@@ -11,35 +11,6 @@ class App extends React.Component {
     super(props);
   }
 
-  // Handle the upload of the image from button
-  // post it to the axios request
-  // handleUpload = (e) => {
-  //   e.preventDefault();
-  //   console.log("Upload input", this.uploadInput.files);
-
-  //   if (this.uploadInput.files.length > 0) {
-  //     const imageUp = new FormData();
-  //     imageUp.append("file", this.uploadInput.files[0]);
-  //     //imageUp.append("stub_photo", server/src/upload/test.png);
-  //     console.log(imageUp);
-  //     //processReceipt(imageUp);
-  //     // processReceipt(imageUp);
-      
-  //     axios.post("/api/receipt", imageUp).then(res => {
-  //         console.log("Successful upload", res);
-  //         //this.setState({uploaderOpen: false});
-  //         //window.location.href=`#/photos/${this.props.curUser._id}`;
-  //       }).catch(err => console.log(`POST ERR: ${err.response.error}`));
-
-  //     /*
-  //     axios.post("/api/receipt", imageUp).then(res => {
-  //         console.log("Successful upload", res);
-  //         //this.setState({uploaderOpen: false});
-  //         //window.location.href=`#/photos/${this.props.curUser._id}`;
-  //       }).catch(err => console.log(`POST ERR: ${err.response.error}`));*/
-  //   }
-  // };
-
   render() {
     return (
           <div className="App">
