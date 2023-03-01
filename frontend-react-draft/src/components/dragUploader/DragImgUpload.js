@@ -23,7 +23,7 @@ function DragDropFile(props) {
       axios.post("/api/receipt", imageUp).then(res => {
           console.log("Successful upload", res);
           this.props.onUpload();
-        }).catch(err => console.log(`POST ERR: ${err.response.error}`));
+        }).catch();
     }
   };
   
