@@ -10,6 +10,9 @@ const axios = require('axios');
 
 const app = express();
 const port = 3000;
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017', { useNewUrlParser: true, useUnifiedTopology: true });
+var Receipt = require('./schema/receipt.js');
 
 app.use(express.static('public'));
 
@@ -75,6 +78,49 @@ app.post('/api/receipt', upload.single('file'), function (req, res) {
     res.status(500).send('Internal server error');
   }
 });
+
+//Get receipt's index in mongo to generate unique link
+app.get('receipt/uniqueLink', function(request, response) {
+
+});
+
+//Get user name from request.body
+app.post('/receipt/claimItems', function(request, response) {
+  console.log("Received request" + JSON.stringify(request.body));
+  Receipt.find({creatorName: request.body.receiptID}).select("creatorName lineItems").then(function (err, receipt) {
+    if (err || receipt.length === 0) {
+      console.log("Could not find receipt with id: " + request.body.receiptID);
+      response.status(400).send('Receipt not found');
+      return;
+    }
+    for (var i = 0; i < receipt.lineItems.length; i++) {
+      if (request.body.items[receipt.lineItems[i].desc]) {
+        receipt.lineItems[i].payers.push(request.body.user);
+      }
+    }
+    receipt.save();
+    response.status(200).send(receipt);
+  });
+});
+
+app.get('/receipt/listItems/:receiptID', function(request, response) {
+  var id = request.params.receiptID;
+  if (id === "" || !request.params.receiptID) {
+    response.status(401).send("List items request was not given a receipt ID");
+    return;
+  }
+  Receipt.find({_id: id}).select("_id lineItems").then(function (err, receipt) {
+    if (err) console.log(err);
+    else {
+      console.log(JSON.stringify(receipt));
+      response.status(200).send(receipt);
+    }
+  });
+  //console.log("Received request to list items " + JSON.stringify(request));
+  //test_items = {"items": {"name": "hamburger", "isChecked": true}};
+  //return response.status(400).send(JSON.stringify(test_items));
+});
+
 // var server = app.listen(port, function () {
 //     var port = server.address().port;
 //     console.log(path.join('Listening at http://localhost:', String(port) , ' exporting the directory ' , String(__dirname)));
