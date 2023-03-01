@@ -3,7 +3,7 @@ import cors from "cors";
 import express from "express";
 import { billRouter } from "./bill.routes";
 import { connectToDatabase } from "./database";
-import ReceiptModel from "./receipt"
+import ReceiptModel, { default as Receipt } from "./receipt";
 
 import { getOCR, convertOCRToBill } from "./helpers";
 import multer from 'multer';
@@ -61,8 +61,10 @@ connectToDatabase(ATLAS_URI)
             bill = convertOCRToBill(receiptBody, tip);
             console.log("\n\n\n\n", bill);
 
+            // TODO get username on the front end
             // Save receipt to database
             const newReceipt = new ReceiptModel({
+                  creatorName: "William",
                   establishment: "McDonalds",
                   total: 100,
                   subtotal: bill._subTotal,
@@ -92,6 +94,51 @@ connectToDatabase(ATLAS_URI)
             res.status(500).json({ error: "Error processing receipt" });
           }
         });
+
+      // Queries database for a receipt of a given name
+      // It queries for the user who presses the submit button
+      // Request.body has receiptID and map of string to boolean
+      app.post('/receipt/claimItems', function(request, response) {
+         console.log("Received request" + JSON.stringify(request.body));
+         Receipt.findOne({creatorName: request.body.receiptID})
+           .select("creatorName lineItems")
+           .then(function (receipt) {
+             if (!receipt) {
+               console.log("Could not find receipt with id: " + request.body.receiptID);
+               response.status(400).send('Receipt not found');
+               return;
+             }
+             for (let i = 0; i < receipt.lineItems.length; i++) {
+               if (request.body.items[receipt.lineItems[i].desc]) {
+                 receipt.lineItems[i].payers.push(request.body.user);
+               }
+             }
+             receipt.save();
+             response.status(200).send(receipt);
+           })
+           .catch(function (err: Error) {
+             console.log(err);
+             response.status(500).send('Error occurred while processing the request');
+           });
+       });
+         
+       app.get('/receipt/listItems/:receiptID', function(request, response) {
+         var id = request.params.receiptID;
+         if (id === "" || !request.params.receiptID) {
+           response.status(401).send("List items request was not given a receipt ID");
+           return;
+         }
+         Receipt.find({_id: id}).select("_id lineItems").then(function (receipt) {
+            if (!receipt) {
+               console.log("Could not find receipt with id: " + request.body.receiptID);
+               response.status(400).send('Receipt not found');
+               return;
+            } else {
+             console.log(JSON.stringify(receipt));
+             response.status(200).send(receipt);
+           }
+         });
+      });
 
        // start the Express server
        app.listen(port, () => {
