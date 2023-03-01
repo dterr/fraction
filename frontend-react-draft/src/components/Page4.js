@@ -10,43 +10,14 @@ class Page4 extends React.Component {
     this.state = {
       value: '',
       username: '',
-      items: '',
-      receiptID: ''
+      allItems: '',
+      receiptID: '1234'
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleNameSubmit = this.handleNameSubmit.bind(this);
     this.handleItemsSubmit = this.handleItemsSubmit.bind(this);
   }
-
-  state = {
-    isChecked: false,
-  }
-
-  var test_bill = (function(user) {
-    var foods = [{lineTotal: 15, desc: "Tacos", qty: 3, price: 5, unit: "taco", payers:[]},
-              {lineTotal: 24, desc: "Burritos", qty: 2, price: 12, unit: "burrito", payers:[]},
-              {lineTotal: 6, desc: "Horchata", qty: 1, price: 6, unit: "cup", payers:[]}];
-    var test_bill = {creatorName: "Paul", establishment:"Chilis", total: 45, subtotal: 45, cash: 0, change: 0, tax: 0, tip: 0, currency: "USD", lineItems: foods};
-
-    return receipt.create({
-      creatorName: test_bill.creatorName, 
-      establishment: test_bill.establishment,
-      total: test_bill.total,
-      subtotal: test_bill.subtotal, 
-      cash: test_bill.cash,
-      change: test_bill.change,
-      tax: test_bill.tax,
-      tip: test_bill.tip, 
-      currency: test_bill.currency, 
-      lineItems: test_bill.lineItems
-    }).then(function (userObj) {
-      userObj.save();
-      console.log('Test bill');
-    }).catch(function(err) {
-      console.error('Error create bill', err);
-    }); 
-  });
 
   toggleCheckBoxChange = () => {
     const{handleCheckboxChange, label} = this.props;
@@ -70,12 +41,28 @@ class Page4 extends React.Component {
 
   }
 
-  renderItems() {
-    var allItems = axios.get(this.dummyData + this.state.items);
-    allItems.then(response => {
-      this.setState({allItems: this.state.items, isChecked:false})
-    }).catch(err => (err.status + " Failed"));
+  renderItem(item) {
     const{label} = this.props;
+    return <div className="checkbox">
+              <label>
+                <input type="checkbox" id={item.name} name={item.name} value={label} checked={item.isChecked} onChange={this.toggleCheckboxChange}/>
+                {label}
+                <label htmlFor="item">{item.name}</label>
+              </label>
+            </div>
+  }
+
+  renderItems() {
+    if (this.state.allItems === "") { //&& this.state.receiptID !== "") {
+      var allItems = axios.get("/receipt/listItems/" + this.state.receiptID);
+      allItems.then(response => {
+        this.setState({allItems: JSON.parse(response.data.items)})
+      }).catch(err => (err.status + ": Unable to get list items from receipt with id: " + this.state.receiptID));
+    } else {
+      return this.state.allItems.map(item => this.renderItem(item));
+    }
+  }
+    /*const{label} = this.props;
     const{isChecked} = this.state;
     return <div> 
             {this.renderItems}
@@ -93,8 +80,7 @@ class Page4 extends React.Component {
                 </label>
                 </div>
               } 
-          </div>
-  }
+          </div>*/
 
   // renderCheckboxes() {
   //   var checked = axios.get(/*TODO*/);
@@ -113,7 +99,7 @@ class Page4 extends React.Component {
     if (this.state.username === "") {
       alert('No username found');
     } else {
-      var submit = axios.post('/receipt/claimItems', {receiptID: this.state.receiptID, items: this.state.items, user: this.state.username});
+      var submit = axios.post('/receipt/claimItems', {receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username});
       submit.then(response => this.finishItemsSubmit(response)).catch(err => alert(err));
     }
   }
@@ -134,43 +120,7 @@ class Page4 extends React.Component {
                   </label>
                   <input type="submit" value="Submit" />
                   
-                  {this.renderItems()}
-                  
-                  
-
-                  {/* for (item in allItems) {
-                    <div className="checkbox">
-                    <label>
-                      <input type="checkbox" id="item" name="item" value={label} checked={isChecked} onChange={this.toggleCheckboxChange}/>
-                      {label}
-                      <label htmlFor="item">item</label>
-                    </label>
-                  </div>
-                  } */}
-          
-                {/* <div className="checkbox">
-                  <label>
-                    <input type="checkbox" id="salmon_tartar" name="salmon_tartar" value={label} checked={isChecked} onChange={this.toggleCheckboxChange}/>
-                    {label}
-                    <label htmlFor="salmon_tartar">Salmon Tartar</label>
-                  </label>
-                </div>
-
-                <div className="checkbox">
-                  <label>
-                    <input type="checkbox" id="oysters" name="oysters" value={label} checked={isChecked} onChange={this.toggleCheckboxChange}/>
-                    {label}
-                    <label htmlFor="oysters">Oysters</label>
-                  </label>
-                </div>
-
-                <div className="checkbox">
-                  <label>
-                    <input type="checkbox" id="grey_goose" name="grey_goose" value={label} checked={isChecked} onChange={this.toggleCheckboxChange}/>
-                    {label}
-                    <label htmlFor="grey_goose">Grey Goose Lime</label>
-                  </label>
-                </div> */}
+                {this.renderItems()}
                 
                 <div>
                   <button onClick={this.handleItemsSubmit()}>Submit</button>

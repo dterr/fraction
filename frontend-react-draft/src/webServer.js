@@ -8,6 +8,8 @@ const upload = multer({ dest: 'uploads/' });
 
 const app = express();
 const port = 3000;
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017', { useNewUrlParser: true, useUnifiedTopology: true });
 var Receipt = require('./schema/receipt.js');
 
 app.use(express.static('public'));
@@ -95,8 +97,10 @@ app.post('/receipt/claimItems', function(request, response) {
   });
 });
 
-app.get('/receipt/listItems', function(request, response) {
-
+app.get('/receipt/listItems/:receiptID', function(request, response) {
+  console.log("Received request to list items " + JSON.stringify(request));
+  test_items = {"items": {"name": "hamburger", "isChecked": true}};
+  return response.status(400).send(JSON.stringify(test_items));
 });
 
 // var server = app.listen(port, function () {
