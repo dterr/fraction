@@ -50,7 +50,6 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
        app.post('/api/receipt', upload.single('file'), async (req: express.Request, res: express.Response) => {
          try {
             //const { filePath, tip, phoneNumber } = req.body;
-            console.log("Request", req);
             const file = req.file;
             const tip = 1; //TODO GET TIP
             const filePath = file ? file.path : "server/src/upload/test.png";
@@ -61,6 +60,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             // Send receipt for OCR and get text body of receipt
             //const receiptBody = getOCR(3000, filePath).then();
             //console.log(receiptBody);
+            
             const receiptBody = await getOCR(3000, filePath);
             bill = convertOCRToBill(receiptBody, tip);
             console.log("\n\n\n\n", bill);
@@ -68,7 +68,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             // TODO get username on the front end
             // Save receipt to database
             const newReceipt = new ReceiptModel({
-                  creatorName: "DominicTest1",
+                  creatorName: req.body.name,
                   establishment: "McDonalds",
                   total: 100,
                   subtotal: bill._subTotal,
@@ -90,7 +90,6 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             console.log("About to save: %O",newReceipt);
 
             await newReceipt.save();
-            
             // Return response with success message
             res.status(200).json({ message: "Receipt processed successfully!" });
           } catch (error) {

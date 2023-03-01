@@ -1,22 +1,28 @@
 import React from 'react';
 import axios from 'axios';
 import './DragImgUpload.css';
+import { stripBasename } from '@remix-run/router';
 
 // drag drop file component
-function DragDropFile() {
+function DragDropFile(props) {
   // drag state
   const [isDragging, setIsDragging] = React.useState(false);
   // ref
   const inputRef = React.useRef(null);
+  // state for name input
+  const [name, setName] = React.useState('');
 
   const handleUpload = (img) => {
     console.log("Upload input", img);
     if (img.length > 0) {
       const imageUp = new FormData();
       imageUp.append("file", img[0]);
+      imageUp.append("name",name);
+      props.onUpload();
 
       axios.post("/api/receipt", imageUp).then(res => {
           console.log("Successful upload", res);
+          this.props.onUpload();
         }).catch(err => console.log(`POST ERR: ${err.response.error}`));
     }
   };
@@ -54,9 +60,14 @@ function DragDropFile() {
   const handleButtonClick = () => {
     inputRef.current.click();
   };
+
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  }
   
   return (
     <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
+      <input type="text" id="name-input" placeholder="Enter your name first" value={name} onChange={handleNameChange}/>
       <input ref={inputRef} type="file" id="input-file-upload" multiple={true} onChange={handleChange} />
       <label id="label-file-upload" htmlFor="input-file-upload" className={isDragging ? "dragging" : "" }>
         <div>
