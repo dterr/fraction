@@ -22,7 +22,7 @@ connectToDatabase(ATLAS_URI)
        app.use("/bills", billRouter);
 
        let port = parseInt(process.env.PORT);
-       if (port == null || String(port) == "") {
+       if (Number.isNaN(port) || String(port) == "") {
          port = 5200;
        }
 
