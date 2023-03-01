@@ -1,9 +1,8 @@
 import './App.css';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 import React from 'react';
 import axios from 'axios';
-const receiptSchema = require('../schema/receipt.js')
-
+const Receipt = require('../schema/receipt.js')
 
 class Page4 extends React.Component {
   constructor(props) {
@@ -106,7 +105,7 @@ class Page4 extends React.Component {
 
   finishItemsSubmit(response) {
     alert("Received " + JSON.stringify(response));
-    return <Redirect to="/page6/" />
+    return <redirect to="/page6/" />
   }
 
   //Assuming all items are stored in this.state.items
@@ -114,7 +113,7 @@ class Page4 extends React.Component {
     if (this.state.username === "") {
       alert('No username found');
     } else {
-      var submit = axios.post('/receipt/claimItems', {receiptID: this.state.receiptID, items: this.state.items});
+      var submit = axios.post('/receipt/claimItems', {receiptID: this.state.receiptID, items: this.state.items, user: this.state.username});
       submit.then(response => this.finishItemsSubmit(response)).catch(err => alert(err));
     }
   }

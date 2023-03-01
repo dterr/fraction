@@ -79,7 +79,20 @@ app.get('receipt/uniqueLink', function(request, response) {
 //Get user name from request.body
 app.post('/receipt/claimItems', function(request, response) {
   console.log("Received request" + JSON.stringify(request.body));
-  //Receipt.find()
+  Receipt.find({creatorName: request.body.receiptID}).select("creatorName lineItems").exec(function (err, receipt) {
+    if (err || receipt.length === 0) {
+      console.log("Could not find receipt with id: " + request.body.receiptID);
+      response.status(400).send('Receipt not found');
+      return;
+    }
+    for (var i = 0; i < receipt.lineItems.length; i++) {
+      if (request.body.items[receipt.lineItems[i].desc]) {
+        receipt.lineItems[i].payers.push(request.body.user);
+      }
+    }
+    receipt.save();
+    response.status(200).send(receipt);
+  });
 });
 
 app.get('/receipt/listItems', function(request, response) {
