@@ -2,6 +2,8 @@ import './App.css';
 import { Link, Redirect } from 'react-router-dom';
 import React from 'react';
 import axios from 'axios';
+const receiptSchema = require('../schema/receipt.js')
+
 
 class Page4 extends React.Component {
   constructor(props) {
@@ -21,6 +23,31 @@ class Page4 extends React.Component {
   state = {
     isChecked: false,
   }
+
+  var test_bill = (function(user) {
+    var foods = [{lineTotal: 15, desc: "Tacos", qty: 3, price: 5, unit: "taco", payers:[]},
+              {lineTotal: 24, desc: "Burritos", qty: 2, price: 12, unit: "burrito", payers:[]},
+              {lineTotal: 6, desc: "Horchata", qty: 1, price: 6, unit: "cup", payers:[]}];
+    var test_bill = {creatorName: "Paul", establishment:"Chilis", total: 45, subtotal: 45, cash: 0, change: 0, tax: 0, tip: 0, currency: "USD", lineItems: foods};
+
+    return receipt.create({
+      creatorName: test_bill.creatorName, 
+      establishment: test_bill.establishment,
+      total: test_bill.total,
+      subtotal: test_bill.subtotal, 
+      cash: test_bill.cash,
+      change: test_bill.change,
+      tax: test_bill.tax,
+      tip: test_bill.tip, 
+      currency: test_bill.currency, 
+      lineItems: test_bill.lineItems
+    }).then(function (userObj) {
+      userObj.save();
+      console.log('Test bill');
+    }).catch(function(err) {
+      console.error('Error create bill', err);
+    }); 
+  });
 
   toggleCheckBoxChange = () => {
     const{handleCheckboxChange, label} = this.props;
@@ -45,7 +72,7 @@ class Page4 extends React.Component {
   }
 
   renderItems() {
-    var allItems = axios.get("/receipt/claimItems" + this.state.items);
+    var allItems = axios.get(this.dummyData + this.state.items);
     allItems.then(response => {
       this.setState({allItems: this.state.items, isChecked:false})
     }).catch(err => (err.status + " Failed"));
