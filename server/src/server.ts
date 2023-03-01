@@ -18,7 +18,11 @@ if (!ATLAS_URI) {
    process.exit(1);
 }
 
-connectToDatabase(ATLAS_URI)
+var mongoose = require('mongoose');
+//mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+//connectToDatabase(ATLAS_URI)
+mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
    .then(() => {
        const app = express();
        app.use(cors());
@@ -64,7 +68,7 @@ connectToDatabase(ATLAS_URI)
             // TODO get username on the front end
             // Save receipt to database
             const newReceipt = new ReceiptModel({
-                  creatorName: "William",
+                  creatorName: "DominicTest1",
                   establishment: "McDonalds",
                   total: 100,
                   subtotal: bill._subTotal,
@@ -83,7 +87,7 @@ connectToDatabase(ATLAS_URI)
                   })),
                });
 
-            console.log(newReceipt);
+            console.log("About to save: %O",newReceipt);
 
             await newReceipt.save();
             
