@@ -4,6 +4,7 @@ import express from "express";
 import { billRouter } from "./bill.routes";
 import { connectToDatabase } from "./database";
 import ReceiptModel, { default as Receipt } from "./receipt";
+import { Bill, Item } from "./bill"
 
 import { getOCR, convertOCRToBill } from "./helpers";
 import multer from 'multer';
@@ -49,21 +50,14 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
        app.post('/api/receipt', upload.single('file'), async (req: express.Request, res: express.Response) => {
          try {
-            //const { filePath, tip, phoneNumber } = req.body;
+            
             const file = req.file;
             const tip = 1; //TODO GET TIP
             const filePath = file ? file.path : "server/src/upload/test.png";
-            console.log("Filepath!", filePath);
-
-            let bill;
         
-            // Send receipt for OCR and get text body of receipt
-            //const receiptBody = getOCR(3000, filePath).then();
-            //console.log(receiptBody);
-            
+            // Send receipt for OCR and get text body of receipt                        
             const receiptBody = await getOCR(3000, filePath);
-            bill = convertOCRToBill(receiptBody, tip);
-            console.log("\n\n\n\n", bill);
+            const bill = convertOCRToBill(receiptBody, tip);
 
             // TODO get username on the front end
             // Save receipt to database
@@ -77,17 +71,18 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
                   tax: bill._tax,
                   tip: bill._tip,
                   currency: "USD",
-                  lineItems: bill._orders.map((item) => ({
-                  lineTotal: item._total,
-                  desc: item._name,
-                  qty: item._quantity,
-                  price: item._price,
-                  unit: "item",
-                  payers: bill._payees ? bill._payees.map((payee) => payee._name) : [],
-                  })),
+                  lineItems: bill._orders.map((item: Item) => ({
+                     lineTotal: item._totalPrice,
+                     desc: item._desc,
+                     qty: item._qty,
+                     price: item._pricePerItem,
+                     unit: "item",
+                     payers: bill._payees ? bill._payees.map((payee) => payee._name) : [],
+                     })),
                });
 
-            console.log("About to save: %O",newReceipt);
+               console.log("%cAbout to save the following: ", "color:red;font-size:50;");
+               console.log("%O", newReceipt);
 
             await newReceipt.save();
             // Return response with success message
