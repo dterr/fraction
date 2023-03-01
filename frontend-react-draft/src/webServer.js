@@ -98,9 +98,21 @@ app.post('/receipt/claimItems', function(request, response) {
 });
 
 app.get('/receipt/listItems/:receiptID', function(request, response) {
-  console.log("Received request to list items " + JSON.stringify(request));
-  test_items = {"items": {"name": "hamburger", "isChecked": true}};
-  return response.status(400).send(JSON.stringify(test_items));
+  var id = request.params.receiptID;
+  if (id === "" || !request.params.receiptID) {
+    response.status(401).send("List items request was not given a receipt ID");
+    return;
+  }
+  Receipt.find({_id: id}).select("_id lineItems").then(function (err, receipt) {
+    if (err) console.log(err);
+    else {
+      console.log(JSON.stringify(receipt));
+      response.status(200).send(receipt);
+    }
+  });
+  //console.log("Received request to list items " + JSON.stringify(request));
+  //test_items = {"items": {"name": "hamburger", "isChecked": true}};
+  //return response.status(400).send(JSON.stringify(test_items));
 });
 
 // var server = app.listen(port, function () {
