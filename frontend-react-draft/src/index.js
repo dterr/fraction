@@ -4,6 +4,7 @@ import './index.css';
 import App from './components/App';
 import Page3 from './components/Page3';
 import Page4 from './components/Page4';
+import Page5 from './components/Page5';
 import Page6 from './components/Page6';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -14,6 +15,7 @@ root.render(
     <Routes>
       <Route exact path="/page3/" element={<Page3/>} />
       <Route path="/page4/" element={<Page4/>} />
+      <Route path="/page5/" element={<Page5/>} />
       <Route path="/page6/" element={<Page6/>} />
       <Route exact path="/" element={<App/>} />
     </Routes>
