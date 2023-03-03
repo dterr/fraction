@@ -24,6 +24,7 @@ function DragDropFile(props) {
           console.log("Successful upload", res);
           this.props.onUpload();
         }).catch();
+        setName('');
     }
   };
   
