@@ -144,8 +144,8 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
        });
 
        app.get('/', function (req, res) {
-        // res.render('index', {});
-        res.status(201).send("Hello");
+        res.render('index', {});
+        res.status(201).send("Return to home screen");
       });
 
    })
