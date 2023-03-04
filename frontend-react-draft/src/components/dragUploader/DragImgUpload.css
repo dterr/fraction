@@ -53,3 +53,23 @@
   bottom: 0px;
   left: 0px;
 }
+
+#name-input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-width: 2px;
+  border-radius: 1rem;
+  border-style: dashed;
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+  color: #282c34;
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  outline: none;
+}
+
+#name-input::placeholder {
+  color: #a0aec0;
+}

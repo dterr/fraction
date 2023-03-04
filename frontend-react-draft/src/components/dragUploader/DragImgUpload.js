@@ -11,6 +11,8 @@ function DragDropFile(props) {
   const inputRef = React.useRef(null);
   // state for name input
   const [name, setName] = React.useState('');
+  // state for upload image
+  const [isUploaded, setIsUploaded] = React.useState('');
 
   const handleUpload = (img) => {
     console.log("Upload input", img);
