@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-//import './DragImgUpload.css';
+import "./form.css";
 import { stripBasename } from '@remix-run/router';
 
 // drag drop file component

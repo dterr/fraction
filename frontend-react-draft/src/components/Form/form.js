@@ -5,6 +5,8 @@ import ImgUpload from './ImgUpload';
 import NamePrompt from './NamePrompt';
 import TipPrompt from './TipPrompt';
 
+import "./form.css";
+
 function DominicForm() {
     const [page, setPage] = useState(0);
     const [data, setData] = useState({
@@ -54,36 +56,40 @@ function DominicForm() {
         <div>
             <p>{formTitles[page]}</p>
             {pageFlow()}
-            <button
-                onClick={() => {
-                    if (page == 0) {
-                        if (data.image == '') {
-                            //alert('You must upload an image');
+            {page != 3 &&
+                <button id="next-button"
+                    onClick={() => {
+                        if (page == 0) {
+                            if (data.image == '') {
+                                //alert('You must upload an image');
+                                setPage(page + 1);
+                                return
+                            } else {
+                                setPage(page + 1);
+                                console.log(data);
+                            }
+                        } else if (page == 1) {
+                            if (data.name == '') {
+                                alert('You must have a name!');
+                                return;
+                            } else {
+                                setPage(page + 1);
+                            }
+                        } else if (page == 2) {
+                            if (data.tip == '') {
+                                setData({tip: 0});
+                            }
                             setPage(page + 1);
-                            return
-                        } else {
-                            setPage(page + 1);
-                            console.log(data);
-                        }
-                    } else if (page == 1) {
-                        if (data.name == '') {
-                            alert('You must have a name!');
-                            return;
-                        } else {
-                            setPage(page + 1);
-                        }
-                    } else if (page == 2) {
-                        if (data.tip == '') {
-                            setData({tip: 0});
-                        }
-                        setPage(page + 1);
-                        uploadForm();
-                    } 
-                }}
-
-
-
-            />
+                            uploadForm();
+                        } 
+                    }}
+                >
+                    {page == 2 
+                    ? 'Submit'
+                    : 'Next'
+                    }
+                </button>
+            }
         </div>
     );
 }
