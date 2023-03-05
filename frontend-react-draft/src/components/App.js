@@ -2,11 +2,8 @@ import './App.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import DragDropFile from './dragUploader/DragImgUpload';
-import namePrompter from './namePrompter/namePrompter';
 import { Route, Routes } from 'react-router-dom';
 import DominicForm from './Form/form'; 
-//const processReceipt = require('../processReceipt.js');
 
 class App extends React.Component {
   
