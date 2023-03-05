@@ -44,7 +44,7 @@ function DominicForm() {
         const imageUp = new FormData();
         imageUp.append("file", data.image);
         imageUp.append("name",data.name); 
-        imageUp.append("tip",data.tip)
+        imageUp.append("tip",data.tip);
 
         axios.post("/api/receipt", imageUp).then(res => {
             console.log("Successful upload", res);

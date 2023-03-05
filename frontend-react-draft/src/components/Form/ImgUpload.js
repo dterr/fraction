@@ -14,7 +14,7 @@ function ImgUpload({data, setData}) {
   const handleUpload = (img) => {
     console.log("Upload input", img);
     if (img.length > 0) {
-        setData({ ...data, image: img });
+        setData({ ...data, image: img[0] });
     }
   };
   
