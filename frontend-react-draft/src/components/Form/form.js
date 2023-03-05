@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { useState } from 'react';
 import ImgUpload from './ImgUpload';
 import NamePrompt from './NamePrompt';
@@ -47,8 +48,7 @@ function DominicForm() {
             console.log("Successful upload", res);
             cleanForm();
           }).catch();
-      }
-    };
+    }
 
     return (
         <div>
