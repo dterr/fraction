@@ -16,19 +16,6 @@ class Page4 extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleNameSubmit = this.handleNameSubmit.bind(this);
-    this.handleItemsSubmit = this.handleItemsSubmit.bind(this);
-  }
-
-  toggleCheckBoxChange = () => {
-    const{handleCheckboxChange, label} = this.props;
-
-    this.setState(({isChecked}) => (
-      {
-        isChecked: !isChecked,
-      }
-    ));
-
-    handleCheckboxChange(label);
   }
 
   handleChange(event) {
@@ -36,15 +23,28 @@ class Page4 extends React.Component {
   }
 
   handleNameSubmit(event) {
+    event.preventDefault();
     this.setState({username: this.state.nameboxValue});
-    console.log('Name: ' + this.state.username);
+  }
+
+  toggleCheckBoxChange(itemName) {
+    const{handleCheckboxChange, label} = this.props;
+    var newAllItems = this.state.allItems;
+    for (var i = 0; i < this.state.allItems.length; i++) {
+      if (this.state.allItems[i].desc === itemName) {
+        newAllItems[i].isChecked = !newAllItems[i].isChecked;
+      }
+    }
+    this.setState({allItems: newAllItems});
+
   }
 
   renderItem(item) {
     const{label} = this.props;
-    return <div className="checkbox" key={item.desc}>
+    return  <div className="checkbox" key={item.desc}>
               <label>
-                <input type="checkbox" id={item.desc} name={item.desc} value={label} checked={item.isChecked} onChange={this.toggleCheckboxChange}/>
+                <input type="checkbox" id={item.desc} name={item.desc} value={label} checked={item.isChecked} 
+                        onChange={() => this.toggleCheckBoxChange(item.desc)} />
                 {label}
                 <label htmlFor="item">{item.desc}</label>
               </label>
@@ -62,7 +62,7 @@ class Page4 extends React.Component {
                 <p>Hello {this.state.username}, what items did you order? Select them below.</p>
                 {this.state.allItems.map(item => this.renderItem(item))}
                 <div>
-                  <button onClick={this.handleItemsSubmit()}>Submit</button>
+                  <button onClick={() => this.handleItemsSubmit()}>Submit</button>
                 </div>
              </div>
     }
@@ -103,26 +103,11 @@ class Page4 extends React.Component {
   }
 
   render() {
+    const{label} = this.props;
+    const{isChecked} = this.state;
     return (
           <div className="App">
               <header className="App-header">
-                {/*<p>
-                  What items did you order? Select them below.
-                </p>
-                <form onSubmit={this.handleNameSubmit}>
-                  <label>
-                    Name:
-                    <input type="text" value={this.state.username} onChange= {this.handleChange} />
-                  </label>
-    <input type="submit" value="Submit" />
-                 
-                {this.renderItems()}
-               
-                <div>
-                  <button onClick={this.handleItemsSubmit()}>Submit</button>
-                </div>
-
-                </form>*/}
                 {this.renderPage4()}
               </header>
           </div>
