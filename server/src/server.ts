@@ -102,19 +102,20 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
       // Queries database for a receipt of a given name
       // It queries for the user who presses the submit button
       // Request.body has receiptID and map of string to boolean
-      app.post('/receipt/claimItems', function(request, response) {
-         console.log("Received request" + JSON.stringify(request.body));
-         ReceiptModel.findOne({_id: new mongoose.Types.ObjectId(request.body.receiptID)})
+      app.post('/receipt/claimItems/:json', function(request, response) {
+        var json = JSON.parse(request.params.json);
+         console.log("Received request for claim items " + JSON.stringify(json));
+         ReceiptModel.findOne({_id: new mongoose.Types.ObjectId(json.receiptID)})
            .select("creatorName lineItems")
            .then(function (receipt) {
              if (!receipt) {
-               console.log("Could not find receipt with id: " + request.body.receiptID);
+               console.log("Could not find receipt with id: " + json.receiptID);
                response.status(400).send('Receipt not found');
                return;
              }
              for (let i = 0; i < receipt.lineItems.length; i++) {
-               if (request.body.items[receipt.lineItems[i].desc]) {
-                 receipt.lineItems[i].payers.push(request.body.user);
+               if (json.items[receipt.lineItems[i].desc]) {
+                 receipt.lineItems[i].payers.push(json.user);
                }
              }
              receipt.save();
@@ -126,20 +127,28 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
            });
        });
          
-       app.get('/receipt/listItems/:receiptID', function(request, response) {
-         var id = request.params.receiptID;
-         if (id === "" || !request.params.receiptID) {
+       app.get('/receipt/listItems/:json', function(request, response) {
+         console.log("Received request for list items: " + request.params.json);
+         var json = JSON.parse(request.params.json);
+         var id = json.receiptID;
+         var username = json.user;
+         if (id === "" || !request.params.json) {
            response.status(401).send("List items request was not given a receipt ID");
            return;
          }
-         Receipt.find({_id: new mongoose.Types.ObjectId(id)}).select("_id lineItems").then(function (receipt) {
+         Receipt.findOne({_id: new mongoose.Types.ObjectId(id)}).select("_id lineItems").then(function (receipt) {
             if (!receipt) {
                console.log("Could not find receipt with id: " + request.body.receiptID);
                response.status(400).send('Receipt not found');
                return;
             } else {
-             console.log(JSON.stringify(receipt));
-             response.status(200).send(receipt);
+             console.log("List items receipt: " + JSON.stringify(receipt));
+             console.log("Comparing with username: " + username);
+             var lineItemsList = new Array();
+             for (var item of receipt.lineItems) {
+              lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username)});
+             }
+             response.status(200).send({lineItems: lineItemsList});
            }
          });
       });

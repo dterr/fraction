@@ -9,7 +9,7 @@ class Page4 extends React.Component {
     super(props);
     this.state = {
       value: '',
-      username: '',
+      username: 'Clemente',
       allItems: '',
       receiptID: '63ff96c42670dc6a57886bc0'
      
@@ -44,53 +44,27 @@ class Page4 extends React.Component {
 
   renderItem(item) {
     const{label} = this.props;
-    return <div className="checkbox">
+    return <div className="checkbox" key={item.desc}>
               <label>
-                <input type="checkbox" id={item.desc} name={item.desc} value={label} checked={true} onChange={this.toggleCheckboxChange}/>
+                <input type="checkbox" id={item.desc} name={item.desc} value={label} checked={item.isChecked} onChange={this.toggleCheckboxChange}/>
                 {label}
-                <label htmlFor="item">{item.name}</label>
+                <label htmlFor="item">{item.desc}</label>
               </label>
             </div>
   }
 
   renderItems() {
     if (this.state.allItems === "") { //&& this.state.receiptID !== "") {
-      var allItems = axios.get("http://localhost:5000/receipt/listItems/" + this.state.receiptID);
+      var allItems = axios.get("http://localhost:5000/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
       allItems.then(response => {
-        console.log("This is the response" + JSON.stringify(response.data[0]));
-        this.setState({allItems: response.data[0].lineItems})
+        console.log("This is the response" + JSON.stringify(response.data));
+        this.setState({allItems: response.data.lineItems})
       }).catch(err => (err.status + ": Unable to get list items from receipt with id: " + this.state.receiptID));
     } else {
       console.log(this.state.allItems);
       return this.state.allItems.map(item => this.renderItem(item));
     }
   }
-    /*const{label} = this.props;
-    const{isChecked} = this.state;
-    return <div>
-            {this.renderItems}
-              if (this.state.items.Empty) {
-                <label>
-                Uh-Oh.
-                </label>
-              }
-              for (item in this.state.items) {
-                <div className="checkbox">
-                <label>
-                <input type="checkbox" id="item" name="item" value={label} checked={isChecked} onChange={this.toggleCheckboxChange}/>
-                {label}
-                <label htmlFor="item">item</label>
-                </label>
-                </div>
-              }
-          </div>*/
-
-  // renderCheckboxes() {
-  //   var checked = axios.get(/*TODO*/);
-  //   checked.then(response => {
-  //     this.setState({checked: /*TODO*/});
-  //   }).catch(err => (err.status + "Failed"));
-  // }
 
   finishItemsSubmit(response) {
     alert("Received " + JSON.stringify(response));
@@ -102,8 +76,8 @@ class Page4 extends React.Component {
     if (this.state.username === "") {
       alert('No username found');
     } else {
-      var submit = axios.post('/receipt/claimItems', {receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username});
-      submit.then(response => this.finishItemsSubmit(response)).catch(err => alert(err));
+      var submit = axios.post('http://localhost:5000/receipt/claimItems/' + JSON.stringify({receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username}));
+      submit.then(response => this.finishItemsSubmit(response)).catch(err => console.log(err));
     }
   }
 
@@ -117,11 +91,11 @@ class Page4 extends React.Component {
                   What items did you order? Select them below.
                 </p>
                 <form onSubmit={this.handleNameSubmit}>
-                  <label>
+                {/*  <label>
                     Name:
                     <input type="text" value={this.state.username} onChange= {this.handleChange} />
                   </label>
-                  <input type="submit" value="Submit" />
+    <input type="submit" value="Submit" />*/}
                  
                 {this.renderItems()}
                
@@ -129,7 +103,7 @@ class Page4 extends React.Component {
                   <button onClick={this.handleItemsSubmit()}>Submit</button>
                 </div>
 
-    </form>
+                </form>
               </header>
           </div>
     );
