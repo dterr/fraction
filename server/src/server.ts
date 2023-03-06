@@ -54,7 +54,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
          try {
             
             const file = req.file;
-            const tip = 1; //TODO GET TIP
+            const tip = req.body.tip; //TODO GET TIP
             const filePath = file ? file.path : "server/src/upload/test.png";
         
             // Send receipt for OCR and get text body of receipt                        
