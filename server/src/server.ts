@@ -113,10 +113,20 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
                response.status(400).send('Receipt not found');
                return;
              }
-             for (let i = 0; i < receipt.lineItems.length; i++) {
-               if (json.items[receipt.lineItems[i].desc]) {
-                 receipt.lineItems[i].payers.push(json.user);
-               }
+             for (let i = 0; i < json.items.length; i++) {
+              if (json.items[i].isChecked) {
+                console.log("Item: " + json.items[i].desc + " is checked");
+                for(var j = 0; j < receipt.lineItems.length; j++) {
+                  if (receipt.lineItems[j].desc === json.items[i].desc && !receipt.lineItems[j].payers.includes(json.user))
+                    receipt.lineItems[j].payers.push(json.user);
+                }
+              } else {
+                console.log("Item: " + json.items[i].desc + " is not checked");
+                for(var j = 0; j < receipt.lineItems.length; j++) {
+                  if (receipt.lineItems[j].desc === json.items[i].desc && receipt.lineItems[j].payers.includes(json.user))
+                    receipt.lineItems[j].payers = receipt.lineItems[j].payers.filter((value, index, arr) => value !== json.user);
+                }
+              }
              }
              receipt.save();
              response.status(200).send(receipt);
@@ -128,7 +138,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
        });
          
        app.get('/receipt/listItems/:json', function(request, response) {
-         console.log("Received request for list items: " + request.params.json);
+         //console.log("Received request for list items: " + request.params.json);
          var json = JSON.parse(request.params.json);
          var id = json.receiptID;
          var username = json.user;
@@ -142,8 +152,6 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
                response.status(400).send('Receipt not found');
                return;
             } else {
-             console.log("List items receipt: " + JSON.stringify(receipt));
-             console.log("Comparing with username: " + username);
              var lineItemsList = new Array();
              for (var item of receipt.lineItems) {
               lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username)});

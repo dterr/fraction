@@ -69,7 +69,7 @@ class Page4 extends React.Component {
   }
 
   finishItemsSubmit(response) {
-    //alert("Received " + JSON.stringify(response));
+    alert("Received response: " + JSON.stringify(response));
     return <redirect to="/page6/" />
   }
 
@@ -78,9 +78,8 @@ class Page4 extends React.Component {
     if (this.state.username === "") {
       alert('No username found');
     } else {
-      alert("Submitting request with json: " + JSON.stringify({receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username}))
-      //var submit = axios.post('http://localhost:5000/receipt/claimItems/' + JSON.stringify({receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username}));
-      //submit.then(response => this.finishItemsSubmit(response)).catch(err => console.log(err));
+      var submit = axios.post('http://localhost:5000/receipt/claimItems/' + JSON.stringify({receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username}));
+      submit.then(response => this.finishItemsSubmit(response)).catch(err => console.log(err));
     }
   }
 
