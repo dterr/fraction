@@ -8,89 +8,68 @@ class Page4 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '',
+      nameboxValue: '',
       username: '',
       allItems: '',
-      receiptID: '1234'
+      receiptID: '63ff96c42670dc6a57886bc0'
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleNameSubmit = this.handleNameSubmit.bind(this);
-    this.handleItemsSubmit = this.handleItemsSubmit.bind(this);
-  }
-
-  toggleCheckBoxChange = () => {
-    const{handleCheckboxChange, label} = this.props;
-
-    this.setState(({isChecked}) => (
-      {
-        isChecked: !isChecked,
-      }
-    ));
-
-    handleCheckboxChange(label);
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value});
+    this.setState({nameboxValue: event.target.value});
   }
 
   handleNameSubmit(event) {
-    alert('Name: ' + this.state.username);
-    this.setState({username: event.state.username});
+    event.preventDefault();
+    this.setState({username: this.state.nameboxValue});
+  }
+
+  toggleCheckBoxChange(itemName) {
+    const{handleCheckboxChange, label} = this.props;
+    var newAllItems = this.state.allItems;
+    for (var i = 0; i < this.state.allItems.length; i++) {
+      if (this.state.allItems[i].desc === itemName) {
+        newAllItems[i].isChecked = !newAllItems[i].isChecked;
+      }
+    }
+    this.setState({allItems: newAllItems});
 
   }
 
   renderItem(item) {
     const{label} = this.props;
-    return <div className="checkbox">
+    return  <div className="checkbox" key={item.desc}>
               <label>
-                <input type="checkbox" id={item.name} name={item.name} value={label} checked={item.isChecked} onChange={this.toggleCheckboxChange}/>
+                <input type="checkbox" id={item.desc} name={item.desc} value={label} checked={item.isChecked} 
+                        onChange={() => this.toggleCheckBoxChange(item.desc)} />
                 {label}
-                <label htmlFor="item">{item.name}</label>
+                <label htmlFor="item">{item.desc}</label>
               </label>
             </div>
   }
 
   renderItems() {
     if (this.state.allItems === "") { //&& this.state.receiptID !== "") {
-      var allItems = axios.get("/receipt/listItems/" + this.state.receiptID);
+      var allItems = axios.get("http://localhost:5000/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
       allItems.then(response => {
-        this.setState({allItems: JSON.parse(response.data.items)})
+        this.setState({allItems: response.data.lineItems})
       }).catch(err => (err.status + ": Unable to get list items from receipt with id: " + this.state.receiptID));
     } else {
-      return this.state.allItems.map(item => this.renderItem(item));
+      return <div>
+                <p>Hello {this.state.username}, what items did you order? Select them below.</p>
+                {this.state.allItems.map(item => this.renderItem(item))}
+                <div>
+                  <button onClick={() => this.handleItemsSubmit()}>Submit</button>
+                </div>
+             </div>
     }
   }
-    /*const{label} = this.props;
-    const{isChecked} = this.state;
-    return <div> 
-            {this.renderItems}
-              if (this.state.items.Empty) {
-                <label>
-                Uh-Oh.
-                </label>
-              }
-              for (item in this.state.items) {
-                <div className="checkbox">
-                <label>
-                <input type="checkbox" id="item" name="item" value={label} checked={isChecked} onChange={this.toggleCheckboxChange}/>
-                {label}
-                <label htmlFor="item">item</label>
-                </label>
-                </div>
-              } 
-          </div>*/
-
-  // renderCheckboxes() {
-  //   var checked = axios.get(/*TODO*/);
-  //   checked.then(response => {
-  //     this.setState({checked: /*TODO*/});
-  //   }).catch(err => (err.status + "Failed"));
-  // }
 
   finishItemsSubmit(response) {
-    alert("Received " + JSON.stringify(response));
+    alert("Received response: " + JSON.stringify(response));
     return <redirect to="/page6/" />
   }
 
@@ -99,34 +78,36 @@ class Page4 extends React.Component {
     if (this.state.username === "") {
       alert('No username found');
     } else {
-      var submit = axios.post('/receipt/claimItems', {receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username});
-      submit.then(response => this.finishItemsSubmit(response)).catch(err => alert(err));
+      var submit = axios.post('http://localhost:5000/receipt/claimItems/' + JSON.stringify({receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username}));
+      submit.then(response => this.finishItemsSubmit(response)).catch(err => console.log(err));
+    }
+  }
+
+  renderNameEntryBox() {
+    return <form onSubmit={this.handleNameSubmit}>
+              <label>
+                Name:
+                <input type="text" value={this.state.nameboxValue} onChange={this.handleChange} />
+                </label>
+              <input type="submit" value="Submit" />
+           </form>
+  }
+
+  renderPage4() {
+    if (this.state.username === "") {
+      return this.renderNameEntryBox();
+    } else {
+      return this.renderItems();
     }
   }
 
   render() {
-    //const{label} = this.props;
-    //const{isChecked} = this.state;
+    const{label} = this.props;
+    const{isChecked} = this.state;
     return (
           <div className="App">
               <header className="App-header">
-                <p>
-                  What items did you order? Select them below.
-                </p>
-                <form onSubmit={this.handleNameSubmit}>
-                  <label>
-                    Name:
-                    <input type="text" value={this.state.username} onChange= {this.handleChange} />
-                  </label>
-                  <input type="submit" value="Submit" />
-                  
-                {this.renderItems()}
-                
-                <div>
-                  <button onClick={this.handleItemsSubmit()}>Submit</button>
-                </div>
-
-                </form>
+                {this.renderPage4()}
               </header>
           </div>
     );

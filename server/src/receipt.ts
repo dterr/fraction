@@ -6,7 +6,7 @@ interface LineItem {
   qty: number;
   price: number;
   unit: string;
-  payers?: string[];
+  payers: string[];
 }
 
 const lineItemSchema = new mongoose.Schema({

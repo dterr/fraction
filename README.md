@@ -1,17 +1,18 @@
 # Team 15 Home
 
 [View our Wiki here
-](https://github.com/StanfordCS194/win2023-team15/wiki)
+](https://github.com/StanfordCS194/win2023-team15/wiki) <br>
+THe Homepage of our Wiki contains information about our product and team and serves as a directory for the Wiki pages.
 
 [View our Rapid Prototype Summary here
 ](https://docs.google.com/presentation/d/1GDyb13ec9v1C0KgXlOwE0DuArh_Dy2hFsdouI2vryrE/edit?usp=sharing)
 
 ## Git Source Control Assignment
-Below is my name for the Git Source Control assigment.
-Clemente Farias Canepa
-[Dominic Reynaldo Terrones](./dom.com)
-Clarisse Hokia 
-Cat Fergesen
+Below is my name for the Git Source Control assigment. <br>
+Clemente Farias Canepa <br>
+[Dominic Reynaldo Terrones](./dom.com) <br>
+Clarisse Hokia <br>
+Cat Fergesen <br>
 ## Stack
 
 MERN
