@@ -64,6 +64,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             // TODO get username on the front end
             // Save receipt to database
             const newReceipt = new ReceiptModel({
+                  isOpen: true,
                   creatorName: req.body.name,
                   establishment: bill._store,
                   total: bill._total,

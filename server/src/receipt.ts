@@ -43,6 +43,10 @@ interface Receipt {
 }
 
 const receiptSchema = new mongoose.Schema({
+  isOpen:  {
+    type: Boolean,
+    required: true
+  },
   creatorName: {
     type: String,
     required: true
