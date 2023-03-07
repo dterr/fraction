@@ -2,10 +2,8 @@ import './App.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import DragDropFile from './dragUploader/DragImgUpload';
-import namePrompter from './namePrompter/namePrompter';
 import { Route, Routes } from 'react-router-dom';
-//const processReceipt = require('../processReceipt.js');
+import DominicForm from './Form/form'; 
 
 class App extends React.Component {
   
@@ -32,8 +30,8 @@ class App extends React.Component {
                   : )
                 </p>     
                 <div>
-                <DragDropFile onUpload={this.uponUpload}/>
-                </div>      
+                  <DominicForm/>
+                </div>   
                   {this.state.uploadSuccess &&
                     <Link path="/Page4"/>
                   }

@@ -61,6 +61,9 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
 
 // View TabScanner docs on results for more: https://docs.tabscanner.com/#documenter-4-2
 export function convertOCRToBill(receiptBody: any, tip: Number): Bill {
+  console.log("%cThis is what the OCR returns: ", "color:red;font-size:50;");
+  console.log("%O", receiptBody);
+
   let items: Array<Item> = [];
 
   receiptBody.lineItems.forEach( (currItem: any) => {
@@ -73,6 +76,10 @@ export function convertOCRToBill(receiptBody: any, tip: Number): Bill {
     })
 
   let bill: Bill = {
+    _store: receiptBody.establishment,
+    _total: receiptBody.total,
+    _cash: receiptBody.cash,
+    _change: receiptBody.change,
     _orders: items,
     _tip: tip,
     _tax: receiptBody.tax,

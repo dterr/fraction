@@ -4,14 +4,18 @@ import express from "express";
 import { billRouter } from "./bill.routes";
 import { connectToDatabase } from "./database";
 import ReceiptModel, { default as Receipt } from "./receipt";
+import { Bill, Item } from "./bill"
 
 import { getOCR, convertOCRToBill } from "./helpers";
 import multer from 'multer';
+
+var path = require('path')
 
 // Load environment variables from the .env file, where the ATLAS_URI is configured
 dotenv.config();
 
 const { ATLAS_URI } = process.env;
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 if (!ATLAS_URI) {
    console.error("No ATLAS_URI environment variable has been defined in config.env");
@@ -25,16 +29,15 @@ var mongoose = require('mongoose');
 mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
    .then(() => {
        const app = express();
+       
        app.use(cors());
 
        app.use("/bills", billRouter);
 
-       let port = parseInt("5000");
+       let port = parseInt("3000");
        if (port == null || String(port) == "") {
          port = 5200;
        }
-
-       var path = require('path')
 
        const multer = require('multer')
          const storage = multer.diskStorage({
@@ -49,50 +52,44 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
        app.post('/api/receipt', upload.single('file'), async (req: express.Request, res: express.Response) => {
          try {
-            //const { filePath, tip, phoneNumber } = req.body;
-            const file = req.file;
-            const tip = 1; //TODO GET TIP
-            const filePath = file ? file.path : "server/src/upload/test.png";
-            console.log("Filepath!", filePath);
-
-            let bill;
-       
-            // Send receipt for OCR and get text body of receipt
-            //const receiptBody = getOCR(3000, filePath).then();
-            //console.log(receiptBody);
             
+            const file = req.file;
+            const tip = req.body.tip; //TODO GET TIP
+            const filePath = file ? file.path : "server/src/upload/test.png";
+        
+            // Send receipt for OCR and get text body of receipt                        
             const receiptBody = await getOCR(3000, filePath);
-            bill = convertOCRToBill(receiptBody, tip);
-            console.log("\n\n\n\n", bill);
+            const bill = convertOCRToBill(receiptBody, tip);
 
             // TODO get username on the front end
             // Save receipt to database
             const newReceipt = new ReceiptModel({
                   creatorName: req.body.name,
-                  establishment: "McDonalds",
-                  total: 100,
+                  establishment: bill._store,
+                  total: bill._total,
                   subtotal: bill._subTotal,
-                  cash: 0,
-                  change: 0,
+                  cash: bill._cash,
+                  change: bill._change,
                   tax: bill._tax,
                   tip: bill._tip,
                   currency: "USD",
-                  lineItems: bill._orders.map((item) => ({
-                  lineTotal: item._total,
-                  desc: item._name,
-                  qty: item._quantity,
-                  price: item._price,
-                  unit: "item",
-                  payers: bill._payees ? bill._payees.map((payee) => payee._name) : [],
-                  })),
+                  lineItems: bill._orders.map((item: Item) => ({
+                     lineTotal: item._totalPrice,
+                     desc: item._desc,
+                     qty: item._qty,
+                     price: item._pricePerItem,
+                     unit: "item",
+                     payers: bill._payees ? bill._payees.map((payee) => payee._name) : [],
+                     })),
                });
 
-            console.log("About to save: %O",newReceipt);
+               console.log("%cAbout to save the following: ", "color:red;font-size:50;");
+               console.log("%O", newReceipt);
 
             await newReceipt.save();
 
             // Return response with success message
-            res.status(200).json({ message: "Receipt processed successfully!" });
+            res.status(200).json({ message: "Receipt processed successfully!" , receipt: newReceipt });
           } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Error processing receipt" });
@@ -166,9 +163,30 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
            console.log(`Server running at http://localhost:${port}...`);
        });
 
+
+       /* Dominic's Note
+       * I'm not really sure what I'm doing down here. I'm trying to have it automatically
+       * redirect to the App.js file when we refresh the page. I was reading stuff about
+       * needing to use webpack and index.html but I didn't really get it so will continue
+       * to hardcode it to index.js
+       */
+       // // Serve the static files generated by the `npm run build` command
+      app.use(express.static(path.join(__dirname, '..', '..', 'frontend-react-draft', 'build')));
+
+      // // Redirect to the homepage when the root URL is accessed
+      // app.get('/', function (req, res) {
+      //   res.redirect('/home');
+      // });
+
+      // // Serve the homepage
+      // app.get('/home', function (req, res) {
+      //   res.sendFile(path.join(__dirname, '..', '..', 'frontend-react-draft', 'build', 'index.html'));
+      // });
+
        app.get('/', function (req, res) {
-        // res.render('index', {});
-        res.status(201).send("Hello");
+        //res.redirect(FRONTEND_URL);
+        res.sendFile(path.join(__dirname, '..', '..', 'frontend-react-draft', 'src', 'index.js'));
+        //res.status(201).send("Return to home screen");
       });
 
    })
