@@ -29,7 +29,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
        app.use("/bills", billRouter);
 
-       let port = parseInt("3000");
+       let port = parseInt("5000");
        if (port == null || String(port) == "") {
          port = 5200;
        }
@@ -56,7 +56,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             console.log("Filepath!", filePath);
 
             let bill;
-        
+       
             // Send receipt for OCR and get text body of receipt
             //const receiptBody = getOCR(3000, filePath).then();
             //console.log(receiptBody);
@@ -90,6 +90,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             console.log("About to save: %O",newReceipt);
 
             await newReceipt.save();
+
             // Return response with success message
             res.status(200).json({ message: "Receipt processed successfully!" });
           } catch (error) {
@@ -101,20 +102,31 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
       // Queries database for a receipt of a given name
       // It queries for the user who presses the submit button
       // Request.body has receiptID and map of string to boolean
-      app.post('/receipt/claimItems', function(request, response) {
-         console.log("Received request" + JSON.stringify(request.body));
-         Receipt.findOne({creatorName: request.body.receiptID})
+      app.post('/receipt/claimItems/:json', function(request, response) {
+        var json = JSON.parse(request.params.json);
+         console.log("Received request for claim items " + JSON.stringify(json));
+         ReceiptModel.findOne({_id: new mongoose.Types.ObjectId(json.receiptID)})
            .select("creatorName lineItems")
            .then(function (receipt) {
              if (!receipt) {
-               console.log("Could not find receipt with id: " + request.body.receiptID);
+               console.log("Could not find receipt with id: " + json.receiptID);
                response.status(400).send('Receipt not found');
                return;
              }
-             for (let i = 0; i < receipt.lineItems.length; i++) {
-               if (request.body.items[receipt.lineItems[i].desc]) {
-                 receipt.lineItems[i].payers.push(request.body.user);
-               }
+             for (let i = 0; i < json.items.length; i++) {
+              if (json.items[i].isChecked) {
+                console.log("Item: " + json.items[i].desc + " is checked");
+                for(var j = 0; j < receipt.lineItems.length; j++) {
+                  if (receipt.lineItems[j].desc === json.items[i].desc && !receipt.lineItems[j].payers.includes(json.user))
+                    receipt.lineItems[j].payers.push(json.user);
+                }
+              } else {
+                console.log("Item: " + json.items[i].desc + " is not checked");
+                for(var j = 0; j < receipt.lineItems.length; j++) {
+                  if (receipt.lineItems[j].desc === json.items[i].desc && receipt.lineItems[j].payers.includes(json.user))
+                    receipt.lineItems[j].payers = receipt.lineItems[j].payers.filter((value, index, arr) => value !== json.user);
+                }
+              }
              }
              receipt.save();
              response.status(200).send(receipt);
@@ -125,20 +137,26 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
            });
        });
          
-       app.get('/receipt/listItems/:receiptID', function(request, response) {
-         var id = request.params.receiptID;
-         if (id === "" || !request.params.receiptID) {
+       app.get('/receipt/listItems/:json', function(request, response) {
+         //console.log("Received request for list items: " + request.params.json);
+         var json = JSON.parse(request.params.json);
+         var id = json.receiptID;
+         var username = json.user;
+         if (id === "" || !request.params.json) {
            response.status(401).send("List items request was not given a receipt ID");
            return;
          }
-         Receipt.find({_id: id}).select("_id lineItems").then(function (receipt) {
+         Receipt.findOne({_id: new mongoose.Types.ObjectId(id)}).select("_id lineItems").then(function (receipt) {
             if (!receipt) {
                console.log("Could not find receipt with id: " + request.body.receiptID);
                response.status(400).send('Receipt not found');
                return;
             } else {
-             console.log(JSON.stringify(receipt));
-             response.status(200).send(receipt);
+             var lineItemsList = new Array();
+             for (var item of receipt.lineItems) {
+              lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username)});
+             }
+             response.status(200).send({lineItems: lineItemsList});
            }
          });
       });
@@ -154,4 +172,4 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
       });
 
    })
-   .catch(error => console.error(error));
+   .catch(error => console.error("Didn't connect to Mongo" + error));
