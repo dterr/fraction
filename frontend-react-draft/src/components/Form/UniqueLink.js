@@ -6,9 +6,8 @@ function UniqueLink({link}) {
 
     return (
         <div>
-            <p>{link}</p>
-            <button onClick={() =>  navigator.clipboard.writeText(link)} >
-            Copy
+            <button id="unique-link" onClick={() =>  navigator.clipboard.writeText(link)} >
+            {link}
             </button>
         </div>
     );
