@@ -61,7 +61,6 @@ function DominicForm() {
             console.log("Successful upload", res);
             setLink(res.data.link);
             setPage({page:page + 1});
-            console.log(page, link);
             cleanForm();
           }).catch();
     }
@@ -73,11 +72,9 @@ function DominicForm() {
             {page < 3 &&
                 <button id="next-button"
                     onClick={() => {
-                        console.log("next button clicked", page);
                         if (page == 0) {
                             if (data.image == '') {
-                                //alert('You must upload an image');
-                                setPage(page + 1);
+                                alert('You must upload an image');
                                 return
                             } else {
                                 setPage(page + 1);
