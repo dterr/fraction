@@ -9,13 +9,17 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+var name = "";
+function updateUsername(user_login) {
+  name = user_login;
+}
 root.render(
   <BrowserRouter>
     <Routes>
       <Route exact path="/page3/" element={<Page3/>} />
-      <Route path="/page4/" element={<Page4/>} />
+      <Route path="/page4/" element={<Page4 username={name}/>} />
       <Route path="/page6/" element={<Page6/>} />
-      <Route exact path="/" element={<App/>} />
+      <Route exact path="/" element={<App username = {name} sendBack={updateUsername}/>} />
     </Routes>
   </BrowserRouter>
 );
