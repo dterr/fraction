@@ -39,17 +39,22 @@ function DominicForm() {
         } else if (page == 2) {
             return <TipPrompt data={data} setData={setData}/>
         } else if (page == 3) {
-            return <p>Thank you, please wait while your receipt processes.</p>
+            return <div>
+                        <p>Thank you, please wait while your receipt processes.</p>
+                        <div className="loading">. . .</div>
+                    </div>
         } else {
             return <UniqueLink link={link}/>
         }
     }
     const uploadForm = () => {
         const imageUp = new FormData();
+
+        imageUp.append("test",true); // Test Flag
         imageUp.append("file", data.image);
         imageUp.append("name",data.name); 
         imageUp.append("tip",data.tip);
-        //imageUp.append("test",true);
+        
         setPage(page + 1);
         console.log("Upload Form", page);
         axios.post("/api/receipt", imageUp).then(res => {
