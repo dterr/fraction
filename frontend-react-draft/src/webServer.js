@@ -2,7 +2,6 @@ const express = require('express');
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const axios = require('axios');
-
 // const helpers = require('frontend-react-draft/server/src/helpers.ts');
 // const { convertOCRToBill } = require('../server/src/helpers.ts');
 // const processReceipt = require('./processReceipt.js');
