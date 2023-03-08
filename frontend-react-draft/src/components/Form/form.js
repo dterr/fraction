@@ -4,6 +4,7 @@ import { useState } from 'react';
 import ImgUpload from './ImgUpload';
 import NamePrompt from './NamePrompt';
 import TipPrompt from './TipPrompt';
+import UniqueLink from './UniqueLink';
 
 import "./form.css";
 
@@ -14,6 +15,7 @@ function DominicForm() {
         tip: '',
         image: '',
     });
+    const [link, setLink] = useState('');
 
     const formTitles = [
         'Upload your receipt here',
@@ -36,8 +38,10 @@ function DominicForm() {
             return <NamePrompt data={data} setData={setData}/>
         } else if (page == 2) {
             return <TipPrompt data={data} setData={setData}/>
+        } else if (page == 3) {
+            return <p>Thank you, please wait while your receipt processes.</p>
         } else {
-            return <p>Thanks!</p>
+            return <UniqueLink link={link}/>
         }
     }
     const uploadForm = () => {
@@ -45,9 +49,14 @@ function DominicForm() {
         imageUp.append("file", data.image);
         imageUp.append("name",data.name); 
         imageUp.append("tip",data.tip);
-
+        //imageUp.append("test",true);
+        setPage(page + 1);
+        console.log("Upload Form", page);
         axios.post("/api/receipt", imageUp).then(res => {
             console.log("Successful upload", res);
+            setLink(res.data.link);
+            setPage({page:page + 1});
+            console.log(page, link);
             cleanForm();
           }).catch();
     }
@@ -56,9 +65,10 @@ function DominicForm() {
         <div>
             <p>{formTitles[page]}</p>
             {pageFlow()}
-            {page != 3 &&
+            {page < 3 &&
                 <button id="next-button"
                     onClick={() => {
+                        console.log("next button clicked", page);
                         if (page == 0) {
                             if (data.image == '') {
                                 //alert('You must upload an image');
