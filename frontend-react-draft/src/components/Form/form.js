@@ -7,7 +7,7 @@ import TipPrompt from './TipPrompt';
 
 import "./form.css";
 
-function DominicForm() {
+function DominicForm({ sendBack }) {
     const [page, setPage] = useState(0);
     const [data, setData] = useState({
         name: '',
@@ -66,16 +66,18 @@ function DominicForm() {
                                 return
                             } else {
                                 setPage(page + 1);
-                                console.log(data);
                             }
                         } else if (page == 1) {
                             if (data.name == '') {
                                 alert('You must have a name!');
                                 return;
                             } else {
+                                sendBack(data.name);
+                                console.log(data);
                                 setPage(page + 1);
                             }
                         } else if (page == 2) {
+                            console.log(data);
                             if (data.tip == '') {
                                 setData({tip: 0});
                             }
