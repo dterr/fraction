@@ -5,6 +5,7 @@ import { billRouter } from "./bill.routes";
 import { connectToDatabase } from "./database";
 import ReceiptModel, { default as Receipt } from "./receipt";
 import { Bill, Item } from "./bill"
+import ObjectId from "mongodb";
 
 import { getOCR, convertOCRToBill } from "./helpers";
 import multer from 'multer';
@@ -56,6 +57,11 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             const file = req.file;
             const tip = req.body.tip; //TODO GET TIP
             const filePath = file ? file.path : "server/src/upload/test.png";
+
+            if (req.body.test) {
+              console.log("Test run detected, skipping OCR . . .", req.body.test);
+              res.status(200).json({ message: `Receipt processed without OCR`, link: `https://fifteen.herokuapp.com/bills/test1`});
+            } else  {
         
             // Send receipt for OCR and get text body of receipt                        
             const receiptBody = await getOCR(3000, filePath);
@@ -87,10 +93,11 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
                console.log("%cAbout to save the following: ", "color:red;font-size:50;");
                console.log("%O", newReceipt);
 
-            await newReceipt.save();
-
+            const result = await newReceipt.save();
+            console.log("Successfully saved. Here is the receipt: %O", result.id);
             // Return response with success message
-            res.status(200).json({ message: "Receipt processed successfully!" , receipt: newReceipt });
+            res.status(200).json({ message: `Receipt processed successfully!`, link: `https://fifteen.herokuapp.com/bills/${result.id}`});
+            }
           } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Error processing receipt" });
