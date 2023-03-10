@@ -1,1 +1,1 @@
-web: chmod u+x runServer.sh && ./runServer.sh
+web: npm start-full
