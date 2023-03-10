@@ -1,1 +1,1 @@
-web: npm run start-full
+web: npx ts-node server/src/server.ts
