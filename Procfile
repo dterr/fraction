@@ -1,1 +1,1 @@
-web: npx ts-node server/src/server.ts
+web: chmod u+x runServer.sh && ./runServer.sh
