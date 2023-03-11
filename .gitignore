@@ -6,4 +6,4 @@ npm-debug.log
 */package-lock.json
 server/src/uploads/
 package-lock.json
-build/
+/build/
