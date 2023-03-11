@@ -98,7 +98,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             const result = await newReceipt.save();
             console.log("Successfully saved. Here is the receipt: %O", result.id);
             // Return response with success message
-            res.status(200).json({ message: `Receipt processed successfully!`, link: `https://fifteen.herokuapp.com/bills/${result.id}`});
+            res.status(200).json({ message: `Receipt processed successfully!`, link: `https://fifteen.herokuapp.com/page4/${result.id}`});
             }
           } catch (error) {
             console.error(error);

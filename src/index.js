@@ -14,7 +14,7 @@ root.render(
   <BrowserRouter>
     <Routes>
       <Route exact path="/page3/" element={<Page3/>} />
-      <Route path="/page4/" element={<Page4/>} />
+      <Route path="/page4/:id" element={<Page4/>} />
       <Route path="/page5/" element={<Page5/>} />
       <Route path="/page6/" element={<Page6/>} />
       <Route exact path="/" element={<App/>} />
