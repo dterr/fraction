@@ -10,7 +10,7 @@ THe Homepage of our Wiki contains information about our product and team and ser
 ## Git Source Control Assignment
 Below is my name for the Git Source Control assigment. <br>
 Clemente Farias Canepa <br>
-[Dominic Reynaldo Terrones](./dom.com) <br>
+Dominic Reynaldo Terrones<br>
 Clarisse Hokia <br>
 Cat Fergesen <br>
 ## Stack
@@ -23,13 +23,17 @@ MERN
 
 
 ## Getting it running
-First thing is to make sure that the `.env` file lives in /server (and not /server/src).
+First thing is to make sure that the `.env` file lives in root.
 Populate that file with the tokens Jacob emailed us. We have a `dotenv` package that takes care of everything else.
 Also! Make sure you have all the dependencies installed
 ```
-cd server/src
 npm install
 ```
+
+Then run
+`npm run start-full`
+
+If that doesn't work, for some reason, then follow the instructions below and troubleshoot.
 
 1. Terminal Tab 1
 ```
