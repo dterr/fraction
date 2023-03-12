@@ -10,7 +10,8 @@ class Page5 extends React.Component {
     this.state = {
       receipt: null,
       buttonText: "",
-      timerID: null
+      timerID: null,
+      username: ""
     }
   }
 
@@ -18,6 +19,7 @@ class Page5 extends React.Component {
     const url = new URL(window.location.href);
     const urlSearch = new URLSearchParams(url.search);
     const username = urlSearch.get("username");
+    this.setState({ username: username })
     this.fetchData(username);
     const timerID = setInterval(() => {
       this.fetchData(username);
@@ -51,9 +53,9 @@ class Page5 extends React.Component {
       this.setState({receipt:receipt});
       this.setState({buttonText:text});
 
-      if(!receipt.isOpen){
+      if(receipt.isClosed){
         clearInterval(this.state.timerID);
-        //TODO: add automatic transition to page 6
+        window.location.assign("/page6");
       }
     });
   }
@@ -72,9 +74,18 @@ class Page5 extends React.Component {
                 {instruction}
                 <br></br>
                 <br></br>
-                <a href="/page6/">
-                    <button>{this.state.buttonText}</button>
-                </a>
+                {this.state.username === this.state.receipt?.creatorName && !this.state.receipt?.isClosed && 
+                <header>
+                    <button onClick={() => {
+                      axios.post('http://localhost:5000/receipt/status/' + JSON.stringify({receiptID: "63ff96c42670dc6a57886bc0", isClosed: true}));
+                    }}>{this.state.buttonText}</button>
+                </header>
+                }
+                {this.state.username !== this.state.receipt?.creatorName && !this.state.receipt?.isClosed && 
+                <header>
+                    {this.state.buttonText}
+                </header>
+                }
               </header>
           </div>
     );

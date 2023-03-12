@@ -31,7 +31,7 @@ const lineItemSchema = new mongoose.Schema({
 });
 
 interface Receipt {
-  isOpen: boolean;
+  isClosed: boolean;
   creatorName: string;
   establishment: string;
   total: number;
@@ -45,7 +45,7 @@ interface Receipt {
 }
 
 const receiptSchema = new mongoose.Schema({
-  isOpen:  {
+  isClosed:  {
     type: Boolean,
     required: true
   },

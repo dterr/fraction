@@ -72,7 +72,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             // TODO get username on the front end
             // Save receipt to database
             const newReceipt = new ReceiptModel({
-                  isOpen: true,
+                  isClosed: false,
                   creatorName: req.body.name,
                   establishment: bill._store,
                   total: bill._total,
@@ -143,6 +143,28 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
              response.status(500).send('Error occurred while processing the request');
            });
        });
+
+      // Changes the status of receipt.isClosed
+      app.post('/receipt/status/:json', function(request, response) {
+        var json = JSON.parse(request.params.json);
+        console.log("Changing status of " + JSON.stringify(json));
+        ReceiptModel.findOne({_id: new mongoose.Types.ObjectId(json.receiptID)})
+          .select("isClosed")
+          .then(function (receipt) {
+            if (!receipt) {
+              console.log("Could not find receipt with id: " + json.receiptID);
+              response.status(400).send('Receipt not found');
+              return;
+            }
+            receipt.isClosed = json.isClosed
+            receipt.save();
+            response.status(200).send(receipt);
+          })
+          .catch(function (err: Error) {
+            console.log(err);
+            response.status(500).send('Error occurred while processing the request');
+          });
+      });
          
        app.get('/receipt/listItems/:json', function(request, response) {
          //console.log("Received request for list items: " + request.params.json);
@@ -153,7 +175,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
            response.status(401).send("List items request was not given a receipt ID");
            return;
          }
-         Receipt.findOne({_id: new mongoose.Types.ObjectId(id)}).select("_id lineItems isOpen creatorName").then(function (receipt) {
+         Receipt.findOne({_id: new mongoose.Types.ObjectId(id)}).select("_id lineItems isClosed creatorName").then(function (receipt) {
             if (!receipt) {
                console.log("Could not find receipt with id: " + request.body.receiptID);
                response.status(400).send('Receipt not found');
@@ -163,7 +185,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
              for (var item of receipt.lineItems) {
               lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username), payers: item.payers});
              }
-             response.status(200).send({lineItems: lineItemsList, isOpen: receipt.isOpen, creatorName: receipt.creatorName});
+             response.status(200).send({lineItems: lineItemsList, isClosed: receipt.isClosed, creatorName: receipt.creatorName});
            }
          });
       });
