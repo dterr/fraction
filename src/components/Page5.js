@@ -1,11 +1,61 @@
 import './App.css';
 //import { Link } from 'react-router-dom';
 import React from 'react';
+import axios from 'axios';
 //import Page6 from './Page6';
 
 class Page5 extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      receipt: null,
+      buttonText: "",
+      timerID: null
+    }
+  }
+
+  componentDidMount() {
+    const url = new URL(window.location.href);
+    const urlSearch = new URLSearchParams(url.search);
+    const username = urlSearch.get("username");
+    this.fetchData(username);
+    const timerID = setInterval(() => {
+      this.fetchData(username);
+    }, 5000)
+    this.setState({timerID:timerID});
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.state.timerID);
+  }
+
+  fetchData(username) {
+    // TODO: only show button for the primary user
+    let promise = axios.get('http://localhost:5000/receipt/listItems/' + JSON.stringify({receiptID: "63ff96c42670dc6a57886bc0"}));
+    promise.then(({data: receipt}) => {
+      let usersList = [];
+      for (var elem of receipt.lineItems) {
+        for (var person of elem.payers) {
+          if (!usersList.includes(person)) {
+            usersList.push(person);
+          }
+        }
+      }
+      let text = '';
+      if (receipt.creatorName === username) {
+        text = "Click this button once everyone has finished selecting their orders.";
+      } else if (!usersList.includes(username)) {
+        text = "error: name not recognized";
+      }
+
+      this.setState({receipt:receipt});
+      this.setState({buttonText:text});
+
+      if(!receipt.isOpen){
+        clearInterval(this.state.timerID);
+        //TODO: add automatic transition to page 6
+      }
+    });
   }
   
   render() {
@@ -23,7 +73,7 @@ class Page5 extends React.Component {
                 <br></br>
                 <br></br>
                 <a href="/page6/">
-                    <button>{buttonText}</button>
+                    <button>{this.state.buttonText}</button>
                 </a>
               </header>
           </div>

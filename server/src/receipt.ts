@@ -31,6 +31,8 @@ const lineItemSchema = new mongoose.Schema({
 });
 
 interface Receipt {
+  isOpen: boolean;
+  creatorName: string;
   establishment: string;
   total: number;
   subtotal: number;

@@ -37,7 +37,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
        app.use("/bills", billRouter);
 
-       let port = parseInt("3000");
+       let port = parseInt("5000");
        if (port == null || String(port) == "") {
          port = 5200;
        }
@@ -153,7 +153,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
            response.status(401).send("List items request was not given a receipt ID");
            return;
          }
-         Receipt.findOne({_id: new mongoose.Types.ObjectId(id)}).select("_id lineItems").then(function (receipt) {
+         Receipt.findOne({_id: new mongoose.Types.ObjectId(id)}).select("_id lineItems isOpen creatorName").then(function (receipt) {
             if (!receipt) {
                console.log("Could not find receipt with id: " + request.body.receiptID);
                response.status(400).send('Receipt not found');
@@ -161,9 +161,9 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             } else {
              var lineItemsList = new Array();
              for (var item of receipt.lineItems) {
-              lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username)});
+              lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username), payers: item.payers});
              }
-             response.status(200).send({lineItems: lineItemsList});
+             response.status(200).send({lineItems: lineItemsList, isOpen: receipt.isOpen, creatorName: receipt.creatorName});
            }
          });
       });

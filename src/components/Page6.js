@@ -34,10 +34,10 @@ class Page6 extends React.Component {
         }
       }
     }
-    // add tip to amounts
+    // add tip and tax to amounts
     for (const payer of Object.keys(payers)) {
-      var tipAmount = (payers[payer] / test_bill.subtotal) * test_bill.tip;
-      payers[payer] += tipAmount;
+      var taxTipAmount = (payers[payer] / test_bill.subtotal) * (test_bill.tip + test_bill.tax);
+      payers[payer] += taxTipAmount;
       payers[payer] = Math.round((payers[payer] + Number.EPSILON) * 100) / 100;
     }
 
