@@ -175,7 +175,8 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
            response.status(401).send("List items request was not given a receipt ID");
            return;
          }
-         Receipt.findOne({_id: new mongoose.Types.ObjectId(id)}).select("_id lineItems isClosed creatorName").then(function (receipt) {
+
+         Receipt.findOne({_id: new mongoose.Types.ObjectId(id)}).select("_id isClosed creatorName establishment total subtotal tax tip lineItems").then(function (receipt) {
             if (!receipt) {
                console.log("Could not find receipt with id: " + request.body.receiptID);
                response.status(400).send('Receipt not found');
@@ -183,9 +184,9 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             } else {
              var lineItemsList = new Array();
              for (var item of receipt.lineItems) {
-              lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username), payers: item.payers});
+              lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username), payers: item.payers, qty:item.qty, price:item.price,});
              }
-             response.status(200).send({lineItems: lineItemsList, isClosed: receipt.isClosed, creatorName: receipt.creatorName});
+             response.status(200).send({lineItems: lineItemsList, isClosed: receipt.isClosed, creatorName: receipt.creatorName, establishment: receipt.establishment, total: receipt.total, subtotal: receipt.subtotal, tax: receipt.tax, tip: receipt.tip});
            }
          });
       });

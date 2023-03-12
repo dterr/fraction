@@ -1,8 +1,6 @@
 import './App.css';
-//import { Link } from 'react-router-dom';
 import React from 'react';
 import axios from 'axios';
-//import Page6 from './Page6';
 
 class Page5 extends React.Component {
   constructor(props) {
@@ -32,7 +30,6 @@ class Page5 extends React.Component {
   }
 
   fetchData(username) {
-    // TODO: only show button for the primary user
     let promise = axios.get('http://localhost:5000/receipt/listItems/' + JSON.stringify({receiptID: "63ff96c42670dc6a57886bc0"}));
     promise.then(({data: receipt}) => {
       let usersList = [];
@@ -63,8 +60,7 @@ class Page5 extends React.Component {
   render() {
     const thanks = "Thanks for selecting your order!";
     const instruction = "Please wait while your friends finish selecting their orders.";
-    // TODO: only show this button for the primary user
-    const buttonText = "Click this button once everyone has finished selecting their orders."
+
     return (
           <div className="App">
               <header className="App-header">
