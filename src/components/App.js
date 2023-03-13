@@ -9,6 +9,7 @@ class App extends React.Component {
   
   constructor(props) {
     super(props);
+    this.sendToParent = this.props.sendBack;
     this.state = {
       uploadSuccess: false
     };
@@ -30,8 +31,10 @@ class App extends React.Component {
                   : )
                 </p>     
                 <div>
-                  <DominicForm/>
+                  <DominicForm sendBack={this.sendToParent} />
+                  
                 </div>   
+                {console.log(this.state.username)}
                   {this.state.uploadSuccess &&
                     <Link path="/Page4"/>
                   }
