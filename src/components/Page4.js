@@ -9,13 +9,14 @@ class Page4 extends React.Component {
     super(props);
     this.state = {
       nameboxValue: '',
-      username: '',
+      username: props.username,
       allItems: '',
       receiptID: '63ff96c42670dc6a57886bc0'
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleNameSubmit = this.handleNameSubmit.bind(this);
+    this.handleItemsSubmit = this.handleItemsSubmit.bind(this);
   }
 
   handleChange(event) {
@@ -53,7 +54,7 @@ class Page4 extends React.Component {
 
   renderItems() {
     if (this.state.allItems === "") { //&& this.state.receiptID !== "") {
-      var allItems = axios.get("http://localhost:5000/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
+      var allItems = axios.get("/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
       allItems.then(response => {
         this.setState({allItems: response.data.lineItems})
       }).catch(err => (err.status + ": Unable to get list items from receipt with id: " + this.state.receiptID));
@@ -69,7 +70,8 @@ class Page4 extends React.Component {
   }
 
   finishItemsSubmit(response) {
-    alert("Received response: " + JSON.stringify(response));
+    //alert("Received response: " + JSON.stringify(response));
+    console.log("Received response to items submit");
     return <redirect to="/page6/" />
   }
 
