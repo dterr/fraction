@@ -61,6 +61,7 @@ function DominicForm({ sendBack }) {
             console.log("Successful upload", res);
             setLink(res.data.link);
             setPage({page:page + 1});
+            sendBack(data.name);
             cleanForm();
           }).catch();
     }
@@ -84,8 +85,6 @@ function DominicForm({ sendBack }) {
                                 alert('You must have a name!');
                                 return;
                             } else {
-                                sendBack(data.name);
-                                console.log(data);
                                 setPage(page + 1);
                             }
                         } else if (page == 2) {
