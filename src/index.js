@@ -10,15 +10,15 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 function Index() {
-  const [username, setUserName] = React.useState(null);
+  const [usernameAndReceiptID, setUserNameAndReceiptID] = React.useState({username: '', receiptID: ''});
 
   return <BrowserRouter>
     <Routes>
       <Route exact path="/page3/" element={<Page3/>} />
       <Route path="/page5/" element={<Page5/>} />
-      <Route path="/page4/" element={<Page4 username={username}/>} />
+      <Route path="/page4/:id" element={<Page4 username={usernameAndReceiptID.username} />} />
       <Route path="/page6/" element={<Page6/>} />
-      <Route exact path="/" element={<App username={username} sendBack={setUserName}/>} />
+      <Route exact path="/" element={<App username={usernameAndReceiptID.username} sendBack={setUserNameAndReceiptID}/>} />
     </Routes>
   </BrowserRouter>
 }
