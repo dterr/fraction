@@ -11,9 +11,8 @@ class Page4 extends React.Component {
       nameboxValue: '',
       username: props.username,
       allItems: '',
-      receiptID: '63ff96c42670dc6a57886bc0'
+      receiptID: window.location.pathname.substring("/page4/".length) //Gets receipt ID from url
     };
-
     this.handleChange = this.handleChange.bind(this);
     this.handleNameSubmit = this.handleNameSubmit.bind(this);
     this.handleItemsSubmit = this.handleItemsSubmit.bind(this);
@@ -54,6 +53,7 @@ class Page4 extends React.Component {
 
   renderItems() {
     if (this.state.allItems === "") { //&& this.state.receiptID !== "") {
+      console.log("Getting receipt with id: " + this.state.receiptID);
       var allItems = axios.get("/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
       allItems.then(response => {
         this.setState({allItems: response.data.lineItems})
@@ -80,7 +80,7 @@ class Page4 extends React.Component {
     if (this.state.username === "") {
       alert('No username found');
     } else {
-      var submit = axios.post('http://localhost:5000/receipt/claimItems/' + JSON.stringify({receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username}));
+      var submit = axios.post('/receipt/claimItems/' + JSON.stringify({receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username}));
       submit.then(response => this.finishItemsSubmit(response)).catch(err => console.log(err));
     }
   }
