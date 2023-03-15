@@ -7,7 +7,7 @@ class Page6 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      receiptID: "63ff96c42670dc6a57886bc0",
+      receiptID: window.location.pathname.substring("/page6/".length),
       receipt: null,
       payersDict: {},
     }
@@ -18,7 +18,7 @@ class Page6 extends React.Component {
   }
 
   fetchData(receiptID) {
-    let promise = axios.get('http://localhost:5000/receipt/listItems/' + JSON.stringify({receiptID: receiptID}));
+    let promise = axios.get('/receipt/listItems/' + JSON.stringify({receiptID: receiptID}));
     promise.then(({data: receipt}) => {
       // calculations to display per-person totals based on the database given receipt ID
       // dictionary maps payers to per-person sum, before taxes and tip
@@ -27,7 +27,7 @@ class Page6 extends React.Component {
         var numPayers = line.payers.length;
         var eachAmount = 0;
         if (numPayers > 0) {
-          eachAmount = (line.price * line.qty) / numPayers; 
+          eachAmount = line.lineTotal / numPayers; 
         } 
         for (var person of line.payers) {
           if (person in payers) {

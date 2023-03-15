@@ -38,9 +38,6 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
        app.use("/bills", billRouter);
 
        let port = parseInt("5000");
-       if (port == null || String(port) == "") {
-         port = 5200;
-       }
 
        const multer = require('multer')
          const storage = multer.diskStorage({
@@ -66,7 +63,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             } else  {
         
             // Send receipt for OCR and get text body of receipt                        
-            const receiptBody = await getOCR(3000, filePath);
+            const receiptBody = await getOCR(30000, filePath);
             const bill = convertOCRToBill(receiptBody, tip);
 
             // TODO get username on the front end
@@ -184,7 +181,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             } else {
              var lineItemsList = new Array();
              for (var item of receipt.lineItems) {
-              lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username), payers: item.payers, qty:item.qty, price:item.price,});
+              lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username), payers: item.payers, qty:item.qty, price:item.price, lineTotal:item.lineTotal,});
              }
              response.status(200).send({lineItems: lineItemsList, isClosed: receipt.isClosed, creatorName: receipt.creatorName, establishment: receipt.establishment, total: receipt.total, subtotal: receipt.subtotal, tax: receipt.tax, tip: receipt.tip});
            }
