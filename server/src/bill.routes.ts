@@ -19,6 +19,7 @@ billRouter.use(fileUpload({
         abortOnLimit: true,
     }));
 
+// /bills POST
 billRouter.post("/", async (req, res) => {
    try {
        // Get the file that was set to our field named "image"
@@ -54,6 +55,7 @@ billRouter.post("/", async (req, res) => {
    }
 });
 
+// GET /bills/:id
 billRouter.get("/:id", async (req, res) => {
    try {
        const id = req?.params?.id;
@@ -62,11 +64,15 @@ billRouter.get("/:id", async (req, res) => {
 
        const payees = bill._payees;
 
+       // For every payee in payees, jsonify relevant info
        const payeeOrders = payees.map(function(payee, index){
          return (payee as Payee)._orders.map(i => (bill._orders[(i as number)] as Item)._desc)
        });
 
+       // Add tax and tip
        const taxAndTip: number = +bill._tax + +bill._tip;
+       // Split tax and tip between all payees
+       // proportionally based on order sizes
        const owedAmounts = payees.map(function(payee, index){
          let taxAndTipPortion = (payee._orderTotal as number) * taxAndTip / (bill._subTotal as number)
          return parseInt((+payee._orderTotal + +taxAndTipPortion).toFixed(2));
@@ -84,6 +90,7 @@ billRouter.get("/:id", async (req, res) => {
    }
 });
 
+// PUT /bills/:id
 billRouter.put("/:id", async (req, res) => {
    try {
 
@@ -93,6 +100,7 @@ billRouter.put("/:id", async (req, res) => {
 
        let orderTotal: number = 0
 
+       // Calculate order total
        req.body.orders.forEach(function(i,){
          orderTotal += ((bill._orders[i] as Item)._pricePerItem as number)
        });
@@ -121,10 +129,12 @@ billRouter.put("/:id", async (req, res) => {
    }
 });
 
+// DELETE /bills/:id
 billRouter.delete("/:id", async (req, res) => {
    try {
        const id = req?.params?.id;
        const query = { _id: new mongodb.ObjectId(id) };
+       // Delete bill from collection 
        const result = await collections.bills.deleteOne(query);
 
        if (result && result.deletedCount) {

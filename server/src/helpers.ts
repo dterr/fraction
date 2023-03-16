@@ -7,6 +7,7 @@ const axios = require('axios');
 
 dotenv.config();
 
+// Load ENV API_KEYS from twilio and tabscanner
 const { TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN, TWILIO_NUMBER, TABSCANNER_API_KEY } = process.env;
 const twilio_client = require('twilio')(TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN);
 
@@ -42,7 +43,13 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
   //ex: server/src/upload/test.png
   data.append('file', fs.createReadStream(filePath));
 
-  // View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-1
+  /*
+    Sends POST request to tabscanner server to submit an image.
+    Returns a token in response to then query for receipt results
+    once fully processed.
+
+    View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-1
+  */
   var config = {
     method: 'post',
     url: 'https://api.tabscanner.com/api/2/process',
@@ -59,7 +66,14 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
     console.log(error);
   });
 
-  // View TabScanner docs on results for more: https://docs.tabscanner.com/#documenter-4-2
+  /*
+    Sends GET request to tabscanner server to retrieve receipt results
+    by token id from POST response. We constantly ping the server
+    unti the response is a successful process.
+
+    View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-2
+  */
+
   var config2 = {
     method: 'get',
     url: `https://api.tabscanner.com/api/result/${token}`,
@@ -85,7 +99,23 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
   return receiptBody;
 }
 
-// View TabScanner docs on results for more: https://docs.tabscanner.com/#documenter-4-2
+/*
+  Processes receipt JSON from TabScanners into correct format for MongoDB.
+  Namely, we create a Bill object with the:
+    - store
+    - bill total
+    - cash
+    - change to be given
+    - tax
+    - tip
+    - subtotal
+    - all orders which is an array of Items
+
+  Items have the description, quanitity, price per
+  item (with a transform), and total price of item
+
+  View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-2
+*/
 export function convertOCRToBill(receiptBody: any, tip: Number): Bill {
   console.log("%cThis is what the OCR returns: ", "color:red;font-size:50;");
   console.log("%O", receiptBody);
@@ -115,7 +145,12 @@ export function convertOCRToBill(receiptBody: any, tip: Number): Bill {
   return bill
 }
 
-// Sends SMS with link to specific receipt
+/*
+  Sends SMS with link to specific recipient.
+  TWILIO has approved us with a TOLL-FREE Number
+  to use for texting phone numbers to improve
+  payee user flow
+*/
 export async function sendSMS(phoneNumber: String, link: String) {
   await twilio_client.messages
    .create({
