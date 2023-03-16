@@ -37,10 +37,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
        app.use("/bills", billRouter);
 
-       let port = parseInt("3000");
-       if (port == null || String(port) == "") {
-         port = 5200;
-       }
+       let port = parseInt("5000");
 
        const multer = require('multer')
          const storage = multer.diskStorage({
@@ -66,13 +63,13 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             } else  {
         
             // Send receipt for OCR and get text body of receipt                        
-            const receiptBody = await getOCR(3000, filePath);
+            const receiptBody = await getOCR(30000, filePath);
             const bill = convertOCRToBill(receiptBody, tip);
 
             // TODO get username on the front end
             // Save receipt to database
             const newReceipt = new ReceiptModel({
-                  isOpen: true,
+                  isClosed: false,
                   creatorName: req.body.name,
                   establishment: bill._store,
                   total: bill._total,
@@ -98,7 +95,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             const result = await newReceipt.save();
             console.log("Successfully saved. Here is the receipt: %O", result.id);
             // Return response with success message
-            res.status(200).json({ message: `Receipt processed successfully!`, link: `https://fifteen.herokuapp.com/bills/${result.id}`});
+            res.status(200).json({ message: `Receipt processed successfully!`, link: `https://fifteen.herokuapp.com/page4/${result.id}`});
             }
           } catch (error) {
             console.error(error);
@@ -143,6 +140,28 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
              response.status(500).send('Error occurred while processing the request');
            });
        });
+
+      // Changes the status of receipt.isClosed
+      app.post('/receipt/status/:json', function(request, response) {
+        var json = JSON.parse(request.params.json);
+        console.log("Changing status of " + JSON.stringify(json));
+        ReceiptModel.findOne({_id: new mongoose.Types.ObjectId(json.receiptID)})
+          .select("isClosed")
+          .then(function (receipt) {
+            if (!receipt) {
+              console.log("Could not find receipt with id: " + json.receiptID);
+              response.status(400).send('Receipt not found');
+              return;
+            }
+            receipt.isClosed = json.isClosed
+            receipt.save();
+            response.status(200).send(receipt);
+          })
+          .catch(function (err: Error) {
+            console.log(err);
+            response.status(500).send('Error occurred while processing the request');
+          });
+      });
          
        app.get('/receipt/listItems/:json', function(request, response) {
          //console.log("Received request for list items: " + request.params.json);
@@ -153,7 +172,8 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
            response.status(401).send("List items request was not given a receipt ID");
            return;
          }
-         Receipt.findOne({_id: new mongoose.Types.ObjectId(id)}).select("_id lineItems").then(function (receipt) {
+
+         Receipt.findOne({_id: new mongoose.Types.ObjectId(id)}).select("_id isClosed creatorName establishment total subtotal tax tip lineItems").then(function (receipt) {
             if (!receipt) {
                console.log("Could not find receipt with id: " + request.body.receiptID);
                response.status(400).send('Receipt not found');
@@ -161,9 +181,9 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             } else {
              var lineItemsList = new Array();
              for (var item of receipt.lineItems) {
-              lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username)});
+              lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username), payers: item.payers, qty:item.qty, price:item.price, lineTotal:item.lineTotal,});
              }
-             response.status(200).send({lineItems: lineItemsList});
+             response.status(200).send({lineItems: lineItemsList, isClosed: receipt.isClosed, creatorName: receipt.creatorName, establishment: receipt.establishment, total: receipt.total, subtotal: receipt.subtotal, tax: receipt.tax, tip: receipt.tip});
            }
          });
       });

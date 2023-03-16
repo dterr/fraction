@@ -28,10 +28,9 @@ Populate that file with the tokens Jacob emailed us. We have a `dotenv` package 
 Also! Make sure you have all the dependencies installed
 ```
 npm install
+npm build
+npm run start-full
 ```
-
-Then run
-`npm run start-full`
 
 If that doesn't work, for some reason, then follow the instructions below and troubleshoot.
 

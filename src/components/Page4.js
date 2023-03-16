@@ -9,13 +9,13 @@ class Page4 extends React.Component {
     super(props);
     this.state = {
       nameboxValue: '',
-      username: '',
+      username: props.username,
       allItems: '',
-      receiptID: '63ff96c42670dc6a57886bc0'
+      receiptID: window.location.pathname.substring("/page4/".length) //Gets receipt ID from url
     };
-
     this.handleChange = this.handleChange.bind(this);
     this.handleNameSubmit = this.handleNameSubmit.bind(this);
+    this.handleItemsSubmit = this.handleItemsSubmit.bind(this);
   }
 
   handleChange(event) {
@@ -53,7 +53,8 @@ class Page4 extends React.Component {
 
   renderItems() {
     if (this.state.allItems === "") { //&& this.state.receiptID !== "") {
-      var allItems = axios.get("http://localhost:5000/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
+      console.log("Getting receipt with id: " + this.state.receiptID);
+      var allItems = axios.get("/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
       allItems.then(response => {
         this.setState({allItems: response.data.lineItems})
       }).catch(err => (err.status + ": Unable to get list items from receipt with id: " + this.state.receiptID));
@@ -69,8 +70,9 @@ class Page4 extends React.Component {
   }
 
   finishItemsSubmit(response) {
-    alert("Received response: " + JSON.stringify(response));
-    return <redirect to="/page6/" />
+    //alert("Received response: " + JSON.stringify(response));
+    console.log("Received response to items submit");
+    window.location.assign("/page5/" + this.state.receiptID + "?username=" + this.state.username);
   }
 
   //Assuming all items are stored in this.state.items
@@ -78,7 +80,7 @@ class Page4 extends React.Component {
     if (this.state.username === "") {
       alert('No username found');
     } else {
-      var submit = axios.post('http://localhost:5000/receipt/claimItems/' + JSON.stringify({receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username}));
+      var submit = axios.post('/receipt/claimItems/' + JSON.stringify({receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username}));
       submit.then(response => this.finishItemsSubmit(response)).catch(err => console.log(err));
     }
   }
