@@ -75,6 +75,28 @@ Make sure you do it in this order, or else you might get an error about an occup
 2. OCR (Optical Character Recognition): [TabScanner API](https://tabscanner.com/)
 3. SMS Texting: [Twilio API](https://www.twilio.com/en-us/messaging/channels/sms)
 
+## Dependencies
+    @testing-library/jest-dom: ^5.16.5,
+    @testing-library/react: ^13.4.0,
+    @testing-library/user-event: ^13.5.0,
+    axios: ^1.3.4,
+    concurrently: ^7.6.0,
+    cors: ^2.8.5,
+    dotenv: ^16.0.3,
+    express: ^4.18.2,
+    express-fileupload: ^1.4.0,
+    form-data: ^4.0.0,
+    jest: ^27.5.1,
+    mongodb: ^5.0.0,
+    mongoose: ^7.0.2,
+    multer: ^1.4.5-lts.1,
+    react: ^18.2.0,
+    react-dom: ^18.2.0,
+    react-router-dom: ^6.8.1,
+    react-scripts: 5.0.1,
+    twilio: ^3.84.1,
+    web-vitals: ^2.1.4
+
 ## React
 
 1. test: npm react-scripts test
