@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+// Line Item interface
 interface LineItem {
   lineTotal: number;
   desc: string;
@@ -9,6 +10,7 @@ interface LineItem {
   payers: string[];
 }
 
+// Schema for line item within a receipt
 const lineItemSchema = new mongoose.Schema({
   lineTotal: {
     type: Number,
@@ -30,6 +32,7 @@ const lineItemSchema = new mongoose.Schema({
   },
 });
 
+// Receipt interface
 interface Receipt {
   isClosed: boolean;
   creatorName: string;
