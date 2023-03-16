@@ -49,7 +49,7 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
     headers: {
      'apikey': TABSCANNER_API_KEY
     },
-    params: { region: 'us', documentType: 'receipt', },
+    params: { region: 'us', documentType: 'receipt', defaultDateParsing: 'm/d', cents: false},
     data : data
   };
 
