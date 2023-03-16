@@ -9,6 +9,7 @@ THe Homepage of our Wiki contains information about our product and team and ser
 
 ## Git Source Control Assignment
 Below is my name for the Git Source Control assigment. <br>
+Jacob Chudnovsky <br>
 Clemente Farias Canepa <br>
 Dominic Reynaldo Terrones<br>
 Clarisse Hokia <br>
