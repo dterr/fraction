@@ -37,7 +37,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
        app.use("/bills", billRouter);
 
-       let port = parseInt("5000");
+       let port = parseInt("3000");
 
        const multer = require('multer')
          const storage = multer.diskStorage({
