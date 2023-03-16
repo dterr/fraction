@@ -63,7 +63,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             } else  {
         
             // Send receipt for OCR and get text body of receipt                        
-            const receiptBody = await getOCR(30000, filePath);
+            const receiptBody = await getOCR(3000, filePath);
             const bill = convertOCRToBill(receiptBody, tip);
 
             // TODO get username on the front end
