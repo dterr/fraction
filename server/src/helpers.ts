@@ -23,9 +23,17 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
   data.append('file', fs.createReadStream(filePath));
 
   // View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-1
-  let token = await axios.post('https://api.tabscanner.com/api/2/process', data, {
-    headers: { 'apikey': TABSCANNER_API_KEY }
-  }).then(function (response : any) {
+  var config = {
+    method: 'post',
+    url: 'https://api.tabscanner.com/api/2/process',
+    headers: {
+     'apikey': TABSCANNER_API_KEY
+    },
+    params: { region: 'us'},
+    data : data
+  };
+
+  let token = await axios(config).then(function (response: any) {
     return response.data.token;
   }) .catch(function (error: any) {
     console.log(error);
