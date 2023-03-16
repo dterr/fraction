@@ -75,6 +75,13 @@ Make sure you do it in this order, or else you might get an error about an occup
 2. OCR (Optical Character Recognition): [TabScanner API](https://tabscanner.com/)
 3. SMS Texting: [Twilio API](https://www.twilio.com/en-us/messaging/channels/sms)
 
+## React
+
+1. test: npm react-scripts test
+2. start: npm react-scripts start
+3. build: npm react-scripts build
+4. eject: npm react-scripts eject
+
 ## Hosting
 
 We use Heroku for hosting.
