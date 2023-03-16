@@ -15,9 +15,9 @@ function Index() {
   return <BrowserRouter>
     <Routes>
       <Route exact path="/page3/" element={<Page3/>} />
-      <Route path="/page5/" element={<Page5/>} />
+      <Route path="/page5/:id" element={<Page5 username={username}/>} />
       <Route path="/page4/:id" element={<Page4 username={username} />} />
-      <Route path="/page6/" element={<Page6/>} />
+      <Route path="/page6/:id" element={<Page6/>} />
       <Route exact path="/" element={<App username={username} sendBack={setUserName}/>} />
     </Routes>
   </BrowserRouter>

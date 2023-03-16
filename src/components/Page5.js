@@ -6,6 +6,7 @@ class Page5 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      receiptID: window.location.pathname.substring("/page5/".length), //Gets receipt ID from url
       receipt: null,
       buttonText: "",
       timerID: null,
@@ -30,7 +31,7 @@ class Page5 extends React.Component {
   }
 
   fetchData(username) {
-    let promise = axios.get('http://localhost:5000/receipt/listItems/' + JSON.stringify({receiptID: "63ff96c42670dc6a57886bc0"}));
+    let promise = axios.get('/receipt/listItems/' + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
     promise.then(({data: receipt}) => {
       let usersList = [];
       for (var elem of receipt.lineItems) {
@@ -52,7 +53,7 @@ class Page5 extends React.Component {
 
       if(receipt.isClosed){
         clearInterval(this.state.timerID);
-        window.location.assign("/page6");
+        window.location.assign("/page6/" + this.state.receiptID);
       }
     });
   }
@@ -73,7 +74,7 @@ class Page5 extends React.Component {
                 {this.state.username === this.state.receipt?.creatorName && !this.state.receipt?.isClosed && 
                 <header>
                     <button onClick={() => {
-                      axios.post('http://localhost:5000/receipt/status/' + JSON.stringify({receiptID: "63ff96c42670dc6a57886bc0", isClosed: true}));
+                      axios.post('/receipt/status/' + JSON.stringify({receiptID: this.state.receiptID, isClosed: true}));
                     }}>{this.state.buttonText}</button>
                 </header>
                 }
