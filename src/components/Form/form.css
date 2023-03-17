@@ -1,3 +1,4 @@
+/* Click button that sits at bottom of form click thru */
 #next-button {
     background-color: #282c34;
     color: white;
@@ -91,6 +92,7 @@
     color: #a0aec0;
 }
 
+/* Three dots for loading */
 .loading {
     font-weight: bold;
     display:inline-block;
@@ -106,6 +108,7 @@
     }
   }
 
+/* Styling for the click-to-copy link to the receipt */
 #unique-link {
     height: 100%;
     display: flex;

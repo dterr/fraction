@@ -8,7 +8,18 @@ import UniqueLink from './UniqueLink';
 
 import "./form.css";
 
+/* This contains the entirety of the first flow.
+ * We take in the receipt, creator name, and tip (if there is one)
+ * At the end of the flow we provide the user with a link to share and start the second flow
+ * 
+ */ 
 function DominicForm({ sendBack }) {
+
+    /* Using react hooks for control of form flow
+     * int page - what part of the form flow the user is on. 0 = image upload
+     * struct data - container to hold the String name, int tip, and file image.
+     * string link - the unique link that contains the mongo ID for the newly generated Receipt object
+    */
     const [page, setPage] = useState(0);
     const [data, setData] = useState({
         name: '',
@@ -23,6 +34,7 @@ function DominicForm({ sendBack }) {
         'Did you tip? If so, how much was it?',
     ];
 
+    // In case the API rejects and we need to refill the form
     const cleanForm = () => {
         setData({
             name: '',
@@ -31,6 +43,7 @@ function DominicForm({ sendBack }) {
         });
     }
 
+    // This component will react to the changing page state to step thru form
     const pageFlow = () => {
         if (page == 0) {
             return <ImgUpload data={data} setData={setData}/>
@@ -60,6 +73,7 @@ function DominicForm({ sendBack }) {
         axios.post("/api/receipt", imageUp).then(res => {
             console.log("Successful upload", res);
             setLink(res.data.link);
+            // Move onto the Unique Link page since we recieved the result
             setPage({page:page + 1});
             sendBack(data.name);
             cleanForm();
@@ -88,7 +102,7 @@ function DominicForm({ sendBack }) {
                                 setPage(page + 1);
                             }
                         } else if (page == 2) {
-                            console.log(data);
+                            // Tip is not necessary.
                             if (data.tip == '') {
                                 setData({tip: 0});
                             }
