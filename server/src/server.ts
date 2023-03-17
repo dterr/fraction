@@ -37,7 +37,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
        app.use("/bills", billRouter);
 
        // Use port
-       let port = parseInt("5000");
+       let port = parseInt("3000");
 
        // Multer is a node.js middleware for handling multipart/form-data,
        // which is primarily used for uploading files. It is written on top
