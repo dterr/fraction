@@ -5,6 +5,7 @@ import "./form.css";
 function ImgUpload({data, setData}) {
   // drag state
   const [isDragging, setIsDragging] = React.useState(false);
+  const [fileName, setFileName] = React.useState('');
   // ref
   const inputRef = React.useRef(null);
 
@@ -13,6 +14,7 @@ function ImgUpload({data, setData}) {
     if (img.length > 0) {
         setData({ ...data, image: img[0] });
     }
+    setFileName(img[0].name);
   };
   
   // handle drag events
@@ -54,8 +56,19 @@ function ImgUpload({data, setData}) {
       <input ref={inputRef} type="file" id="input-file-upload" multiple={true} onChange={handleChange} />
       <label id="label-file-upload" htmlFor="input-file-upload" className={isDragging ? "dragging" : "" }>
         <div>
-          <p id="form-file-text">Drag and drop your image here or</p>
-          <button className="upload-button" onClick={handleButtonClick}>Upload an image</button>
+          {fileName ? 
+            <div>
+              <p id="form-file-text">{fileName} uploaded!</p>
+              <button className="upload-button" onClick={handleButtonClick}>Click to upload a new image</button>
+            </div>
+            :
+            <div>
+              <p id="form-file-text">Drag and drop your image here or</p>
+              <button className="upload-button" onClick={handleButtonClick}>Upload an image</button>
+            </div>
+          }
+          
+          
         </div> 
       </label>
       { isDragging && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div> }
