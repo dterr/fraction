@@ -26,22 +26,22 @@ if (!ATLAS_URI) {
 }
 
 var mongoose = require('mongoose');
-//mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-//connectToDatabase(ATLAS_URI)
 mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
    .then(() => {
        const app = express();
-       
+
        app.use(cors());
 
+       // Use bill.routes.ts for all /bills routes
        app.use("/bills", billRouter);
 
+       // Use port
        let port = parseInt("5000");
-       if (port == null || String(port) == "") {
-         port = 5200;
-       }
 
+       // Multer is a node.js middleware for handling multipart/form-data,
+       // which is primarily used for uploading files. It is written on top
+       // of busboy for maximum efficiency.
        const multer = require('multer')
          const storage = multer.diskStorage({
          dest: function (req, file, cb) {
@@ -53,9 +53,10 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
          })
          const upload = multer({storage: storage})
 
+       // /api/receipt POST for uploading file and providing tip amount
        app.post('/api/receipt', upload.single('file'), async (req: express.Request, res: express.Response) => {
          try {
-            
+
             const file = req.file;
             const tip = req.body.tip; //TODO GET TIP
             const filePath = file ? file.path : "server/src/upload/test.png";
@@ -64,9 +65,9 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
               console.log("Test run detected, skipping OCR . . .", req.body.test);
               res.status(200).json({ message: `Receipt processed without OCR`, link: `https://fifteen.herokuapp.com/bills/test1`});
             } else  {
-        
-            // Send receipt for OCR and get text body of receipt                        
-            const receiptBody = await getOCR(3000, filePath);
+
+            // Send receipt for OCR and get text body of receipt
+            const receiptBody = await getOCR(30000, filePath);
             const bill = convertOCRToBill(receiptBody, tip);
 
             // TODO get username on the front end
@@ -120,6 +121,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
                response.status(400).send('Receipt not found');
                return;
              }
+             // Checks all users
              for (let i = 0; i < json.items.length; i++) {
               if (json.items[i].isChecked) {
                 console.log("Item: " + json.items[i].desc + " is checked");
@@ -144,7 +146,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
            });
        });
 
-      // Changes the status of receipt.isClosed
+       // /receipt/status/:json POST for closing a tab (changes the status of receipt.isClosed)
       app.post('/receipt/status/:json', function(request, response) {
         var json = JSON.parse(request.params.json);
         console.log("Changing status of " + JSON.stringify(json));
@@ -165,7 +167,8 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             response.status(500).send('Error occurred while processing the request');
           });
       });
-         
+
+       // /receipt/listItems/:json GET for finding specific items from receipt
        app.get('/receipt/listItems/:json', function(request, response) {
          //console.log("Received request for list items: " + request.params.json);
          var json = JSON.parse(request.params.json);
@@ -184,7 +187,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             } else {
              var lineItemsList = new Array();
              for (var item of receipt.lineItems) {
-              lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username), payers: item.payers, qty:item.qty, price:item.price,});
+              lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username), payers: item.payers, qty:item.qty, price:item.price, lineTotal:item.lineTotal,});
              }
              response.status(200).send({lineItems: lineItemsList, isClosed: receipt.isClosed, creatorName: receipt.creatorName, establishment: receipt.establishment, total: receipt.total, subtotal: receipt.subtotal, tax: receipt.tax, tip: receipt.tip});
            }

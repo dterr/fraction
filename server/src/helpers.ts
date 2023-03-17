@@ -7,6 +7,7 @@ const axios = require('axios');
 
 dotenv.config();
 
+// Load ENV API_KEYS from twilio and tabscanner
 const { TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN, TWILIO_NUMBER, TABSCANNER_API_KEY } = process.env;
 const twilio_client = require('twilio')(TWILIO_SID_MAIN, TWILIO_TOKEN_MAIN);
 
@@ -16,32 +17,63 @@ function sleep(ms: any) {
   });
 }
 
+
+// OCR RESPONSE CODES
+// 200 - Process request submitted successfully
+// 202 - Result available
+// 300 - Image uploaded, but did not meet the recommended dimension of 720x1280 (WxH)
+// 301 - Result not yet available
+// 400 - API key not found
+// 401 - Not enough credit
+// 402 - Token not found
+// 403 - No file detected
+// 404 - Multiple files detected, can only upload 1 file per API call
+// 405 - Unsupported mimetype
+// 406 - Form parser error
+// 407 - Unsupported file extension
+// 408 - File system error
+// 500 - OCR Failure
+// 510 - Server error
+// 520 - Database Connection Error
+// 521 - Database Query Error
+
 // Sends receipt for OCR and returns text body of receipt
 export async function getOCR(ms: Number, filePath: String): Promise<any> {
   var data = new FormData();
   //ex: server/src/upload/test.png
   data.append('file', fs.createReadStream(filePath));
 
-  // View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-1
+  /*
+    Sends POST request to tabscanner server to submit an image.
+    Returns a token in response to then query for receipt results
+    once fully processed.
+
+    View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-1
+  */
   var config = {
     method: 'post',
     url: 'https://api.tabscanner.com/api/2/process',
     headers: {
      'apikey': TABSCANNER_API_KEY
     },
-    params: { region: 'us'},
+    params: { region: 'us', documentType: 'receipt', defaultDateParsing: 'm/d', cents: false},
     data : data
   };
 
   let token = await axios(config).then(function (response: any) {
     return response.data.token;
-  }) .catch(function (error: any) {
+  }).catch(function (error: any) {
     console.log(error);
   });
 
-  await sleep(ms);
+  /*
+    Sends GET request to tabscanner server to retrieve receipt results
+    by token id from POST response. We constantly ping the server
+    unti the response is a successful process.
 
-  // View TabScanner docs on results for more: https://docs.tabscanner.com/#documenter-4-2
+    View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-2
+  */
+
   var config2 = {
     method: 'get',
     url: `https://api.tabscanner.com/api/result/${token}`,
@@ -50,16 +82,40 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
     }
   };
 
-  let receiptBody = await axios(config2).then(function (response: any) {
-    return response.data.result;
-  }) .catch(function (error: any) {
-    console.log(error);
-  });
+  let isSuccessful = false
+  let receiptBody = {}
+
+  while(!isSuccessful){
+    let receipt = await axios(config2).then(function (response: any) {
+      return response.data;
+    }) .catch(function (error: any) {
+      console.log(error);
+    });
+
+    receiptBody = receipt.result
+    isSuccessful = receipt.success
+  }
 
   return receiptBody;
 }
 
-// View TabScanner docs on results for more: https://docs.tabscanner.com/#documenter-4-2
+/*
+  Processes receipt JSON from TabScanners into correct format for MongoDB.
+  Namely, we create a Bill object with the:
+    - store
+    - bill total
+    - cash
+    - change to be given
+    - tax
+    - tip
+    - subtotal
+    - all orders which is an array of Items
+
+  Items have the description, quanitity, price per
+  item (with a transform), and total price of item
+
+  View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-2
+*/
 export function convertOCRToBill(receiptBody: any, tip: Number): Bill {
   console.log("%cThis is what the OCR returns: ", "color:red;font-size:50;");
   console.log("%O", receiptBody);
@@ -89,7 +145,12 @@ export function convertOCRToBill(receiptBody: any, tip: Number): Bill {
   return bill
 }
 
-// Sends SMS with link to specific receipt
+/*
+  Sends SMS with link to specific recipient.
+  TWILIO has approved us with a TOLL-FREE Number
+  to use for texting phone numbers to improve
+  payee user flow
+*/
 export async function sendSMS(phoneNumber: String, link: String) {
   await twilio_client.messages
    .create({

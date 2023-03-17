@@ -70,7 +70,7 @@ class Page4 extends React.Component {
   finishItemsSubmit(response) {
     //alert("Received response: " + JSON.stringify(response));
     console.log("Received response to items submit");
-    return <redirect to="/page6/" />
+    window.location.assign("/page5/" + this.state.receiptID + "?username=" + this.state.username);
   }
 
   //Assuming all items are stored in this.state.items
