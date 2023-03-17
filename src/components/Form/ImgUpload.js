@@ -1,7 +1,5 @@
 import React from 'react';
-import axios from 'axios';
 import "./form.css";
-import { stripBasename } from '@remix-run/router';
 
 // drag drop file component
 function ImgUpload({data, setData}) {
@@ -9,7 +7,6 @@ function ImgUpload({data, setData}) {
   const [isDragging, setIsDragging] = React.useState(false);
   // ref
   const inputRef = React.useRef(null);
-  const [name, setName] = React.useState('');
 
   const handleUpload = (img) => {
     console.log("Upload input", img);
@@ -51,10 +48,6 @@ function ImgUpload({data, setData}) {
   const handleButtonClick = () => {
     inputRef.current.click();
   };
-
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  }
   
   return (
     <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
