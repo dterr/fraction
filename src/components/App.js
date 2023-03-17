@@ -1,8 +1,6 @@
 import './App.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { Route, Routes } from 'react-router-dom';
 import DominicForm from './Form/form'; 
 
 class App extends React.Component {
