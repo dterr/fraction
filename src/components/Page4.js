@@ -1,8 +1,6 @@
 import './App.css';
-import { Link, redirect } from 'react-router-dom';
 import React from 'react';
 import axios from 'axios';
-const Receipt = require('../schema/receipt.js')
 
 class Page4 extends React.Component {
   constructor(props) {
