@@ -45,13 +45,13 @@ function DominicForm({ sendBack }) {
 
     // This component will react to the changing page state to step thru form
     const pageFlow = () => {
-        if (page == 0) {
+        if (page === 0) {
             return <ImgUpload data={data} setData={setData}/>
-        } else if (page == 1) {
+        } else if (page === 1) {
             return <NamePrompt data={data} setData={setData}/>
-        } else if (page == 2) {
+        } else if (page === 2) {
             return <TipPrompt data={data} setData={setData}/>
-        } else if (page == 3) {
+        } else if (page === 3) {
             return <div>
                         <p>Thank you, please wait while your receipt processes.</p>
                         <div className="loading">. . .</div>
@@ -87,23 +87,23 @@ function DominicForm({ sendBack }) {
             {page < 3 &&
                 <button id="next-button"
                     onClick={() => {
-                        if (page == 0) {
-                            if (data.image == '') {
+                        if (page === 0) {
+                            if (data.image === '') {
                                 alert('You must upload an image');
                                 return
                             } else {
                                 setPage(page + 1);
                             }
-                        } else if (page == 1) {
-                            if (data.name == '') {
+                        } else if (page === 1) {
+                            if (data.name === '') {
                                 alert('You must have a name!');
                                 return;
                             } else {
                                 setPage(page + 1);
                             }
-                        } else if (page == 2) {
+                        } else if (page === 2) {
                             // Tip is not necessary.
-                            if (data.tip == '') {
+                            if (data.tip === '') {
                                 setData({tip: 0});
                             }
                             setPage(page + 1);
@@ -111,7 +111,7 @@ function DominicForm({ sendBack }) {
                         } 
                     }}
                 >
-                    {page == 2 
+                    {page === 2 
                     ? 'Submit'
                     : 'Next'
                     }
