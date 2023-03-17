@@ -82,20 +82,20 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
     }
   };
 
-  let isSuccessful = false
+  let ocrCode = 0
   let receiptBody = {}
 
-  while(!isSuccessful){
+  
+  while(ocrCode != 202) {
     let receipt = await axios(config2).then(function (response: any) {
       return response.data;
     }) .catch(function (error: any) {
       console.log(error);
     });
-
+    // We can also grab receipt.success for error checking
     receiptBody = receipt.result
-    isSuccessful = receipt.success
+    ocrCode = receipt.code
   }
-
   return receiptBody;
 }
 
