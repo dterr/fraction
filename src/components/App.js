@@ -26,9 +26,7 @@ class App extends React.Component {
           <div className="App">
               <header className="App-header">
                 <p>
-                  Hello! Welcome to Fraction.
-
-                  : )
+                  Hello! Welcome to Fraction 🧾
                 </p>     
                 <div>
                   <DominicForm sendBack={this.sendToParent} />
