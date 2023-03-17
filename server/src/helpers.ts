@@ -17,6 +17,26 @@ function sleep(ms: any) {
   });
 }
 
+
+// OCR RESPONSE CODES
+// 200 - Process request submitted successfully
+// 202 - Result available
+// 300 - Image uploaded, but did not meet the recommended dimension of 720x1280 (WxH)
+// 301 - Result not yet available
+// 400 - API key not found
+// 401 - Not enough credit
+// 402 - Token not found
+// 403 - No file detected
+// 404 - Multiple files detected, can only upload 1 file per API call
+// 405 - Unsupported mimetype
+// 406 - Form parser error
+// 407 - Unsupported file extension
+// 408 - File system error
+// 500 - OCR Failure
+// 510 - Server error
+// 520 - Database Connection Error
+// 521 - Database Query Error
+
 // Sends receipt for OCR and returns text body of receipt
 export async function getOCR(ms: Number, filePath: String): Promise<any> {
   var data = new FormData();
@@ -36,17 +56,15 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
     headers: {
      'apikey': TABSCANNER_API_KEY
     },
-    params: { region: 'us'},
+    params: { region: 'us', documentType: 'receipt', defaultDateParsing: 'm/d', cents: false},
     data : data
   };
 
   let token = await axios(config).then(function (response: any) {
     return response.data.token;
-  }) .catch(function (error: any) {
+  }).catch(function (error: any) {
     console.log(error);
   });
-
-  await sleep(ms);
 
   /*
     Sends GET request to tabscanner server to retrieve receipt results
@@ -55,6 +73,7 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
 
     View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-2
   */
+
   var config2 = {
     method: 'get',
     url: `https://api.tabscanner.com/api/result/${token}`,
@@ -63,11 +82,19 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
     }
   };
 
-  let receiptBody = await axios(config2).then(function (response: any) {
-    return response.data.result;
-  }) .catch(function (error: any) {
-    console.log(error);
-  });
+  let isSuccessful = false
+  let receiptBody = {}
+
+  while(!isSuccessful){
+    let receipt = await axios(config2).then(function (response: any) {
+      return response.data;
+    }) .catch(function (error: any) {
+      console.log(error);
+    });
+
+    receiptBody = receipt.result
+    isSuccessful = receipt.success
+  }
 
   return receiptBody;
 }
