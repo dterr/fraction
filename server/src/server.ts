@@ -11,6 +11,10 @@ import ObjectId from "mongodb";
 import { getOCR, convertOCRToBill } from "./helpers";
 import multer from 'multer';
 
+// HEIC conversion imports
+import { promisify } from 'util';
+import fs from 'fs';
+import convert from 'heic-convert';
 
 var path = require('path')
 
@@ -42,8 +46,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
        // Multer is a node.js middleware for handling multipart/form-data,
        // which is primarily used for uploading files. It is written on top
        // of busboy for maximum efficiency.
-       const multer = require('multer')
-         const storage = multer.diskStorage({
+        const storage = multer.diskStorage({
          dest: function (req, file, cb) {
             cb(null, 'uploads/')
          },
@@ -59,8 +62,25 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
             const file = req.file;
             const tip = req.body.tip; //TODO GET TIP
-            const filePath = file ? file.path : "server/src/upload/test.png";
+            let filePath = file ? file.path : "server/src/upload/test.png";
 
+            /* Convert HEIC to JPG, if necessary */
+            // Check if the file is in HEIC format
+            if (file && path.extname(file.originalname).toLowerCase() === '.heic') {
+              // Read the HEIC file
+              const inputBuffer = await promisify(fs.readFile)(filePath);
+
+              // Convert the HEIC file to JPEG
+              const outputBuffer = await convert({
+                buffer: inputBuffer, // the HEIC file buffer
+                format: 'JPEG',      // output format
+                quality: 1           // the jpeg compression quality, between 0 and 1
+              });
+
+              // Replace the original file with the converted JPEG file
+              filePath = filePath.replace(path.extname(filePath), '.jpg');
+              await promisify(fs.writeFile)(filePath, outputBuffer);
+            }
             if (req.body.test) {
               console.log("Test run detected, skipping OCR . . .", req.body.test);
               res.status(200).json({ message: `Receipt processed without OCR`, link: `https://fifteen.herokuapp.com/bills/test1`});
