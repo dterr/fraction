@@ -5,6 +5,12 @@ const fs = require("fs");
 const FormData = require('form-data');
 const axios = require('axios');
 
+// HEIC conversion imports
+import { promisify } from 'util';
+//import fs from 'fs';
+import convert from 'heic-convert';
+var path = require('path')
+
 dotenv.config();
 
 // Load ENV API_KEYS from twilio and tabscanner
@@ -159,4 +165,24 @@ export async function sendSMS(phoneNumber: String, link: String) {
      from: TWILIO_NUMBER, // From a valid Twilio number
    })
    .then((message: any) => console.log(message.sid));
+}
+
+/*
+  Takes in a HEIC Image and converts it to JPG
+*/
+export async function convertHEIC(filePath: String) {
+  // Read the HEIC file
+  const inputBuffer = await promisify(fs.readFile)(filePath);
+
+  // Convert the HEIC file to JPEG
+  const outputBuffer = await convert({
+    buffer: inputBuffer, // the HEIC file buffer
+    format: 'JPEG',      // output format
+    quality: 1           // the jpeg compression quality, between 0 and 1
+  });
+
+  // Replace the original file with the converted JPEG file
+  filePath = filePath.replace(path.extname(filePath), '.jpg');
+  await promisify(fs.writeFile)(filePath, outputBuffer);
+  return filePath;
 }
