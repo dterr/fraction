@@ -12,6 +12,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
+    "deploy": "npm run build && npm run server",
+    "server": "npx ts-node server/src/server.ts",
+    "watch": "concurrently \"npm run build -- --watch\" \"npm run server\"",
     "start-full": "concurrently \"npm start\" \"npx ts-node server/src/server.ts\""
   },
   "keywords": [],
