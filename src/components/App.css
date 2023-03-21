@@ -36,3 +36,47 @@
     transform: rotate(360deg);
   }
 }
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 20px;
+  padding: 20px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 1rem;
+  background-color: #f8fafc;
+}
+
+.checkbox-item input[type='checkbox'] {
+  margin-right: 10px;
+}
+
+.checkbox-item label {
+  color: #282c34;
+  font-size: 1rem;
+}
+
+.button-container {
+  margin-top: 1rem;
+}
+
+.button-container button {
+  background-color: #282c34;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: dashed;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.button-container button:hover {
+  background-color: #3d444f;
+}

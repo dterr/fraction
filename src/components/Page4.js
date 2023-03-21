@@ -38,15 +38,20 @@ class Page4 extends React.Component {
   }
 
   renderItem(item) {
-    const{label} = this.props;
-    return  <div className="checkbox" key={item.desc}>
-              <label>
-                <input type="checkbox" id={item.desc} name={item.desc} value={label} checked={item.isChecked} 
-                        onChange={() => this.toggleCheckBoxChange(item.desc)} />
-                {label}
-                <label htmlFor="item">{item.desc}</label>
-              </label>
-            </div>
+    const { label } = this.props;
+    return (
+      <div className="checkbox-item" key={item.desc} onClick={() => this.toggleCheckBoxChange(item.desc)}>
+        <input
+          type="checkbox"
+          id={item.desc}
+          name={item.desc}
+          value={label}
+          checked={item.isChecked}
+          onChange={() => {}}
+        />
+        <label htmlFor={item.desc}>{item.desc}</label>
+      </div>
+    );
   }
 
   renderItems() {
@@ -57,13 +62,17 @@ class Page4 extends React.Component {
         this.setState({allItems: response.data.lineItems})
       }).catch(err => (err.status + ": Unable to get list items from receipt with id: " + this.state.receiptID));
     } else {
-      return <div>
-                <p>Hello {this.state.username}, what items did you order? Select them below.</p>
-                {this.state.allItems.map(item => this.renderItem(item))}
-                <div>
-                  <button onClick={() => this.handleItemsSubmit()}>Submit</button>
-                </div>
-             </div>
+      return (
+        <div>
+          <p>Hello {this.state.username}, what items did you order? Select them below.</p>
+          <div className="checkbox-grid">
+            {this.state.allItems.map((item) => this.renderItem(item))}
+          </div>
+          <div className="button-container">
+            <button onClick={() => this.handleItemsSubmit()}>Submit</button>
+          </div>
+        </div>
+      );
     }
   }
 
@@ -78,8 +87,16 @@ class Page4 extends React.Component {
     if (this.state.username === "") {
       alert('No username found');
     } else {
-      var submit = axios.post('/receipt/claimItems/' + JSON.stringify({receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username}));
-      submit.then(response => this.finishItemsSubmit(response)).catch(err => console.log(err));
+      const requestData = {
+        receiptID: this.state.receiptID,
+        items: this.state.allItems,
+        user: this.state.username,
+      };
+      axios.post('/receipt/claimItems/', requestData).then(
+        (response) => this.finishItemsSubmit(response)
+      ).catch(
+        (err) => console.log(err)
+      );
     }
   }
 
