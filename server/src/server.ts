@@ -67,7 +67,20 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
             if (req.body.test) {
               console.log("Test run detected, skipping OCR . . .", req.body.test);
-              res.status(200).json({ message: `Receipt processed without OCR`, link: `https://fifteen.herokuapp.com/bills/test1`});
+              const testReceipt = new ReceiptModel({
+                isClosed: false,
+                creatorName: "Dominic",
+                establishment: "Yaga",
+                total: 120,
+                subtotal: 114.3,
+                cash: 0,
+                change: 0,
+                tax: 5,
+                tip: .7,
+                currency: "USD",
+                lineItems: [],
+              })
+              res.status(200).json({ message: `Receipt processed without OCR`, receipt: testReceipt});
             } else  {
 
             // Send receipt for OCR and get text body of receipt
