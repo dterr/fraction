@@ -186,3 +186,20 @@ export async function convertHEIC(filePath: String) {
   await promisify(fs.writeFile)(filePath, outputBuffer);
   return filePath;
 }
+
+export function mergeDuplicateLineItems(items: Item[]): Item[] {
+  const mergedItems: Item[] = [];
+
+  items.forEach((item) => {
+    const existingItem = mergedItems.find((mergedItem) => mergedItem._desc === item._desc && mergedItem._pricePerItem === item._pricePerItem);
+
+    if (existingItem) {
+      existingItem._qty = Number(existingItem._qty) + Number(item._qty);
+      existingItem._totalPrice = Number(existingItem._totalPrice) + Number(item._totalPrice);
+    } else {
+      mergedItems.push(item);
+    }
+  });
+
+  return mergedItems;
+}

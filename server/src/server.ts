@@ -7,7 +7,7 @@ import { connectToDatabase } from "./database";
 import ReceiptModel, { default as Receipt } from "./receipt";
 import { Bill, Item } from "./bill"
 
-import { getOCR, convertOCRToBill, convertHEIC } from "./helpers";
+import { getOCR, convertOCRToBill, convertHEIC, mergeDuplicateLineItems } from "./helpers";
 import multer from 'multer';
 
 var path = require('path')
@@ -70,6 +70,8 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             // Send receipt for OCR and get text body of receipt
             const receiptBody = await getOCR(30000, filePath);
             const bill = convertOCRToBill(receiptBody, tip);
+            // Catch any duplicate line items
+            const cleanedItems = mergeDuplicateLineItems(bill._orders);
 
             // TODO get username on the front end
             // Save receipt to database
@@ -84,7 +86,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
                   tax: bill._tax,
                   tip: bill._tip,
                   currency: "USD",
-                  lineItems: bill._orders.map((item: Item) => ({
+                  lineItems: cleanedItems.map((item: Item) => ({
                      lineTotal: item._totalPrice,
                      desc: item._desc,
                      qty: item._qty,
