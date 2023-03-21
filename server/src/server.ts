@@ -102,16 +102,33 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
                console.log("%cAbout to save the following: ", "color:red;font-size:50;");
                console.log("%O", newReceipt);
 
+            /*
             const result = await newReceipt.save();
             console.log("Successfully saved. Here is the receipt: %O", result.id);
             // Return response with success message
             res.status(200).json({ message: `Receipt processed successfully!`, link: `https://fifteen.herokuapp.com/page4/${result.id}`});
+            */
+            res.status(200).json({ message: `OCR results received!`, receipt: newReceipt });
             }
           } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Error processing receipt" });
           }
         });
+
+      api.post('/receipt/approved-receipt', async (req: express.Request, res: express.Response) => {
+        try {
+          const approvedReceipt = new ReceiptModel(req.body.approved_receipt);
+          const result = await appprovedReceipt.save();
+          console.log("Successfully saved. Here is the receipt: %O", result.id);
+          // Return response with success message
+          res.status(200).json({ message: `Receipt processed successfully!`, link: `https://fifteen.herokuapp.com/page4/${result.id}`});
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: "Error saving approved receipt" });
+        }
+        
+    });
 
       // Queries database for a receipt of a given name
       // It queries for the user who presses the submit button
