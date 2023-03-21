@@ -116,7 +116,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
           }
         });
 
-      api.post('/receipt/approved-receipt', async (req: express.Request, res: express.Response) => {
+      api.post('/api/approved-receipt', async (req: express.Request, res: express.Response) => {
         try {
           const approvedReceipt = new ReceiptModel(req.body.approved_receipt);
           const result = await appprovedReceipt.save();
