@@ -35,6 +35,8 @@ function DominicForm({ sendBack }) {
         'Upload your receipt here',
         'While we wait, what\'s your name?',
         'Did you tip? If so, how much was it?',
+        'Thank you, please wait while your receipt processes.',
+        'Here\'s what our AI found, fix any errors you see.',
     ];
 
     // In case the API rejects and we need to refill the form
@@ -56,10 +58,9 @@ function DominicForm({ sendBack }) {
             return <TipPrompt data={data} setData={setData}/>
         } else if (page === 3) {
             return <div>
-                        <p>Thank you, please wait while your receipt processes.</p>
                         <div className="loading">. . .</div>
                     </div>
-        } else if (page === 4) {
+        } else if (page === 4 && ocrResults) {
             return <ReceiptEditor ocrResults={ocrResults} saveApprovedReceipt={saveApprovedReceipt}/>
         } else {
             return <UniqueLink link={link}/>
@@ -77,9 +78,10 @@ function DominicForm({ sendBack }) {
         console.log("Upload Form", page);
         axios.post("/api/receipt", imageUp).then(res => {
             console.log("Successful upload", res);
+            console.log("What we got from the OCR %O", res.data.receipt)
             setOcrResults(res.data.receipt);
             //Let's view the OCR receipt now
-            setPage(page + 1);
+            setPage(4);
           }).catch();
     }
 
