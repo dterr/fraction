@@ -89,7 +89,6 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             // Catch any duplicate line items
             const cleanedItems = mergeDuplicateLineItems(bill._orders);
 
-            // TODO get username on the front end
             // Save receipt to database
             const newReceipt = new ReceiptModel({
                   isClosed: false,
@@ -112,15 +111,6 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
                      })),
                });
 
-               console.log("%cAbout to save the following: ", "color:red;font-size:50;");
-               console.log("%O", newReceipt);
-
-            /*
-            const result = await newReceipt.save();
-            console.log("Successfully saved. Here is the receipt: %O", result.id);
-            // Return response with success message
-            res.status(200).json({ message: `Receipt processed successfully!`, link: `https://fifteen.herokuapp.com/page4/${result.id}`});
-            */
             res.status(200).json({ message: `OCR results received!`, receipt: newReceipt });
             }
           } catch (error) {
@@ -133,7 +123,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
         try {
           const approvedReceipt = new ReceiptModel(req.body.approved_receipt);
           const result = await approvedReceipt.save();
-          console.log("Successfully saved. Here is the receipt: %O", result.id);
+          console.log("Successfully saved with id %O. Here is the receipt: %O", result.id, approvedReceipt);
           // Return response with success message
           res.status(200).json({ message: `Receipt processed successfully!`, link: `https://fifteen.herokuapp.com/page4/${result.id}`});
         } catch (error) {
