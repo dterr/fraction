@@ -39,12 +39,6 @@ function ReceiptEditor({ocrResults, saveApprovedReceipt}) {
                 value={item.qty}
                 onChange={(e) => handleInputChange('qty', index, e)}
               />
-              <label>Price:</label>
-              <input
-                type="number"
-                value={item.price}
-                onChange={(e) => handleInputChange('price', index, e)}
-              />
               <label>Line Total:</label>
               <input
                 type="number"
