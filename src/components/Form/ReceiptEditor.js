@@ -33,18 +33,6 @@ function ReceiptEditor({ocrResults, saveApprovedReceipt}) {
                 value={item.desc}
                 onChange={(e) => handleInputChange('desc', index, e)}
               />
-              <label>Quantity:</label>
-              <input
-                type="number"
-                value={item.qty}
-                onChange={(e) => handleInputChange('qty', index, e)}
-              />
-              <label>Line Total:</label>
-              <input
-                type="number"
-                value={item.lineTotal}
-                onChange={(e) => handleInputChange('lineTotal', index, e)}
-              />
             </div>
           ))}
           <button onClick={() => saveApprovedReceipt(editedData)}>Save</button>
