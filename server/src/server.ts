@@ -33,6 +33,9 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
        // Use bill.routes.ts for all /bills routes
        app.use("/bills", billRouter);
 
+       // Be able to parse incoming and outgoing json
+       app.use(express.json());
+
        // Use port
        let port = parseInt("3000");
 
@@ -113,8 +116,8 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
       // Queries database for a receipt of a given name
       // It queries for the user who presses the submit button
       // Request.body has receiptID and map of string to boolean
-      app.post('/receipt/claimItems/:json', function(request, response) {
-        var json = JSON.parse(request.params.json);
+      app.post('/receipt/claimItems/', function(request, response) {
+        const json = request.body;
          console.log("Received request for claim items " + JSON.stringify(json));
          ReceiptModel.findOne({_id: new mongoose.Types.ObjectId(json.receiptID)})
            .select("creatorName lineItems")

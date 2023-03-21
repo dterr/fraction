@@ -87,8 +87,16 @@ class Page4 extends React.Component {
     if (this.state.username === "") {
       alert('No username found');
     } else {
-      var submit = axios.post('/receipt/claimItems/' + JSON.stringify({receiptID: this.state.receiptID, items: this.state.allItems, user: this.state.username}));
-      submit.then(response => this.finishItemsSubmit(response)).catch(err => console.log(err));
+      const requestData = {
+        receiptID: this.state.receiptID,
+        items: this.state.allItems,
+        user: this.state.username,
+      };
+      axios.post('/receipt/claimItems/', requestData).then(
+        (response) => this.finishItemsSubmit(response)
+      ).catch(
+        (err) => console.log(err)
+      );
     }
   }
 
