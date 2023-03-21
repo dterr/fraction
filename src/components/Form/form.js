@@ -87,7 +87,7 @@ function DominicForm({ sendBack }) {
 
     const saveApprovedReceipt = (data) => {
         setEditedReceipt(data);
-        axios.post("/api/approved-receipt", {approved_receipt: editedReceipt}).then(
+        axios.post("/api/approved-receipt", {approved_receipt: data}).then(
             (res) => {
                 console.log("Successfully saved %O", res);
                 setLink(res.data.link);

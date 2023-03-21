@@ -132,7 +132,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
       app.post('/api/approved-receipt', async (req: express.Request, res: express.Response) => {
         try {
           const approvedReceipt = new ReceiptModel(req.body.approved_receipt);
-          const result = await appprovedReceipt.save();
+          const result = await approvedReceipt.save();
           console.log("Successfully saved. Here is the receipt: %O", result.id);
           // Return response with success message
           res.status(200).json({ message: `Receipt processed successfully!`, link: `https://fifteen.herokuapp.com/page4/${result.id}`});
