@@ -5,6 +5,7 @@ import ImgUpload from './ImgUpload';
 import NamePrompt from './NamePrompt';
 import TipPrompt from './TipPrompt';
 import UniqueLink from './UniqueLink';
+import ReceiptEditor from './ReceiptEditor';
 
 import "./form.css";
 
@@ -27,6 +28,8 @@ function DominicForm({ sendBack }) {
         image: '',
     });
     const [link, setLink] = useState('');
+    const [ocrResults, setOcrResults] = useState(null);
+    const [editedReceipt, setEditedReceipt] = useState(null);
 
     const formTitles = [
         'Upload your receipt here',
@@ -56,6 +59,8 @@ function DominicForm({ sendBack }) {
                         <p>Thank you, please wait while your receipt processes.</p>
                         <div className="loading">. . .</div>
                     </div>
+        } else if (page === 4) {
+            return <ReceiptEditor ocrResults={ocrResults} saveApprovedReceipt={saveApprovedReceipt}/>
         } else {
             return <UniqueLink link={link}/>
         }
@@ -72,12 +77,23 @@ function DominicForm({ sendBack }) {
         console.log("Upload Form", page);
         axios.post("/api/receipt", imageUp).then(res => {
             console.log("Successful upload", res);
-            setLink(res.data.link);
-            // Move onto the Unique Link page since we recieved the result
-            setPage({page:page + 1});
-            sendBack(data.name);
-            cleanForm();
+            setOcrResults(res.data.receipt);
+            //Let's view the OCR receipt now
+            setPage(page + 1);
           }).catch();
+    }
+
+    const saveApprovedReceipt = (data) => {
+        setEditedReceipt(data);
+        axios.post("/api/approved-receipt", {approved_receipt: editedReceipt}).then(
+            (res) => {
+                console.log("Successfully saved %O", res);
+                setLink(res.data.link);
+                setPage(page + 1);
+                sendBack(data.name);
+                cleanForm();
+            }
+        );
     }
 
     return (
