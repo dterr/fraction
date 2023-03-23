@@ -40,14 +40,14 @@ class Page4 extends React.Component {
   renderItem(item) {
     const { label } = this.props;
     return (
-      <div className="checkbox-item" key={item.desc} onClick={() => this.toggleCheckBoxChange(item.desc)}>
+      <div className="checkbox-item" key={item.desc} >
         <input
           type="checkbox"
           id={item.desc}
           name={item.desc}
           value={label}
           checked={item.isChecked}
-          onChange={() => {}}
+          onChange={() => this.toggleCheckBoxChange(item.desc)}
         />
         <label htmlFor={item.desc}>{item.desc}</label>
       </div>
