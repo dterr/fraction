@@ -80,3 +80,8 @@
 .button-container button:hover {
   background-color: #3d444f;
 }
+
+.read-or-hide{
+  color: rgb(192, 192, 192);
+  cursor: pointer;
+}

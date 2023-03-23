@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import ImgUpload from './ImgUpload';
 import NamePrompt from './NamePrompt';
+import VenmoPrompt from './VenmoPrompt';
 import TipPrompt from './TipPrompt';
 import UniqueLink from './UniqueLink';
 import ReceiptEditor from './ReceiptEditor';
@@ -25,6 +26,7 @@ function DominicForm({ sendBack }) {
     const [data, setData] = useState({
         name: '',
         tip: '0',
+        venmo: '',
         image: '',
     });
     const [link, setLink] = useState('');
@@ -33,10 +35,18 @@ function DominicForm({ sendBack }) {
 
     const formTitles = [
         'Upload your receipt here',
-        'While we wait, what\'s your name?',
-        'Did you tip? If so, how much was it?',
-        'Thank you, please wait while your receipt processes.',
-        'Here\'s what our AI found, fix any errors you see.',
+        'Let\'s get to know each other - what\'s your name?',
+        'Let\'s get you paid back. What is your Venmo account?',
+        "One more question - Did you tip? If so, how much was it?",
+        'Here\'s what our AI found, fix any errors you see.'
+    ];
+    
+    const pageTitles = [
+        'Hello! Welcome to Fraction! 🧾',
+        'We hope that you had a great time with your friends!',
+        'It\'s nice to meet you, ' + data.name + '! Thanks for using Fraction!',
+        '',
+        ''
     ];
 
     // In case the API rejects and we need to refill the form
@@ -44,6 +54,7 @@ function DominicForm({ sendBack }) {
         setData({
             name: '',
             tip: '0',
+            venmo: '',
             image: '',
         });
     }
@@ -55,12 +66,15 @@ function DominicForm({ sendBack }) {
         } else if (page === 1) {
             return <NamePrompt data={data} setData={setData}/>
         } else if (page === 2) {
-            return <TipPrompt data={data} setData={setData}/>
+            return <VenmoPrompt data={data} setData={setData}/>
         } else if (page === 3) {
+            return <TipPrompt data={data} setData={setData}/>  
+        } else if (page === 4) {
             return <div>
+                        <p>Thank you! Please wait while your receipt processes. Did you know that eating out with friends is really good for your mental health? Read more about it <a href="https://www.ox.ac.uk/news/2017-03-16-social-eating-connects-communities">here!</a> We hope you reaped the rewards at your most recent event!</p>
                         <div className="loading">. . .</div>
                     </div>
-        } else if (page === 4 && ocrResults) {
+        } else if (page === 5 && ocrResults) {
             return <ReceiptEditor ocrResults={ocrResults} saveApprovedReceipt={saveApprovedReceipt}/>
         } else {
             return <UniqueLink link={link}/>
@@ -72,6 +86,7 @@ function DominicForm({ sendBack }) {
         //imageUp.append("test",true); // Test Flag
         imageUp.append("file", data.image);
         imageUp.append("name",data.name); 
+        imageUp.append("venmo", data.venmo);
         imageUp.append("tip",data.tip);
         
         setPage(page + 1);
@@ -81,7 +96,7 @@ function DominicForm({ sendBack }) {
             console.log("What we got from the OCR %O", res.data.receipt)
             setOcrResults(res.data.receipt);
             //Let's view the OCR receipt now
-            setPage(4);
+            setPage(5);
           }).catch();
     }
 
@@ -93,6 +108,7 @@ function DominicForm({ sendBack }) {
                 setLink(res.data.link);
                 setPage(page + 1);
                 sendBack(data.name);
+                sendBack(data.venmo);
                 cleanForm();
             }
         );
@@ -100,9 +116,10 @@ function DominicForm({ sendBack }) {
 
     return (
         <div>
+            <p>{pageTitles[page]}</p>
             <p>{formTitles[page]}</p>
             {pageFlow()}
-            {page < 3 &&
+            {page < 4 &&
                 <button id="next-button"
                     onClick={() => {
                         if (page === 0) {
@@ -120,6 +137,16 @@ function DominicForm({ sendBack }) {
                                 setPage(page + 1);
                             }
                         } else if (page === 2) {
+                            if (data.venmo === '') {
+                                setData({venmo: '[Not entered]'});
+                            }
+                            setPage(page + 1);
+                            uploadForm();
+                        } else if (page === 3) {
+                            // Tip is not necessary.
+                            if (data.tip === '') {
+                                setData({tip: 0});
+                            }
                             setPage(page + 1);
                             uploadForm();
                         } 
