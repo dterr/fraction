@@ -212,8 +212,8 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
                response.status(400).send('Receipt not found');
                return;
             } else {
-             var lineItemsList = new Array();
-             for (var item of receipt.lineItems) {
+             let lineItemsList = new Array();
+             for (let item of receipt.lineItems) {
               lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username), payers: item.payers, qty:item.qty, price:item.price, lineTotal:item.lineTotal,});
              }
              response.status(200).send({lineItems: lineItemsList, isClosed: receipt.isClosed, creatorVenmo: receipt.creatorVenmo, creatorName: receipt.creatorName, establishment: receipt.establishment, total: receipt.total, subtotal: receipt.subtotal, tax: receipt.tax, tip: receipt.tip});

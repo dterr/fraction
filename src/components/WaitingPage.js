@@ -2,11 +2,11 @@ import './App.css';
 import React from 'react';
 import axios from 'axios';
 
-class Page5 extends React.Component {
+class WaitingPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      receiptID: window.location.pathname.substring("/page5/".length), //Gets receipt ID from url
+      receiptID: window.location.pathname.substring("/waiting/".length), //Gets receipt ID from url
       receipt: null,
       buttonText: "",
       timerID: null,
@@ -56,14 +56,11 @@ class Page5 extends React.Component {
       this.setState({receipt:receipt});
       this.setState({buttonText:text});
 
-      console.log(this.state.numUnselected);
-      console.log(currUnselected);
-
       this.setState({numUnselected:currUnselected});
 
       if(receipt.isClosed){
         clearInterval(this.state.timerID);
-        window.location.assign("/page6/" + this.state.receiptID);
+        window.location.assign("/totals/" + this.state.receiptID);
       }
     });
   }
@@ -107,4 +104,4 @@ class Page5 extends React.Component {
   }
 }
 
-export default Page5;
+export default WaitingPage;

@@ -2,12 +2,13 @@ import './App.css';
 import axios from 'axios';
 import React from 'react';
 
+
 // Page to calculate and display per-person totals
-class Page6 extends React.Component {
+class TotalsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      receiptID: window.location.pathname.substring("/page6/".length),
+      receiptID: window.location.pathname.substring("/totals/".length),
       receipt: null,
       payersDict: {},
     }
@@ -32,21 +33,21 @@ class Page6 extends React.Component {
         }
       }
 
-      let currSubtotal = 0;
       let payers = {}
+      let currSubtotal = 0;
       for (let line of receipt.lineItems) {
         let numPayers = line.payers.length;
         if (numPayers === 0) {
           numPayers = usersList.length;
         }
         let eachAmount = 0;
-        if (line.qty > 1) {
-          currSubtotal += line.qty * line.price;
-          eachAmount = (line.qty * line.price) / numPayers; 
-        } 
-        else {
+        if (isNaN(line.qty) || isNaN(line.price) || line.qty === null || line.price === null || line.qty === undefined || line.price === undefined) {
           currSubtotal += line.lineTotal;
           eachAmount = line.lineTotal / numPayers; 
+        }
+        else {
+          currSubtotal += line.qty * line.price;
+          eachAmount = (line.qty * line.price) / numPayers;
         }
         if (numPayers === usersList.length) {
           for (let u of usersList) {
@@ -71,7 +72,7 @@ class Page6 extends React.Component {
       }
 
       // correct any errors with subtotal and tax
-      if (currSubtotal != receipt.subtotal) {
+      if (currSubtotal !== receipt.subtotal) {
         receipt.subtotal = currSubtotal;
         let newTax = currSubtotal * (receipt.tax / receipt.subtotal);
         receipt.tax = newTax;
@@ -79,7 +80,7 @@ class Page6 extends React.Component {
 
       // add tip and tax to amounts
       let finalTotal = receipt.subtotal + receipt.tip + receipt.tax;
-      if (finalTotal != receipt.total) {
+      if (finalTotal !== receipt.total) {
         receipt.total = finalTotal;
       }
       let currTotal = 0;
@@ -112,7 +113,7 @@ class Page6 extends React.Component {
     }
 
     //const receipt = "View Receipt";
-    const instruction = "Please Venmo " + this.state.receipt?.creatorName + " accordingly. Their Venmo account handle is " + this.state.receipt?.creatorVenmo;
+    const instruction = "Please Venmo " + this.state.receipt?.creatorName + " (@" + this.state.receipt?.creatorVenmo + ") accordingly.";
     const thankyou = "We hope you enjoyed using Fraction! Your friends will thank you for making splitting the bill easier (and less awkward) than ever before."
     
     return (
@@ -161,4 +162,4 @@ class Page6 extends React.Component {
   }
 }
 
-  export default Page6;
+  export default TotalsPage;
