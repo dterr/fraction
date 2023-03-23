@@ -2,6 +2,10 @@ import './App.css';
 import React from 'react';
 import axios from 'axios';
 
+/* 
+ * This handles the workflow that allows primary and secondary users to see the itemized receipt
+ * and claim items by checking off the corresponding checkboxes.
+ */
 class Page4 extends React.Component {
   constructor(props) {
     super(props);
@@ -16,10 +20,12 @@ class Page4 extends React.Component {
     this.handleItemsSubmit = this.handleItemsSubmit.bind(this);
   }
 
+  // Updates display to show name being typed into namebox
   handleChange(event) {
     this.setState({nameboxValue: event.target.value});
   }
 
+  // "Logs in," i.e. sets final username, which advances view to show the itemized receipt
   handleNameSubmit(event) {
     event.preventDefault();
     this.setState({username: this.state.nameboxValue});
@@ -55,6 +61,8 @@ class Page4 extends React.Component {
     );
   }
 
+  // Queries receipt from backend, sends username so that the checkboxes can be pre-populated 
+  // if the user has already claimed items in the past
   renderItems() {
     if (this.state.receiptID === '') {
       alert('No receipt ID found, did you paste the correct URL?');
@@ -82,6 +90,7 @@ class Page4 extends React.Component {
     window.location.assign("/page5/" + this.state.receiptID + "?username=" + this.state.username);
   }
 
+  // Sends data from the checkboxes along with the receipt ID and username to backend to update receipt in Mongo
   handleItemsSubmit(event) {
     if (this.state.username === "") {
       alert('No username found');
