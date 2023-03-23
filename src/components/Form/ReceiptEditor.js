@@ -14,7 +14,8 @@ function ReceiptEditor({ocrResults, saveApprovedReceipt}) {
     
       return (
         <div>
-          <h2>Edit Receipt</h2>
+          <p>Here's what our AI found from your receipt.</p>
+          <p>If you see any errors, correct them here.</p>
           <div className="establishment">
             <label>Establishment:</label>
             <input

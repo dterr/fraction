@@ -38,7 +38,7 @@ function DominicForm({ sendBack }) {
         'Let\'s get to know each other - what\'s your name?',
         'Let\'s get you paid back. What is your Venmo account?',
         "One more question - Did you tip? If so, how much was it?",
-        'Here\'s what our AI found, fix any errors you see.'
+        ''
     ];
     
     const pageTitles = [
