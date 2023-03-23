@@ -32,19 +32,20 @@ class Page6 extends React.Component {
         }
       }
 
+      let currSubtotal = 0;
       var payers = {}
-      console.log(receipt);
       for (var line of receipt.lineItems) {
         var numPayers = line.payers.length;
         if (numPayers === 0) {
           numPayers = usersList.length;
         }
-        console.log(numPayers);
         var eachAmount = 0;
         if (line.qty > 1) {
+          currSubtotal += line.qty * line.price;
           eachAmount = (line.qty * line.price) / numPayers; 
         } 
         else {
+          currSubtotal += line.lineTotal;
           eachAmount = line.lineTotal / numPayers; 
         }
         if (numPayers === usersList.length) {
@@ -69,10 +70,18 @@ class Page6 extends React.Component {
         }
       }
 
-      console.log(payers);
+      // correct any errors with subtotal and tax
+      if (currSubtotal != receipt.subtotal) {
+        receipt.subtotal = currSubtotal;
+        newTax = currSubtotal * (receipt.tax / receipt.subtotal);
+        receipt.tax = newTax;
+      }
 
       // add tip and tax to amounts
       let finalTotal = receipt.subtotal + receipt.tip + receipt.tax;
+      if (finalTotal != receipt.total) {
+        receipt.total = finalTotal;
+      }
       let currTotal = 0;
       for (const payer of Object.keys(payers)) {
         var taxTipAmount = (payers[payer] / receipt.subtotal) * (receipt.tip + receipt.tax);
