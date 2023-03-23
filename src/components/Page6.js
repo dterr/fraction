@@ -24,8 +24,8 @@ class Page6 extends React.Component {
       // dictionary maps payers to per-person sum, before taxes and tip
 
       let usersList = [];
-      for (var elem of receipt.lineItems) {
-        for (var user of elem.payers) {
+      for (let elem of receipt.lineItems) {
+        for (let user of elem.payers) {
           if (!usersList.includes(user)) {
             usersList.push(user);
           }
@@ -33,13 +33,13 @@ class Page6 extends React.Component {
       }
 
       let currSubtotal = 0;
-      var payers = {}
-      for (var line of receipt.lineItems) {
-        var numPayers = line.payers.length;
+      let payers = {}
+      for (let line of receipt.lineItems) {
+        let numPayers = line.payers.length;
         if (numPayers === 0) {
           numPayers = usersList.length;
         }
-        var eachAmount = 0;
+        let eachAmount = 0;
         if (line.qty > 1) {
           currSubtotal += line.qty * line.price;
           eachAmount = (line.qty * line.price) / numPayers; 
@@ -49,7 +49,7 @@ class Page6 extends React.Component {
           eachAmount = line.lineTotal / numPayers; 
         }
         if (numPayers === usersList.length) {
-          for (var u of usersList) {
+          for (let u of usersList) {
             if (u in payers) {
               payers[u] += eachAmount;
             }
@@ -59,7 +59,7 @@ class Page6 extends React.Component {
           }
         }
         else {
-          for (var person of line.payers) {
+          for (let person of line.payers) {
             if (person in payers) {
               payers[person] += eachAmount;
             }
@@ -73,7 +73,7 @@ class Page6 extends React.Component {
       // correct any errors with subtotal and tax
       if (currSubtotal != receipt.subtotal) {
         receipt.subtotal = currSubtotal;
-        newTax = currSubtotal * (receipt.tax / receipt.subtotal);
+        let newTax = currSubtotal * (receipt.tax / receipt.subtotal);
         receipt.tax = newTax;
       }
 
@@ -84,13 +84,16 @@ class Page6 extends React.Component {
       }
       let currTotal = 0;
       for (const payer of Object.keys(payers)) {
-        var taxTipAmount = (payers[payer] / receipt.subtotal) * (receipt.tip + receipt.tax);
+        currTotal += payers[payer];
+        let taxTipAmount = (payers[payer] / receipt.subtotal) * (receipt.tip + receipt.tax);
         // account for +/- $0.01 differences from the final total due to rounding
         if (currTotal + taxTipAmount > finalTotal) {
           taxTipAmount = finalTotal - currTotal
         }
+        currTotal += taxTipAmount;
         payers[payer] += taxTipAmount;
-        payers[payer] = Math.round((payers[payer] + Number.EPSILON) * 100) / 100;
+        let payerTotal = Math.round((payers[payer] + Number.EPSILON) * 100) / 100
+        payers[payer] = payerTotal;
       }
       this.setState({payersDict:payers, receipt:receipt});
     });
@@ -99,9 +102,9 @@ class Page6 extends React.Component {
   render() {
     const header = "Here's the breakdown for your group at ";
     const groupTotal = "The group's total was $";
-    var totals = [];
+    let totals = [];
     for (const payer of Object.keys(this.state?.payersDict)) {
-      var payerAmount = payer + " : $" + this.state.payersDict[payer].toFixed(2);
+      let payerAmount = payer + " : $" + this.state.payersDict[payer].toFixed(2);
       totals.push(<div key={payer}>
         <span>{payerAmount}</span>
         <br/>

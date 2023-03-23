@@ -27,8 +27,8 @@ class Page4 extends React.Component {
 
   toggleCheckBoxChange(itemName) {
     const{handleCheckboxChange, label} = this.props;
-    var newAllItems = this.state.allItems;
-    for (var i = 0; i < this.state.allItems.length; i++) {
+    let newAllItems = this.state.allItems;
+    for (let i = 0; i < this.state.allItems.length; i++) {
       if (this.state.allItems[i].desc === itemName) {
         newAllItems[i].isChecked = !newAllItems[i].isChecked;
       }
@@ -57,7 +57,7 @@ class Page4 extends React.Component {
   renderItems() {
     if (this.state.allItems === "") { //&& this.state.receiptID !== "") {
       console.log("Getting receipt with id: " + this.state.receiptID);
-      var allItems = axios.get("/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
+      let allItems = axios.get("/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
       allItems.then(response => {
         this.setState({allItems: response.data.lineItems})
       }).catch(err => (err.status + ": Unable to get list items from receipt with id: " + this.state.receiptID));

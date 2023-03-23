@@ -36,11 +36,11 @@ class Page5 extends React.Component {
     promise.then(({data: receipt}) => {
       let usersList = [];
       let currUnselected = 0;
-      for (var elem of receipt.lineItems) {
+      for (let elem of receipt.lineItems) {
         if (elem.payers.length === 0) {
           currUnselected++;
         }
-        for (var person of elem.payers) {
+        for (let person of elem.payers) {
           if (!usersList.includes(person)) {
             usersList.push(person);
           }
