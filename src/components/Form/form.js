@@ -69,7 +69,6 @@ function DominicForm({ sendBack }) {
     const uploadForm = () => {
         const imageUp = new FormData();
 
-        //imageUp.append("test",true); // Test Flag
         imageUp.append("file", data.image);
         imageUp.append("name",data.name); 
         imageUp.append("tip",data.tip);
