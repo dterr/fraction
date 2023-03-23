@@ -128,10 +128,13 @@ class Page4 extends React.Component {
     const{isChecked} = this.state;
     return (
           <div className="App">
+              <p>BOO 1!</p>
               <header className="App-header">
+              <p>BOO 2!</p>
                 {this.renderPage4()}
+                <p>BOO 3!</p>
               </header>
-              <p>BOO!</p>
+              <p>BOO 4!</p>
               <Content />
           </div>
     );
