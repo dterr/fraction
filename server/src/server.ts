@@ -196,7 +196,6 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
        // /receipt/listItems/:json GET for finding specific items from receipt
        app.get('/receipt/listItems/:json', function(request, response) {
-         //console.log("Received request for list items: " + request.params.json);
          var json = JSON.parse(request.params.json);
          var id = json.receiptID;
          var username = json.user;
