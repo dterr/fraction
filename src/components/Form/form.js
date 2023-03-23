@@ -102,10 +102,6 @@ function DominicForm({ sendBack }) {
                                 setPage(page + 1);
                             }
                         } else if (page === 2) {
-                            // Tip is not necessary.
-                            //if (data.tip === '') {
-                                //setData({tip: 0});
-                            //}
                             setPage(page + 1);
                             uploadForm();
                         } 
