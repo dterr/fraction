@@ -56,8 +56,7 @@ class Page4 extends React.Component {
   }
 
   renderItems() {
-    if (this.state.allItems === "") { //&& this.state.receiptID !== "") {
-      console.log("Getting receipt with id: " + this.state.receiptID);
+    if (this.state.allItems === "") {
       var allItems = axios.get("/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
       allItems.then(response => {
         this.setState({allItems: response.data.lineItems})
@@ -78,12 +77,9 @@ class Page4 extends React.Component {
   }
 
   finishItemsSubmit(response) {
-    //alert("Received response: " + JSON.stringify(response));
-    console.log("Received response to items submit");
     window.location.assign("/page5/" + this.state.receiptID + "?username=" + this.state.username);
   }
 
-  //Assuming all items are stored in this.state.items
   handleItemsSubmit(event) {
     if (this.state.username === "") {
       alert('No username found');
