@@ -9,7 +9,7 @@ const WhatIsFraction = ({children}) => {
     };
     return (
         <p className="text">
-            {whatIs ? text.slice(0, 150) : text}
+            {whatIs ? text.slice(0, 18) : text}
             <span onClick={toggleWhatIs} className="read-or-hide">
                 {whatIs ? "more" : "less"}
             </span>
@@ -22,7 +22,7 @@ const Content = () => {
         <div className="container">
             <h2>
                 <WhatIsFraction>
-                Fraction is a web-based application that allows you to upload a 
+                What is Fraction? Fraction is a web-based application that allows you to upload a 
                 receipt from a meal (or other activity!) that was shared between 
                 you and your friends and allows you to easily select your items and 
                 receive an automatically calculated subtotal. No more awkward 

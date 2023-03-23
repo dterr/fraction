@@ -68,7 +68,7 @@ class Page6 extends React.Component {
     const instruction = "Please Venmo " + this.state.receipt?.creatorName + " accordingly.";
     const thankyou = "We hope you enjoyed using Fraction! Your friends will thank you for making"
     const thankyou_2 = "splitting the bill easier (and less awkward) than ever before."
-
+    
     return (
           <div className="App">
               <header className="App-header">
@@ -97,6 +97,10 @@ class Page6 extends React.Component {
                     {thankyou}
                     <br></br>
                     {thankyou_2}
+                    <p>If you're interested in learning more about our project, check out our wiki <a href="https://github.com/StanfordCS194/win2023-team15/wiki">here!</a>
+
+                    </p>
+
                   </header>
                 }
                 {!this.state.receipt?.isClosed && 
