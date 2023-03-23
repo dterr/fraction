@@ -58,7 +58,7 @@ class Page4 extends React.Component {
   renderItems() {
     if (this.state.allItems === "") { //&& this.state.receiptID !== "") {
       console.log("Getting receipt with id: " + this.state.receiptID);
-      var allItems = axios.get("http://localhost:5000/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
+      var allItems = axios.get("/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
       allItems.then(response => {
         this.setState({allItems: response.data.lineItems})
       }).catch(err => (err.status + ": Unable to get list items from receipt with id: " + this.state.receiptID));
@@ -93,7 +93,7 @@ class Page4 extends React.Component {
         items: this.state.allItems,
         user: this.state.username,
       };
-      axios.post('http://localhost:5000/receipt/claimItems/', requestData).then(
+      axios.post('/receipt/claimItems/', requestData).then(
         (response) => this.finishItemsSubmit(response)
       ).catch(
         (err) => console.log(err)
