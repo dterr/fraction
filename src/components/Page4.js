@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 import axios from 'axios';
+import Content from "./WhatIsFraction.js"
 
 class Page4 extends React.Component {
   constructor(props) {
@@ -64,7 +65,8 @@ class Page4 extends React.Component {
     } else {
       return (
         <div>
-          <p>Hello {this.state.username}, what items did you order? Select them below.</p>
+          <p>Hello {this.state.username}! Thanks for using Fraction to make splitting the bill easy!</p>
+          <p>What items did you order? Select them below.</p>
           <div className="checkbox-grid">
             {this.state.allItems.map((item) => this.renderItem(item))}
           </div>
@@ -101,13 +103,16 @@ class Page4 extends React.Component {
   }
 
   renderNameEntryBox() {
-    return <form onSubmit={this.handleNameSubmit}>
+    return <div>
+          <p>Sign in here to select the items that you ordered! <br></br> Use a name that is unique from anyone else's in your group.</p>
+          <form onSubmit={this.handleNameSubmit}>
               <label>
                 Name:
                 <input type="text" value={this.state.nameboxValue} onChange={this.handleChange} />
                 </label>
               <input type="submit" value="Submit" />
            </form>
+          </div>
   }
 
   renderPage4() {
@@ -126,6 +131,8 @@ class Page4 extends React.Component {
               <header className="App-header">
                 {this.renderPage4()}
               </header>
+              <p>BOO!</p>
+              <Content />
           </div>
     );
   }

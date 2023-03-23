@@ -65,7 +65,9 @@ class Page6 extends React.Component {
     }
 
     //const receipt = "View Receipt";
-    const instruction = "Please Venmo " + this.state.receipt?.creatorName + " accordingly. Thanks for using Fraction!";
+    const instruction = "Please Venmo " + this.state.receipt?.creatorName + " accordingly.";
+    const thankyou = "We hope you enjoyed using Fraction! Your friends will thank you for making"
+    const thankyou_2 = "splitting the bill easier (and less awkward) than ever before."
 
     return (
           <div className="App">
@@ -90,6 +92,11 @@ class Page6 extends React.Component {
                     <br></br>
                     <br></br>
                     {instruction}
+                    <br></br>
+                    <br></br>
+                    {thankyou}
+                    <br></br>
+                    {thankyou_2}
                   </header>
                 }
                 {!this.state.receipt?.isClosed && 
