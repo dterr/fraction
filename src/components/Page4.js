@@ -93,6 +93,7 @@ class Page4 extends React.Component {
         receiptID: this.state.receiptID,
         items: this.state.allItems,
         user: this.state.username,
+        venmo: this.state.venmo
       };
       axios.post('/receipt/claimItems/', requestData).then(
         (response) => this.finishItemsSubmit(response)

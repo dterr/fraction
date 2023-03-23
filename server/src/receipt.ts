@@ -35,6 +35,7 @@ const lineItemSchema = new mongoose.Schema({
 // Receipt interface
 interface Receipt {
   isClosed: boolean;
+  creatorVenmo: string;
   creatorName: string;
   establishment: string;
   total: number;
@@ -50,6 +51,10 @@ interface Receipt {
 const receiptSchema = new mongoose.Schema({
   isClosed:  {
     type: Boolean,
+    required: true
+  },
+  creatorVenmo: {
+    type: String,
     required: true
   },
   creatorName: {
