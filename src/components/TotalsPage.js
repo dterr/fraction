@@ -2,12 +2,13 @@ import './App.css';
 import axios from 'axios';
 import React from 'react';
 
+
 // Page to calculate and display per-person totals
-class Page6 extends React.Component {
+class TotalsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      receiptID: window.location.pathname.substring("/page6/".length),
+      receiptID: window.location.pathname.substring("/totals/".length),
       receipt: null,
       payersDict: {},
     }
@@ -24,31 +25,32 @@ class Page6 extends React.Component {
       // dictionary maps payers to per-person sum, before taxes and tip
 
       let usersList = [];
-      for (var elem of receipt.lineItems) {
-        for (var user of elem.payers) {
+      for (let elem of receipt.lineItems) {
+        for (let user of elem.payers) {
           if (!usersList.includes(user)) {
             usersList.push(user);
           }
         }
       }
 
-      var payers = {}
-      console.log(receipt);
-      for (var line of receipt.lineItems) {
-        var numPayers = line.payers.length;
+      let payers = {}
+      let currSubtotal = 0;
+      for (let line of receipt.lineItems) {
+        let numPayers = line.payers.length;
         if (numPayers === 0) {
           numPayers = usersList.length;
         }
-        console.log(numPayers);
-        var eachAmount = 0;
-        if (line.qty > 1) {
-          eachAmount = (line.qty * line.price) / numPayers; 
-        } 
-        else {
+        let eachAmount = 0;
+        if (isNaN(line.qty) || isNaN(line.price) || line.qty === null || line.price === null || line.qty === undefined || line.price === undefined) {
+          currSubtotal += line.lineTotal;
           eachAmount = line.lineTotal / numPayers; 
         }
+        else {
+          currSubtotal += line.qty * line.price;
+          eachAmount = (line.qty * line.price) / numPayers;
+        }
         if (numPayers === usersList.length) {
-          for (var u of usersList) {
+          for (let u of usersList) {
             if (u in payers) {
               payers[u] += eachAmount;
             }
@@ -58,7 +60,7 @@ class Page6 extends React.Component {
           }
         }
         else {
-          for (var person of line.payers) {
+          for (let person of line.payers) {
             if (person in payers) {
               payers[person] += eachAmount;
             }
@@ -69,19 +71,30 @@ class Page6 extends React.Component {
         }
       }
 
-      console.log(payers);
+      // correct any errors with subtotal and tax
+      if (currSubtotal !== receipt.subtotal) {
+        receipt.subtotal = currSubtotal;
+        let newTax = currSubtotal * (receipt.tax / receipt.subtotal);
+        receipt.tax = newTax;
+      }
 
       // add tip and tax to amounts
       let finalTotal = receipt.subtotal + receipt.tip + receipt.tax;
+      if (finalTotal !== receipt.total) {
+        receipt.total = finalTotal;
+      }
       let currTotal = 0;
       for (const payer of Object.keys(payers)) {
-        var taxTipAmount = (payers[payer] / receipt.subtotal) * (receipt.tip + receipt.tax);
+        currTotal += payers[payer];
+        let taxTipAmount = (payers[payer] / receipt.subtotal) * (receipt.tip + receipt.tax);
         // account for +/- $0.01 differences from the final total due to rounding
         if (currTotal + taxTipAmount > finalTotal) {
           taxTipAmount = finalTotal - currTotal
         }
+        currTotal += taxTipAmount;
         payers[payer] += taxTipAmount;
-        payers[payer] = Math.round((payers[payer] + Number.EPSILON) * 100) / 100;
+        let payerTotal = Math.round((payers[payer] + Number.EPSILON) * 100) / 100
+        payers[payer] = payerTotal;
       }
       this.setState({payersDict:payers, receipt:receipt});
     });
@@ -90,9 +103,9 @@ class Page6 extends React.Component {
   render() {
     const header = "Here's the breakdown for your group at ";
     const groupTotal = "The group's total was $";
-    var totals = [];
+    let totals = [];
     for (const payer of Object.keys(this.state?.payersDict)) {
-      var payerAmount = payer + " : $" + this.state.payersDict[payer].toFixed(2);
+      let payerAmount = payer + " : $" + this.state.payersDict[payer].toFixed(2);
       totals.push(<div key={payer}>
         <span>{payerAmount}</span>
         <br/>
@@ -100,7 +113,7 @@ class Page6 extends React.Component {
     }
 
     //const receipt = "View Receipt";
-    const instruction = "Please Venmo " + this.state.receipt?.creatorName + " accordingly. Their Venmo account handle is " + this.state.receipt?.creatorVenmo;
+    const instruction = "Please Venmo " + this.state.receipt?.creatorName + " (@" + this.state.receipt?.creatorVenmo + ") accordingly.";
     const thankyou = "We hope you enjoyed using Fraction! Your friends will thank you for making splitting the bill easier (and less awkward) than ever before."
     
     return (
@@ -149,4 +162,4 @@ class Page6 extends React.Component {
   }
 }
 
-  export default Page6;
+  export default TotalsPage;

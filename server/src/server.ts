@@ -10,7 +10,7 @@ import { Bill, Item } from "./bill"
 import { getOCR, convertOCRToBill, convertHEIC, mergeDuplicateLineItems } from "./helpers";
 import multer from 'multer';
 
-var path = require('path')
+let path = require('path')
 
 // Load environment variables from the .env file, where the ATLAS_URI is configured
 dotenv.config();
@@ -22,7 +22,7 @@ if (!ATLAS_URI) {
    process.exit(1);
 }
 
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 
 mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
    .then(() => {
@@ -152,13 +152,13 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
              for (let i = 0; i < json.items.length; i++) {
               if (json.items[i].isChecked) {
                 console.log("Item: " + json.items[i].desc + " is checked");
-                for(var j = 0; j < receipt.lineItems.length; j++) {
+                for(let j = 0; j < receipt.lineItems.length; j++) {
                   if (receipt.lineItems[j].desc === json.items[i].desc && !receipt.lineItems[j].payers.includes(json.user))
                     receipt.lineItems[j].payers.push(json.user);
                 }
               } else {
                 console.log("Item: " + json.items[i].desc + " is not checked");
-                for(var j = 0; j < receipt.lineItems.length; j++) {
+                for(let j = 0; j < receipt.lineItems.length; j++) {
                   if (receipt.lineItems[j].desc === json.items[i].desc && receipt.lineItems[j].payers.includes(json.user))
                     receipt.lineItems[j].payers = receipt.lineItems[j].payers.filter((value, index, arr) => value !== json.user);
                 }
@@ -175,7 +175,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
        // /receipt/status/:json POST for closing a tab (changes the status of receipt.isClosed)
       app.post('/receipt/status/:json', function(request, response) {
-        var json = JSON.parse(request.params.json);
+        let json = JSON.parse(request.params.json);
         console.log("Changing status of " + JSON.stringify(json));
         ReceiptModel.findOne({_id: new mongoose.Types.ObjectId(json.receiptID)})
           .select("isClosed")
@@ -198,9 +198,9 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
        // /receipt/listItems/:json GET for finding specific items from receipt
        app.get('/receipt/listItems/:json', function(request, response) {
          //console.log("Received request for list items: " + request.params.json);
-         var json = JSON.parse(request.params.json);
-         var id = json.receiptID;
-         var username = json.user;
+         let json = JSON.parse(request.params.json);
+         let id = json.receiptID;
+         let username = json.user;
          if (id === "" || !request.params.json) {
            response.status(401).send("List items request was not given a receipt ID");
            return;
@@ -212,8 +212,8 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
                response.status(400).send('Receipt not found');
                return;
             } else {
-             var lineItemsList = new Array();
-             for (var item of receipt.lineItems) {
+             let lineItemsList = new Array();
+             for (let item of receipt.lineItems) {
               lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username), payers: item.payers, qty:item.qty, price:item.price, lineTotal:item.lineTotal,});
              }
              response.status(200).send({lineItems: lineItemsList, isClosed: receipt.isClosed, creatorVenmo: receipt.creatorVenmo, creatorName: receipt.creatorName, establishment: receipt.establishment, total: receipt.total, subtotal: receipt.subtotal, tax: receipt.tax, tip: receipt.tip});

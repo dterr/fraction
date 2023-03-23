@@ -9,7 +9,7 @@ const axios = require('axios');
 import { promisify } from 'util';
 //import fs from 'fs';
 import convert from 'heic-convert';
-var path = require('path')
+let path = require('path')
 
 dotenv.config();
 
@@ -45,7 +45,7 @@ function sleep(ms: any) {
 
 // Sends receipt for OCR and returns text body of receipt
 export async function getOCR(ms: Number, filePath: String): Promise<any> {
-  var data = new FormData();
+  let data = new FormData();
   //ex: server/src/upload/test.png
   data.append('file', fs.createReadStream(filePath));
 
@@ -56,7 +56,7 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
 
     View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-1
   */
-  var config = {
+  let config = {
     method: 'post',
     url: 'https://api.tabscanner.com/api/2/process',
     headers: {
@@ -80,7 +80,7 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
     View TabScanner docs on processing for more: https://docs.tabscanner.com/#documenter-4-2
   */
 
-  var config2 = {
+  let config2 = {
     method: 'get',
     url: `https://api.tabscanner.com/api/result/${token}`,
     headers: {
