@@ -10,7 +10,8 @@ class Page5 extends React.Component {
       receipt: null,
       buttonText: "",
       timerID: null,
-      username: ""
+      username: "",
+      numUnselected: 0
     }
   }
 
@@ -34,7 +35,11 @@ class Page5 extends React.Component {
     let promise = axios.get('/receipt/listItems/' + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
     promise.then(({data: receipt}) => {
       let usersList = [];
+      let currUnselected = 0;
       for (var elem of receipt.lineItems) {
+        if (elem.payers.length === 0) {
+          currUnselected++;
+        }
         for (var person of elem.payers) {
           if (!usersList.includes(person)) {
             usersList.push(person);
@@ -51,6 +56,11 @@ class Page5 extends React.Component {
       this.setState({receipt:receipt});
       this.setState({buttonText:text});
 
+      console.log(this.state.numUnselected);
+      console.log(currUnselected);
+
+      this.setState({numUnselected:currUnselected});
+
       if(receipt.isClosed){
         clearInterval(this.state.timerID);
         window.location.assign("/page6/" + this.state.receiptID);
@@ -61,6 +71,7 @@ class Page5 extends React.Component {
   render() {
     const thanks = "Thanks for selecting your order!";
     const instruction = "Please wait while your friends finish selecting their orders.";
+    const warning = "Warning: Not all items have been selected yet. Any unselected items will be split evenly among the group."
 
     return (
           <div className="App">
@@ -69,6 +80,13 @@ class Page5 extends React.Component {
                 <br></br>
                 <br></br>
                 {instruction}
+                {this.state.numUnselected > 0 && 
+                <header>
+                    <br></br>
+                    <br></br>
+                    {warning}
+                </header>
+                }
                 <br></br>
                 <br></br>
                 {this.state.username === this.state.receipt?.creatorName && !this.state.receipt?.isClosed && 

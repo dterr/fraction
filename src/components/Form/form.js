@@ -24,7 +24,7 @@ function DominicForm({ sendBack }) {
     const [page, setPage] = useState(0);
     const [data, setData] = useState({
         name: '',
-        tip: '',
+        tip: '0',
         image: '',
     });
     const [link, setLink] = useState('');
@@ -43,7 +43,7 @@ function DominicForm({ sendBack }) {
     const cleanForm = () => {
         setData({
             name: '',
-            tip: '',
+            tip: '0',
             image: '',
         });
     }
@@ -120,10 +120,6 @@ function DominicForm({ sendBack }) {
                                 setPage(page + 1);
                             }
                         } else if (page === 2) {
-                            // Tip is not necessary.
-                            if (data.tip === '') {
-                                setData({tip: 0});
-                            }
                             setPage(page + 1);
                             uploadForm();
                         } 
