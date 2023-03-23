@@ -56,7 +56,9 @@ class Page4 extends React.Component {
   }
 
   renderItems() {
-    if (this.state.allItems === "") {
+    if (this.state.receiptID === '') {
+      alert('No receipt ID found, did you paste the correct URL?');
+    } else if (this.state.allItems === "") {
       var allItems = axios.get("/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
       allItems.then(response => {
         this.setState({allItems: response.data.lineItems})
