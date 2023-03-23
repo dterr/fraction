@@ -5,6 +5,7 @@ import ImgUpload from './ImgUpload';
 import NamePrompt from './NamePrompt';
 import TipPrompt from './TipPrompt';
 import UniqueLink from './UniqueLink';
+import ReceiptEditor from './ReceiptEditor';
 
 import "./form.css";
 
@@ -27,11 +28,15 @@ function DominicForm({ sendBack }) {
         image: '',
     });
     const [link, setLink] = useState('');
+    const [ocrResults, setOcrResults] = useState(null);
+    const [editedReceipt, setEditedReceipt] = useState(null);
 
     const formTitles = [
         'Upload your receipt here',
         'While we wait, what\'s your name?',
         'Did you tip? If so, how much was it?',
+        'Thank you, please wait while your receipt processes.',
+        'Here\'s what our AI found, fix any errors you see.',
     ];
 
     // In case the API rejects and we need to refill the form
@@ -53,9 +58,10 @@ function DominicForm({ sendBack }) {
             return <TipPrompt data={data} setData={setData}/>
         } else if (page === 3) {
             return <div>
-                        <p>Thank you, please wait while your receipt processes.</p>
                         <div className="loading">. . .</div>
                     </div>
+        } else if (page === 4 && ocrResults) {
+            return <ReceiptEditor ocrResults={ocrResults} saveApprovedReceipt={saveApprovedReceipt}/>
         } else {
             return <UniqueLink link={link}/>
         }
@@ -72,12 +78,24 @@ function DominicForm({ sendBack }) {
         console.log("Upload Form", page);
         axios.post("/api/receipt", imageUp).then(res => {
             console.log("Successful upload", res);
-            setLink(res.data.link);
-            // Move onto the Unique Link page since we recieved the result
-            setPage({page:page + 1});
-            sendBack(data.name);
-            cleanForm();
+            console.log("What we got from the OCR %O", res.data.receipt)
+            setOcrResults(res.data.receipt);
+            //Let's view the OCR receipt now
+            setPage(4);
           }).catch();
+    }
+
+    const saveApprovedReceipt = (data) => {
+        setEditedReceipt(data);
+        axios.post("/api/approved-receipt", {approved_receipt: data}).then(
+            (res) => {
+                console.log("Successfully saved %O", res);
+                setLink(res.data.link);
+                setPage(page + 1);
+                sendBack(data.name);
+                cleanForm();
+            }
+        );
     }
 
     return (

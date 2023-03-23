@@ -131,7 +131,7 @@ export function convertOCRToBill(receiptBody: any, tip: Number): Bill {
   receiptBody.lineItems.forEach( (currItem: any) => {
       items.push({
         _desc: currItem.descClean,
-        _qty: currItem.qty,
+        _qty: currItem.qty === 0 ? 1 : currItem.qty,
         _pricePerItem: (currItem.lineTotal as number) / (currItem.qty as number),
         _totalPrice: currItem.lineTotal
       } as Item)
