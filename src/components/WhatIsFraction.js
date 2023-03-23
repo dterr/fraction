@@ -11,7 +11,7 @@ const WhatIsFraction = ({children}) => {
         <p className="text">
             {whatIs ? text.slice(0, 18) : text}
             <span onClick={toggleWhatIs} className="read-or-hide">
-                {whatIs ? "more" : "less"}
+                {whatIs ? "Click here to find out!" : " hide"}
             </span>
         </p>
     );
@@ -20,7 +20,6 @@ const WhatIsFraction = ({children}) => {
 const Content = () => {
     return (
         <div className="container">
-            <h2>
                 <WhatIsFraction>
                 What is Fraction? Fraction is a web-based application that allows you to upload a 
                 receipt from a meal (or other activity!) that was shared between 
@@ -31,7 +30,6 @@ const Content = () => {
                 easier for you to enjoy that precious time with your friends without 
                 worry. 
                 </WhatIsFraction>
-            </h2>
         </div>
     );
 };

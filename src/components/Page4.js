@@ -130,8 +130,7 @@ class Page4 extends React.Component {
           <div className="App">
               <header className="App-header">
                 {this.renderPage4()}
-                <p>BOO 3!</p>
-                <p>BOO 4!</p>
+                <br></br>
                 <Content />
               </header>
           </div>
