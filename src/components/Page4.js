@@ -40,25 +40,27 @@ class Page4 extends React.Component {
 
   renderItem(item) {
     const { label } = this.props;
+    var itemNameWithQuantity = item.qty < 2 ? item.desc : "(" + item.qty + "x) " + item.desc;
     return (
-      <div className="checkbox-item" key={item.desc} onClick={() => this.toggleCheckBoxChange(item.desc)}>
+      <div className="checkbox-item" key={item.desc} >
         <input
           type="checkbox"
           id={item.desc}
           name={item.desc}
           value={label}
           checked={item.isChecked}
-          onChange={() => {}}
+          onChange={() => this.toggleCheckBoxChange(item.desc)}
         />
-        <label htmlFor={item.desc}>{item.desc}</label>
+        <label htmlFor={itemNameWithQuantity}>{itemNameWithQuantity}</label>
       </div>
     );
   }
 
   renderItems() {
-    if (this.state.allItems === "") { //&& this.state.receiptID !== "") {
-      console.log("Getting receipt with id: " + this.state.receiptID);
-      let allItems = axios.get("/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
+    if (this.state.receiptID === '') {
+      alert('No receipt ID found, did you paste the correct URL?');
+    } else if (this.state.allItems === "") {
+      var allItems = axios.get("/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
       allItems.then(response => {
         this.setState({allItems: response.data.lineItems})
       }).catch(err => (err.status + ": Unable to get list items from receipt with id: " + this.state.receiptID));
@@ -79,12 +81,9 @@ class Page4 extends React.Component {
   }
 
   finishItemsSubmit(response) {
-    //alert("Received response: " + JSON.stringify(response));
-    console.log("Received response to items submit");
     window.location.assign("/page5/" + this.state.receiptID + "?username=" + this.state.username);
   }
 
-  //Assuming all items are stored in this.state.items
   handleItemsSubmit(event) {
     if (this.state.username === "") {
       alert('No username found');
