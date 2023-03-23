@@ -22,32 +22,67 @@ class Page6 extends React.Component {
     promise.then(({data: receipt}) => {
       // calculations to display per-person totals based on the database given receipt ID
       // dictionary maps payers to per-person sum, before taxes and tip
-      var payers = {}
-      for (var line of receipt.lineItems) {
-        var numPayers = line.payers.length;
-        var eachAmount = 0;
-        if (numPayers > 0) {
-          eachAmount = line.lineTotal / numPayers; 
-        } 
-        for (var person of line.payers) {
-          if (person in payers) {
-            payers[person] += eachAmount;
-          }
-          else {
-            payers[person] = eachAmount;
+
+      let usersList = [];
+      for (var elem of receipt.lineItems) {
+        for (var user of elem.payers) {
+          if (!usersList.includes(user)) {
+            usersList.push(user);
           }
         }
       }
 
+      var payers = {}
+      console.log(receipt);
+      for (var line of receipt.lineItems) {
+        var numPayers = line.payers.length;
+        if (numPayers === 0) {
+          numPayers = usersList.length;
+        }
+        console.log(numPayers);
+        var eachAmount = 0;
+        if (line.qty > 1) {
+          eachAmount = (line.qty * line.price) / numPayers; 
+        } 
+        else {
+          eachAmount = line.lineTotal / numPayers; 
+        }
+        if (numPayers === usersList.length) {
+          for (var u of usersList) {
+            if (u in payers) {
+              payers[u] += eachAmount;
+            }
+            else {
+              payers[u] = eachAmount;
+            }
+          }
+        }
+        else {
+          for (var person of line.payers) {
+            if (person in payers) {
+              payers[person] += eachAmount;
+            }
+            else {
+              payers[person] = eachAmount;
+            }
+          }
+        }
+      }
+
+      console.log(payers);
+
       // add tip and tax to amounts
+      let finalTotal = receipt.subtotal + receipt.tip + receipt.tax;
+      let currTotal = 0;
       for (const payer of Object.keys(payers)) {
         var taxTipAmount = (payers[payer] / receipt.subtotal) * (receipt.tip + receipt.tax);
+        // account for +/- $0.01 differences from the final total due to rounding
+        if (currTotal + taxTipAmount > finalTotal) {
+          taxTipAmount = finalTotal - currTotal
+        }
         payers[payer] += taxTipAmount;
         payers[payer] = Math.round((payers[payer] + Number.EPSILON) * 100) / 100;
       }
-      
-      // TODO: check for rounding errors when sum of per-person totals != receipt.total
-
       this.setState({payersDict:payers, receipt:receipt});
     });
   }
@@ -57,7 +92,7 @@ class Page6 extends React.Component {
     const groupTotal = "The group's total was $";
     var totals = [];
     for (const payer of Object.keys(this.state?.payersDict)) {
-      var payerAmount = payer + " : $" + this.state.payersDict[payer];
+      var payerAmount = payer + " : $" + this.state.payersDict[payer].toFixed(2);
       totals.push(<div key={payer}>
         <span>{payerAmount}</span>
         <br/>
