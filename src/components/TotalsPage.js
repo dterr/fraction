@@ -1,6 +1,7 @@
 import './App.css';
 import axios from 'axios';
 import React from 'react';
+import Confetti from 'react-confetti'
 
 
 // Page to calculate and display per-person totals
@@ -113,11 +114,18 @@ class TotalsPage extends React.Component {
     }
 
     //const receipt = "View Receipt";
-    const instruction = "💸 Please Venmo " + this.state.receipt?.creatorName + " (@" + this.state.receipt?.creatorVenmo + ") accordingly. 💸";
+    const instruction = "Please Venmo " + this.state.receipt?.creatorName + " (@" + this.state.receipt?.creatorVenmo + ") accordingly. 💸💸💸";
     const thankyou =  "We hope you enjoyed using Fraction! 🤑 Your friends will thank you for making splitting the bill easier (and less awkward 👉👈) than ever before. 🥰"
-    
     return (
           <div className="App">
+              <Confetti
+                colors={['#009688','#4CAF50','#8BC34A']}
+                initialVelocityX={5}
+                initialVelocityY={8}
+                opacity={.75}
+                numberOfPieces={300}
+                recycle={0}
+              />
               <header className="App-header">
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 550, marginTop: 150 }}> 
                 {this.state.receipt?.isClosed && 

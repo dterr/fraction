@@ -76,7 +76,7 @@ class WaitingPage extends React.Component {
   render() {
     const thanks = "🙏 Thanks for selecting your order! 🙏";
     const instruction = "⌛ Please wait while your friends finish selecting their orders. ⌛";
-    const warning = "😱 Warning: Not all items have been selected yet. Any unselected items will be split evenly among the group. 🧮"
+    const warning = "😱 Warning: Not all items have been selected yet. Any unselected items will be split evenly among the group. 🧮🧮🧮"
 
     return (
           <div className="App">
