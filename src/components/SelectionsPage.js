@@ -17,10 +17,12 @@ class SelectionsPage extends React.Component {
     this.handleItemsSubmit = this.handleItemsSubmit.bind(this);
   }
 
+  // Updates display to show name being typed into namebox
   handleChange(event) {
     this.setState({nameboxValue: event.target.value});
   }
 
+  // "Logs in," i.e. sets final username, which advances view to show the itemized receipt
   handleNameSubmit(event) {
     event.preventDefault();
     this.setState({username: this.state.nameboxValue});
@@ -57,7 +59,12 @@ class SelectionsPage extends React.Component {
     );
   }
 
+<<<<<<< HEAD:src/components/Page4.js
+  // Queries receipt from backend, sends username so that the checkboxes can be pre-populated 
+  // if the user has already claimed items in the past
+=======
   // get the list of items from the uploaded receipt 
+>>>>>>> 44b862e076dd74ec3545c2c16d284492d9e17da1:src/components/SelectionsPage.js
   renderItems() {
     if (this.state.receiptID === '') {
       alert('No receipt ID found, did you paste the correct URL?');
@@ -86,7 +93,11 @@ class SelectionsPage extends React.Component {
     window.location.assign("/waiting/" + this.state.receiptID + "?username=" + this.state.username);
   }
 
+<<<<<<< HEAD:src/components/Page4.js
+  // Sends data from the checkboxes along with the receipt ID and username to backend to update receipt in Mongo
+=======
   // collect data necessary to build unique receipt 
+>>>>>>> 44b862e076dd74ec3545c2c16d284492d9e17da1:src/components/SelectionsPage.js
   handleItemsSubmit(event) {
     if (this.state.username === "") {
       alert('No username found');

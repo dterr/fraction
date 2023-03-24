@@ -218,10 +218,9 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
        // /receipt/listItems/:json GET for finding specific items from receipt
        app.get('/receipt/listItems/:json', function(request, response) {
-         //console.log("Received request for list items: " + request.params.json);
-         let json = JSON.parse(request.params.json);
-         let id = json.receiptID;
-         let username = json.user;
+         var json = JSON.parse(request.params.json);
+         var id = json.receiptID;
+         var username = json.user;
          if (id === "" || !request.params.json) {
            response.status(401).send("List items request was not given a receipt ID");
            return;
