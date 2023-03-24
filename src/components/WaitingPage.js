@@ -103,9 +103,11 @@ class WaitingPage extends React.Component {
                 <header>
                     {this.state.selectingText}
                     <br></br>
-                    <button onClick={() => {
-                      axios.post('/receipt/status/' + JSON.stringify({receiptID: this.state.receiptID, isClosed: true}));
-                    }}>{this.state.buttonText}</button>
+                    <div className="button-container">
+                      <button onClick={() => {
+                        axios.post('/receipt/status/' + JSON.stringify({receiptID: this.state.receiptID, isClosed: true}));
+                      }}>{this.state.buttonText}</button>
+                    </div>
                 </header>
                 }
                 {this.state.username !== this.state.receipt?.creatorName && !this.state.receipt?.isClosed && 
