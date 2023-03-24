@@ -2,7 +2,6 @@ import './App.css';
 import axios from 'axios';
 import React from 'react';
 
-
 // Page to calculate and display per-person totals
 class TotalsPage extends React.Component {
   constructor(props) {
@@ -11,6 +10,7 @@ class TotalsPage extends React.Component {
       receiptID: window.location.pathname.substring("/totals/".length),
       receipt: null,
       payersDict: {},
+      numUsers: 0,
     }
   }
 
@@ -33,7 +33,12 @@ class TotalsPage extends React.Component {
           }
         }
       }
-      let numUsers = usersList.length;
+      this.state.numUsers = usersList.length;
+      const requestData = {
+        receiptID: this.state.receiptID,
+        numUsers: this.state.numUsers,
+      };
+      axios.post('/receipt/countUsers/', requestData);
 
       // dictionary maps payers to per-person sum, before taxes and tip
       let payers = {}
@@ -83,7 +88,7 @@ class TotalsPage extends React.Component {
       }
 
       // add tip and tax to amounts
-      let finalTotal = receipt.subtotal + receipt.tip + receipt.tax;
+      let finalTotal = Math.round(((receipt.subtotal + receipt.tip + receipt.tax) + Number.EPSILON) * 100) / 100;
       if (finalTotal !== receipt.total) {
         receipt.total = finalTotal;
       }
