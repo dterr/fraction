@@ -144,19 +144,17 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
            .then(function (receipt) {
              if (!receipt) {
                console.log("Could not find receipt with id: " + json.receiptID);
-               response.status(400).send('Receipt not found');
+               response.status(400).send("Could not find receipt with id: " + json.receiptID);
                return;
              }
              // Checks all users
              for (let i = 0; i < json.items.length; i++) {
               if (json.items[i].isChecked) {
-                console.log("Item: " + json.items[i].desc + " is checked");
                 for(let j = 0; j < receipt.lineItems.length; j++) {
                   if (receipt.lineItems[j].desc === json.items[i].desc && !receipt.lineItems[j].payers.includes(json.user))
                     receipt.lineItems[j].payers.push(json.user);
                 }
               } else {
-                console.log("Item: " + json.items[i].desc + " is not checked");
                 for(let j = 0; j < receipt.lineItems.length; j++) {
                   if (receipt.lineItems[j].desc === json.items[i].desc && receipt.lineItems[j].payers.includes(json.user))
                     receipt.lineItems[j].payers = receipt.lineItems[j].payers.filter((value, index, arr) => value !== json.user);
