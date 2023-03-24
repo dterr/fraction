@@ -18,12 +18,13 @@ class TotalsPage extends React.Component {
     this.fetchData(this.state.receiptID);
   }
 
+  // retrieve the receipt
   fetchData(receiptID) {
     let promise = axios.get('/receipt/listItems/' + JSON.stringify({receiptID: receiptID}));
     promise.then(({data: receipt}) => {
       // calculations to display per-person totals based on the database given receipt ID
-      // dictionary maps payers to per-person sum, before taxes and tip
-
+      
+      // get list of users and number of users for this receipt
       let usersList = [];
       for (let elem of receipt.lineItems) {
         for (let user of elem.payers) {
@@ -32,7 +33,9 @@ class TotalsPage extends React.Component {
           }
         }
       }
+      let numUsers = usersList.length;
 
+      // dictionary maps payers to per-person sum, before taxes and tip
       let payers = {}
       let currSubtotal = 0;
       for (let line of receipt.lineItems) {
@@ -41,6 +44,7 @@ class TotalsPage extends React.Component {
           numPayers = usersList.length;
         }
         let eachAmount = 0;
+        // some receipts do not specify quantity or price
         if (isNaN(line.qty) || isNaN(line.price) || line.qty === null || line.price === null || line.qty === undefined || line.price === undefined) {
           currSubtotal += line.lineTotal;
           eachAmount = line.lineTotal / numPayers; 
@@ -112,7 +116,6 @@ class TotalsPage extends React.Component {
       </div>)
     }
 
-    //const receipt = "View Receipt";
     const instruction = "Please Venmo " + this.state.receipt?.creatorName + " (@" + this.state.receipt?.creatorVenmo + ") accordingly.";
     const thankyou = "We hope you enjoyed using Fraction! Your friends will thank you for making splitting the bill easier (and less awkward) than ever before."
     
@@ -143,10 +146,9 @@ class TotalsPage extends React.Component {
                     <br></br>
                     {thankyou}
                     <br></br>
-                    <p>If you're interested in learning more about our project, check out our wiki <a href="https://github.com/StanfordCS194/win2023-team15/wiki">here!</a>
-
+                    <p>
+                      If you're interested in learning more about our project, check out our wiki <a href="https://github.com/StanfordCS194/win2023-team15/wiki">here!</a>
                     </p>
-
                   </header>
                 }
                 {!this.state.receipt?.isClosed && 
@@ -154,12 +156,10 @@ class TotalsPage extends React.Component {
                     ERROR: Receipt has not been closed.
                 </header>
                 }
-
-                  
               </header>
           </div>
-    );
+      );
+    } 
   }
-}
 
   export default TotalsPage;
