@@ -76,7 +76,7 @@ class WaitingPage extends React.Component {
         clearInterval(this.state.timerID);
         window.location.assign("/totals/" + this.state.receiptID);
       }
-    });
+    }).catch(err => (err.status + ": Could not retrieve receipt with id: " + receiptID));
   }
   
   render() {
