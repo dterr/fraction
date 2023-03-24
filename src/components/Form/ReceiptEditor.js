@@ -37,7 +37,7 @@ function ReceiptEditor({ocrResults, saveApprovedReceipt}) {
               />
             </div>
           ))}
-          <button onClick={() => saveApprovedReceipt(editedData)}>Save</button>
+          <button id="next-button" onClick={() => saveApprovedReceipt(editedData)}>Save</button>
         </div>
       );
     }
