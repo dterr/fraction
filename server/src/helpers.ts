@@ -98,6 +98,9 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
     });
     // We can also grab receipt.success for error checking
     receiptBody = receipt.result
+    if (ocrCode !== receipt.code) {
+      console.log("Code %O",receipt.code);
+    }
     ocrCode = receipt.code
   }
   return receiptBody;
