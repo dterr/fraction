@@ -2,6 +2,7 @@ import './App.css';
 import axios from 'axios';
 import React from 'react';
 import Confetti from 'react-confetti'
+import Content from './WhatIsFraction';
 
 // Page to calculate and display per-person totals
 class TotalsPage extends React.Component {
@@ -135,7 +136,7 @@ class TotalsPage extends React.Component {
                 recycle={0}
               />
               <header className="App-header">
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 550, marginTop: 150 }}> 
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "fit-content", marginTop: 150 }}> 
                 {this.state.receipt?.isClosed && 
                   <header>
                     <div>
