@@ -10,6 +10,7 @@ class WaitingPage extends React.Component {
       receiptID: window.location.pathname.substring("/waiting/".length), //Gets receipt ID from url
       receipt: null,
       buttonText: "",
+      selectingText: "",
       timerID: null,
       username: "",
       numUnselected: 0
@@ -53,13 +54,20 @@ class WaitingPage extends React.Component {
       }
       let text = '';
       if (receipt.creatorName === username) {
-        text = "Click this button once everyone has finished selecting their orders.";
+        text = "Calculate!";
       } else if (!usersList.includes(username)) {
         text = "error: name not recognized";
       }
 
+      let selecting_text = "";
+
+      if (receipt.creatorName === username) {
+        selecting_text = "Click 👇below👇 when all participants are done selecting their orders.";
+      }
+
       this.setState({receipt:receipt});
       this.setState({buttonText:text});
+      this.setState({selectingText:selecting_text});
 
       this.setState({numUnselected:currUnselected});
 
@@ -72,13 +80,14 @@ class WaitingPage extends React.Component {
   }
   
   render() {
-    const thanks = "Thanks for selecting your order!";
-    const instruction = "Please wait while your friends finish selecting their orders.";
-    const warning = "Warning: Not all items have been selected yet. Any unselected items will be split evenly among the group."
+    const thanks = "🙏 Thanks for selecting your order! 🙏";
+    const instruction = "⌛ Please wait while your friends finish selecting their orders. ⌛";
+    const warning = "😱 Warning: Not all items have been selected yet. Any unselected items will be split evenly among the group. 🧮🧮🧮"
 
     return (
           <div className="App">
               <header className="App-header">
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 550 }}>
                 {thanks}
                 <br></br>
                 <br></br>
@@ -86,14 +95,14 @@ class WaitingPage extends React.Component {
                 {this.state.numUnselected > 0 && 
                 <header>
                     <br></br>
-                    <br></br>
                     {warning}
                 </header>
                 }
                 <br></br>
-                <br></br>
                 {this.state.username === this.state.receipt?.creatorName && !this.state.receipt?.isClosed && 
                 <header>
+                    {this.state.selectingText}
+                    <br></br>
                     <button onClick={() => {
                       axios.post('/receipt/status/' + JSON.stringify({receiptID: this.state.receiptID, isClosed: true}));
                     }}>{this.state.buttonText}</button>
@@ -104,6 +113,7 @@ class WaitingPage extends React.Component {
                     {this.state.buttonText}
                 </header>
                 }
+                </div>
               </header>
           </div>
     );

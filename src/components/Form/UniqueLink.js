@@ -11,8 +11,8 @@ function UniqueLink({link}) {
     }
 
     return (
-        <div>
-            <p>Share this unique link with your friends so you can all select what you ordered!</p>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <p>Share this unique link with your friends so you can all select what you ordered! 📤</p>
             <button id="unique-link" onClick={() => copyToClipboard()} >
             {link}
             </button>
