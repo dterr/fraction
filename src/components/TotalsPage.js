@@ -3,7 +3,6 @@ import axios from 'axios';
 import React from 'react';
 import Confetti from 'react-confetti'
 
-
 // Page to calculate and display per-person totals
 class TotalsPage extends React.Component {
   constructor(props) {
@@ -12,6 +11,7 @@ class TotalsPage extends React.Component {
       receiptID: window.location.pathname.substring("/totals/".length),
       receipt: null,
       payersDict: {},
+      numUsers: 0,
     }
   }
 
@@ -19,12 +19,13 @@ class TotalsPage extends React.Component {
     this.fetchData(this.state.receiptID);
   }
 
+  // retrieve the receipt
   fetchData(receiptID) {
     let promise = axios.get('/receipt/listItems/' + JSON.stringify({receiptID: receiptID}));
     promise.then(({data: receipt}) => {
       // calculations to display per-person totals based on the database given receipt ID
-      // dictionary maps payers to per-person sum, before taxes and tip
-
+      
+      // get list of users and number of users for this receipt
       let usersList = [];
       for (let elem of receipt.lineItems) {
         for (let user of elem.payers) {
@@ -33,7 +34,14 @@ class TotalsPage extends React.Component {
           }
         }
       }
+      this.state.numUsers = usersList.length;
+      const requestData = {
+        receiptID: this.state.receiptID,
+        numUsers: this.state.numUsers,
+      };
+      axios.post('/receipt/countUsers/', requestData);
 
+      // dictionary maps payers to per-person sum, before taxes and tip
       let payers = {}
       let currSubtotal = 0;
       for (let line of receipt.lineItems) {
@@ -42,6 +50,7 @@ class TotalsPage extends React.Component {
           numPayers = usersList.length;
         }
         let eachAmount = 0;
+        // some receipts do not specify quantity or price
         if (isNaN(line.qty) || isNaN(line.price) || line.qty === null || line.price === null || line.qty === undefined || line.price === undefined) {
           currSubtotal += line.lineTotal;
           eachAmount = line.lineTotal / numPayers; 
@@ -80,7 +89,7 @@ class TotalsPage extends React.Component {
       }
 
       // add tip and tax to amounts
-      let finalTotal = receipt.subtotal + receipt.tip + receipt.tax;
+      let finalTotal = Math.round(((receipt.subtotal + receipt.tip + receipt.tax) + Number.EPSILON) * 100) / 100;
       if (finalTotal !== receipt.total) {
         receipt.total = finalTotal;
       }
@@ -166,8 +175,8 @@ class TotalsPage extends React.Component {
               </div>    
               </header>
           </div>
-    );
+      );
+    } 
   }
-}
 
   export default TotalsPage;

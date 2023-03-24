@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './components/App';
-import Page4 from './components/Page4';
+import SelectionsPage from './components/SelectionsPage';
 import WaitingPage from './components/WaitingPage';
 import TotalsPage from './components/TotalsPage';
 import reportWebVitals from './reportWebVitals';
@@ -14,7 +14,7 @@ function Index() {
   return <BrowserRouter>
     <Routes>
       <Route path="/waiting/:id" element={<WaitingPage username={username}/>} />
-      <Route path="/page4/:id" element={<Page4 username={username} />} />
+      <Route path="/selections/:id" element={<SelectionsPage username={username} />} />
       <Route path="/totals/:id" element={<TotalsPage/>} />
       <Route exact path="/" element={<App username={username} sendBack={setUserName}/>} />
     </Routes>
@@ -23,4 +23,3 @@ function Index() {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<Index/>);
-

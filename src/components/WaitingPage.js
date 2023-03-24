@@ -3,6 +3,7 @@ import React from 'react';
 import axios from 'axios';
 
 class WaitingPage extends React.Component {
+  // initialize variables used
   constructor(props) {
     super(props);
     this.state = {
@@ -16,6 +17,7 @@ class WaitingPage extends React.Component {
     }
   }
 
+  // find primary username, check database every 5 seconds
   componentDidMount() {
     const url = new URL(window.location.href);
     const urlSearch = new URLSearchParams(url.search);
@@ -32,9 +34,12 @@ class WaitingPage extends React.Component {
     clearInterval(this.state.timerID);
   }
 
+  // retrieve receipt
   fetchData(username) {
     let promise = axios.get('/receipt/listItems/' + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
     promise.then(({data: receipt}) => {
+
+      // find all primary and secondary users and count the number of items that are unselected
       let usersList = [];
       let currUnselected = 0;
       for (let elem of receipt.lineItems) {
@@ -66,6 +71,7 @@ class WaitingPage extends React.Component {
 
       this.setState({numUnselected:currUnselected});
 
+      // if receipt is closed, automatically load the next page
       if(receipt.isClosed){
         clearInterval(this.state.timerID);
         window.location.assign("/totals/" + this.state.receiptID);

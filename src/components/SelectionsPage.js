@@ -3,14 +3,14 @@ import React from 'react';
 import axios from 'axios';
 import Content from "./WhatIsFraction.js"
 
-class Page4 extends React.Component {
+class SelectionsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       nameboxValue: '',
       username: props.username,
       allItems: '',
-      receiptID: window.location.pathname.substring("/page4/".length) //Gets receipt ID from url
+      receiptID: window.location.pathname.substring("/selections/".length) //Gets receipt ID from url
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleNameSubmit = this.handleNameSubmit.bind(this);
@@ -115,7 +115,7 @@ class Page4 extends React.Component {
           </div>
   }
 
-  renderPage4() {
+  renderSelections() {
     if (this.state.username === "") {
       return this.renderNameEntryBox();
     } else {
@@ -129,7 +129,7 @@ class Page4 extends React.Component {
     return (
           <div className="App">
               <header className="App-header">
-                {this.renderPage4()}
+                {this.renderSelections()}
                 <br></br>
                 <Content />
               </header>
@@ -138,4 +138,4 @@ class Page4 extends React.Component {
   }
 }
 
-export default Page4;
+export default SelectionsPage;

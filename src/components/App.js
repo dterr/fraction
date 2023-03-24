@@ -30,7 +30,7 @@ class App extends React.Component {
                 </div>   
                 {console.log(this.state.username)}
                   {this.state.uploadSuccess &&
-                    <Link path="/Page4"/>
+                    <Link path="/SelectionsPage"/>
                   }
                   
               </header>
