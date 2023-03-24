@@ -14,18 +14,19 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #D2AFFF;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #3F0A74;
 }
 
 .App-link {
-  color: #61dafb;
+  color: #D33FFF;
 }
 
 @keyframes App-logo-spin {
@@ -58,7 +59,7 @@
 }
 
 .checkbox-item label {
-  color: #282c34;
+  color: #7C2AE8;
   font-size: 1rem;
 }
 
@@ -67,7 +68,7 @@
 }
 
 .button-container button {
-  background-color: #282c34;
+  background-color: #D33FFF;
   color: white;
   padding: 0.5rem 1rem;
   border: dashed;
@@ -78,10 +79,10 @@
 }
 
 .button-container button:hover {
-  background-color: #3d444f;
+  background-color: #7C2AE8;
 }
 
 .read-or-hide{
-  color: rgb(192, 192, 192);
+  color: #D33FFF;
   cursor: pointer;
 }

@@ -3,18 +3,14 @@ import React from 'react';
 import axios from 'axios';
 import Content from "./WhatIsFraction.js"
 
-/* 
- * This handles the workflow that allows primary and secondary users to see the itemized receipt
- * and claim items by checking off the corresponding checkboxes.
- */
-class Page4 extends React.Component {
+class SelectionsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       nameboxValue: '',
       username: props.username,
       allItems: '',
-      receiptID: window.location.pathname.substring("/page4/".length) //Gets receipt ID from url
+      receiptID: window.location.pathname.substring("/selections/".length) //Gets receipt ID from url
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleNameSubmit = this.handleNameSubmit.bind(this);
@@ -32,10 +28,11 @@ class Page4 extends React.Component {
     this.setState({username: this.state.nameboxValue});
   }
 
+  // create a checkbox for each item found in the receipt
   toggleCheckBoxChange(itemName) {
     const{handleCheckboxChange, label} = this.props;
-    var newAllItems = this.state.allItems;
-    for (var i = 0; i < this.state.allItems.length; i++) {
+    let newAllItems = this.state.allItems;
+    for (let i = 0; i < this.state.allItems.length; i++) {
       if (this.state.allItems[i].desc === itemName) {
         newAllItems[i].isChecked = !newAllItems[i].isChecked;
       }
@@ -46,7 +43,7 @@ class Page4 extends React.Component {
 
   renderItem(item) {
     const { label } = this.props;
-    var itemNameWithQuantity = item.qty < 2 ? item.desc : "(" + item.qty + "x) " + item.desc;
+    let itemNameWithQuantity = item.qty < 2 ? item.desc : "(" + item.qty + "x) " + item.desc;
     return (
       <div className="checkbox-item" key={item.desc} >
         <input
@@ -62,21 +59,25 @@ class Page4 extends React.Component {
     );
   }
 
+<<<<<<< HEAD:src/components/Page4.js
   // Queries receipt from backend, sends username so that the checkboxes can be pre-populated 
   // if the user has already claimed items in the past
+=======
+  // get the list of items from the uploaded receipt 
+>>>>>>> 44b862e076dd74ec3545c2c16d284492d9e17da1:src/components/SelectionsPage.js
   renderItems() {
     if (this.state.receiptID === '') {
       alert('No receipt ID found, did you paste the correct URL?');
     } else if (this.state.allItems === "") {
-      var allItems = axios.get("/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
+      let allItems = axios.get("/receipt/listItems/" + JSON.stringify({receiptID: this.state.receiptID, user: this.state.username}));
       allItems.then(response => {
         this.setState({allItems: response.data.lineItems})
       }).catch(err => (err.status + ": Unable to get list items from receipt with id: " + this.state.receiptID));
     } else {
       return (
         <div>
-          <p>Hello {this.state.username}! Thanks for using Fraction to make splitting the bill easy!</p>
-          <p>What items did you order? Select them below.</p>
+          <p>😳 Hello {this.state.username}! Thanks for using Fraction to make splitting the bill easy! 🥹</p>
+          <p>What items did you order? 🤔 Select them below.</p>
           <div className="checkbox-grid">
             {this.state.allItems.map((item) => this.renderItem(item))}
           </div>
@@ -89,10 +90,14 @@ class Page4 extends React.Component {
   }
 
   finishItemsSubmit(response) {
-    window.location.assign("/page5/" + this.state.receiptID + "?username=" + this.state.username);
+    window.location.assign("/waiting/" + this.state.receiptID + "?username=" + this.state.username);
   }
 
+<<<<<<< HEAD:src/components/Page4.js
   // Sends data from the checkboxes along with the receipt ID and username to backend to update receipt in Mongo
+=======
+  // collect data necessary to build unique receipt 
+>>>>>>> 44b862e076dd74ec3545c2c16d284492d9e17da1:src/components/SelectionsPage.js
   handleItemsSubmit(event) {
     if (this.state.username === "") {
       alert('No username found');
@@ -112,8 +117,8 @@ class Page4 extends React.Component {
   }
 
   renderNameEntryBox() {
-    return <div>
-          <p>Sign in here to select the items that you ordered! <br></br> Use a name that is unique from anyone else's in your group.</p>
+    return <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 550 }}>
+          <p>👋 Sign in here to select the items that you ordered! ☑️ <br></br><br></br> Use a name that is unique from anyone else's in your group.</p>
           <form onSubmit={this.handleNameSubmit}>
               <label>
                 Name:
@@ -124,7 +129,7 @@ class Page4 extends React.Component {
           </div>
   }
 
-  renderPage4() {
+  renderSelections() {
     if (this.state.username === "") {
       return this.renderNameEntryBox();
     } else {
@@ -138,7 +143,7 @@ class Page4 extends React.Component {
     return (
           <div className="App">
               <header className="App-header">
-                {this.renderPage4()}
+                {this.renderSelections()}
                 <br></br>
                 <Content />
               </header>
@@ -147,4 +152,4 @@ class Page4 extends React.Component {
   }
 }
 
-export default Page4;
+export default SelectionsPage;

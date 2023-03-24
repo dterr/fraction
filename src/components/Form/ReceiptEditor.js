@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from 'react';
 import "./form.css";
 
+// allows the user to edit the receipt information manually 
 function ReceiptEditor({ocrResults, saveApprovedReceipt}) {
     const [editedData, setEditedData] = useState(ocrResults);
     console.log("The ocrResults %O", editedData);
@@ -14,8 +15,8 @@ function ReceiptEditor({ocrResults, saveApprovedReceipt}) {
     
       return (
         <div>
-          <p>Here's what our AI found from your receipt.</p>
-          <p>If you see any errors, correct them here.</p>
+          <p>Here's what our AI found from your receipt. 🤖</p>
+          <p>If you see any errors, correct them here. ✍️</p>
           <div className="establishment">
             <label>Establishment:</label>
             <input

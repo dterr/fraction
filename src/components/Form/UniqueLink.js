@@ -2,6 +2,7 @@ import React from "react";
 import "./form.css";
 import { useState } from 'react';
 
+// provides user with the unique link associated with their receipt
 function UniqueLink({link}) {
     const [copySuccess, setCopySuccess] = useState('');
 
@@ -11,8 +12,8 @@ function UniqueLink({link}) {
     }
 
     return (
-        <div>
-            <p>Share this unique link with your friends so you can all select what you ordered!</p>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <p>Share this unique link with your friends so you can all select what you ordered! 📤</p>
             <button id="unique-link" onClick={() => copyToClipboard()} >
             {link}
             </button>

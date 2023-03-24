@@ -1,11 +1,11 @@
 import React from "react";
 import "./form.css";
 
+// requests the tip associated with the receipt
 function TipPrompt({data, setData}) {
     return (
         <div>
-            <p> If there were any other charges not on the receipt </p>
-            <p> that you would like to add, feel free to add them here!</p>
+            <p> If there were any other charges not on the receipt that you would like to add, feel free to add them here!</p>
             <input type="number" id="name-input" placeholder="Tip amount." 
                 value={data.tip} onChange={(event) => {
                     setData({...data, tip:event.target.value})

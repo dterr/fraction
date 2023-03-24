@@ -2,10 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './components/App';
-import Page3 from './components/Page3';
-import Page4 from './components/Page4';
-import Page5 from './components/Page5';
-import Page6 from './components/Page6';
+import SelectionsPage from './components/SelectionsPage';
+import WaitingPage from './components/WaitingPage';
+import TotalsPage from './components/TotalsPage';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
@@ -14,10 +13,9 @@ function Index() {
 
   return <BrowserRouter>
     <Routes>
-      <Route exact path="/page3/" element={<Page3/>} />
-      <Route path="/page5/:id" element={<Page5 username={username}/>} />
-      <Route path="/page4/:id" element={<Page4 username={username} />} />
-      <Route path="/page6/:id" element={<Page6/>} />
+      <Route path="/waiting/:id" element={<WaitingPage username={username}/>} />
+      <Route path="/selections/:id" element={<SelectionsPage username={username} />} />
+      <Route path="/totals/:id" element={<TotalsPage/>} />
       <Route exact path="/" element={<App username={username} sendBack={setUserName}/>} />
     </Routes>
   </BrowserRouter>
@@ -25,4 +23,3 @@ function Index() {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<Index/>);
-
