@@ -72,7 +72,7 @@ class SelectionsPage extends React.Component {
     } else {
       return (
         <div>
-          <p>😳 Hello {this.state.username}! Thanks for using Fraction to make splitting the bill easy! 🥹</p>
+          <p>😳 Hello {this.state.username}! Thanks for using Fraction to make splitting the bill easy! 🥱</p>
           <p>What items did you order? 🤔 Select them below.</p>
           <div className="checkbox-grid">
             {this.state.allItems.map((item) => this.renderItem(item))}
@@ -116,7 +116,9 @@ class SelectionsPage extends React.Component {
                 Name:
                 <input type="text" value={this.state.nameboxValue} onChange={this.handleChange} />
                 </label>
-              <input type="submit" value="Submit" />
+              <div className="button-container">
+                <button type="submit" value="Submit">Submit</button>
+              </div>
            </form>
           </div>
   }
