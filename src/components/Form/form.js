@@ -71,7 +71,7 @@ function DominicForm({ sendBack }) {
             return <TipPrompt data={data} setData={setData}/>  
         } else if (page === 4) {
             return <div>
-                        <p>Thank you! Please wait while your receipt processes. Did you know that eating out with friends is really good for your mental health? Read more about it <a href="https://www.ox.ac.uk/news/2017-03-16-social-eating-connects-communities">here!</a> We hope you reaped the rewards at your most recent event!</p>
+                        <p>Thank you! Please wait while your receipt processes. Did you know that eating out with friends is really good for your mental health? Read more about it <a href="https://www.ox.ac.uk/news/2017-03-16-social-eating-connects-communities" targe="_blank">here!</a> We hope you reaped the rewards at your most recent event!</p>
                         <div className="loading">. . .</div>
                     </div>
         } else if (page === 5 && ocrResults) {
