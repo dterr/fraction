@@ -2,38 +2,30 @@
 
 [View our Wiki here
 ](https://github.com/StanfordCS194/win2023-team15/wiki) <br>
-The Homepage of our Wiki contains information about our product and team and serves as a directory for the Wiki pages.
+The Homepage of our Wiki contains information about our product Fraction and team Fifteen and serves as a directory for all other Wiki pages.
 
 [View our Rapid Prototype Summary here
 ](https://docs.google.com/presentation/d/1GDyb13ec9v1C0KgXlOwE0DuArh_Dy2hFsdouI2vryrE/edit?usp=sharing)
 
-## Git Source Control Assignment
-Below is my name for the Git Source Control assigment. <br>
-Jacob Chudnovsky <br>
-Clemente Farias Canepa <br>
-Dominic Reynaldo Terrones<br>
-Clarisse Hokia <br>
-Cat Fergesen <br>
-## Stack
-
-MERN
+## We use a MERN stack:
 1. MongoDB
 2. Express.js
 3. React 
 4. Node.js
 
 
-## Getting it running
-First thing is to make sure that the `.env` file lives in root.
-Populate that file with the tokens Jacob emailed us. We have a `dotenv` package that takes care of everything else.
-Also! Make sure you have all the dependencies installed
+## Running the Project
+Make sure that the `.env` file lives in root.
+Populate the `.env` file with the tokens Jacob emailed. Contact anyone on the team if you need the tokens. The `dotenv` package takes care of everything else.
+Also! Make sure you have all the dependencies installed. <br>
+
 ```
 npm install
 npm build
 npm run start-full
 ```
 
-If that doesn't work, for some reason, then follow the instructions below and troubleshoot.
+If the above commands don't work, then follow the instructions below and troubleshoot:
 
 1. Terminal Tab 1
 ```
@@ -112,3 +104,11 @@ We use Heroku for hosting.
 2. To push changes to heroku: `git push heroku main`
 3. To ensure at least one instance of the app is running: `heroku ps:scale web=1`
 4. **To open app:** `heroku open`
+
+## Git Source Control Assignment
+Below is my name for the Git Source Control assigment. <br>
+Jacob Chudnovsky <br>
+Clemente Farias Canepa <br>
+Dominic Reynaldo Terrones<br>
+Clarisse Hokia <br>
+Cat Fergesen <br>
