@@ -107,7 +107,7 @@ class TotalsPage extends React.Component {
         payers[payer] = payerTotal;
       }
       this.setState({payersDict:payers, receipt:receipt});
-    });
+    }).catch(err => (err.status + ": Could not retrieve receipt with id: " + receiptID));
   }
 
   render() {
@@ -122,7 +122,6 @@ class TotalsPage extends React.Component {
       </div>)
     }
 
-    //const receipt = "View Receipt";
     const instruction = "Please Venmo " + this.state.receipt?.creatorName + " (@" + this.state.receipt?.creatorVenmo + ") accordingly. 💸💸💸";
     const thankyou =  "We hope you enjoyed using Fraction! 🤑 Your friends will thank you for making splitting the bill easier (and less awkward 👉👈) than ever before. 🥰"
     return (
