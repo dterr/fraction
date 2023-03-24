@@ -24,7 +24,7 @@ class App extends React.Component {
     return (
           <div className="App">
               <header className="App-header">  
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 500 }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 550 }}>
                   <DominicForm sendBack={this.sendToParent} />
                   <Content />
                 </div>   

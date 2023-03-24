@@ -57,7 +57,7 @@ class WaitingPage extends React.Component {
       let selecting_text = "";
 
       if (receipt.creatorName === username) {
-        selecting_text = "Click below when all participants are done selecting their orders.";
+        selecting_text = "Click 👇below👇 when all participants are done selecting their orders.";
       }
 
       this.setState({receipt:receipt});
@@ -74,14 +74,14 @@ class WaitingPage extends React.Component {
   }
   
   render() {
-    const thanks = "Thanks for selecting your order!";
-    const instruction = "Please wait while your friends finish selecting their orders.";
-    const warning = "Warning: Not all items have been selected yet. Any unselected items will be split evenly among the group."
+    const thanks = "🙏 Thanks for selecting your order! 🙏";
+    const instruction = "⌛ Please wait while your friends finish selecting their orders. ⌛";
+    const warning = "😱 Warning: Not all items have been selected yet. Any unselected items will be split evenly among the group. 🧮"
 
     return (
           <div className="App">
               <header className="App-header">
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 500 }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 550 }}>
                 {thanks}
                 <br></br>
                 <br></br>
@@ -89,11 +89,9 @@ class WaitingPage extends React.Component {
                 {this.state.numUnselected > 0 && 
                 <header>
                     <br></br>
-                    <br></br>
                     {warning}
                 </header>
                 }
-                <br></br>
                 <br></br>
                 {this.state.username === this.state.receipt?.creatorName && !this.state.receipt?.isClosed && 
                 <header>

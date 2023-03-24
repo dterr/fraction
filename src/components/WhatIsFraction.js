@@ -19,7 +19,7 @@ const WhatIsFraction = ({children}) => {
 
 const Content = () => {
     return (
-        <div className="container" style={{display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 500, fontSize: 17}}>
+        <div className="container" style={{display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 550, fontSize: 17}}>
                 <WhatIsFraction>
                 Fraction is a web-based application that allows you to upload a 
                 receipt from a meal (or other activity!) that was shared between 

@@ -101,7 +101,7 @@ class TotalsPage extends React.Component {
   }
 
   render() {
-    const header = "Here's the breakdown for your group at ";
+    const header = "Here's the 💥breakdown⬇️ for your group at ";
     const groupTotal = "The group's total was $";
     let totals = [];
     for (const payer of Object.keys(this.state?.payersDict)) {
@@ -113,13 +113,13 @@ class TotalsPage extends React.Component {
     }
 
     //const receipt = "View Receipt";
-    const instruction = "Please Venmo " + this.state.receipt?.creatorName + " (@" + this.state.receipt?.creatorVenmo + ") accordingly.";
-    const thankyou = "We hope you enjoyed using Fraction! Your friends will thank you for making splitting the bill easier (and less awkward) than ever before."
+    const instruction = "💸 Please Venmo " + this.state.receipt?.creatorName + " (@" + this.state.receipt?.creatorVenmo + ") accordingly. 💸";
+    const thankyou =  "We hope you enjoyed using Fraction! 🤑 Your friends will thank you for making splitting the bill easier (and less awkward 👉👈) than ever before. 🥰"
     
     return (
           <div className="App">
               <header className="App-header">
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 500, marginTop: 150 }}> 
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 550, marginTop: 150 }}> 
                 {this.state.receipt?.isClosed && 
                   <header>
                     <div>
@@ -143,9 +143,9 @@ class TotalsPage extends React.Component {
                     <br></br>
                     {thankyou}
                     <br></br>
-                    <p>If you're interested in learning more about our project, check out our wiki <a href="https://github.com/StanfordCS194/win2023-team15/wiki">here!</a>
-
+                    <p>If you're interested in learning more about our project, check out our wiki <a href="https://github.com/StanfordCS194/win2023-team15/wiki">here!</a> 
                     </p>
+                    <p>👩🏻‍💻👨🏼‍💻🧑🏻‍💻👨🏽‍💻🧑🏽‍💻</p>
                     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdnepDIkvs9_bxeAtZTTLcNpAxNNwLYg9Gvd2aQXDGIE1O0fQ/viewform?embedded=true" width="640" height="488" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
                   </header>
                 }

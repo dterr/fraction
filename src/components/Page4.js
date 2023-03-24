@@ -67,8 +67,8 @@ class Page4 extends React.Component {
     } else {
       return (
         <div>
-          <p>Hello {this.state.username}! Thanks for using Fraction to make splitting the bill easy!</p>
-          <p>What items did you order? Select them below.</p>
+          <p>😳😳 Hello {this.state.username}! Thanks for using Fraction to make splitting the bill easy! 🥹</p>
+          <p>What items did you order? 🤔 Select them below.</p>
           <div className="checkbox-grid">
             {this.state.allItems.map((item) => this.renderItem(item))}
           </div>
@@ -103,8 +103,8 @@ class Page4 extends React.Component {
   }
 
   renderNameEntryBox() {
-    return <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 500 }}>
-          <p>Sign in here to select the items that you ordered! <br></br> Use a name that is unique from anyone else's in your group.</p>
+    return <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 550 }}>
+          <p>👋 Sign in here to select the items that you ordered! ☑️ <br></br> Use a name that is unique from anyone else's in your group.</p>
           <form onSubmit={this.handleNameSubmit}>
               <label>
                 Name:
