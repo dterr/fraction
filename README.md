@@ -2,7 +2,7 @@
 
 [View our Wiki here
 ](https://github.com/StanfordCS194/win2023-team15/wiki) <br>
-THe Homepage of our Wiki contains information about our product and team and serves as a directory for the Wiki pages.
+The Homepage of our Wiki contains information about our product and team and serves as a directory for the Wiki pages.
 
 [View our Rapid Prototype Summary here
 ](https://docs.google.com/presentation/d/1GDyb13ec9v1C0KgXlOwE0DuArh_Dy2hFsdouI2vryrE/edit?usp=sharing)
