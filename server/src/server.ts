@@ -92,6 +92,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             // Save receipt to database
             const newReceipt = new ReceiptModel({
                   isClosed: false,
+                  creatorVenmo: req.body.venmo,
                   creatorName: req.body.name,
                   establishment: bill._store,
                   total: bill._total,
@@ -140,7 +141,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
         const json = request.body;
          console.log("Received request for claim items " + JSON.stringify(json));
          ReceiptModel.findOne({_id: new mongoose.Types.ObjectId(json.receiptID)})
-           .select("creatorName lineItems")
+           .select("creatorVenmo creatorName lineItems")
            .then(function (receipt) {
              if (!receipt) {
                console.log("Could not find receipt with id: " + json.receiptID);
@@ -204,7 +205,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
            return;
          }
 
-         Receipt.findOne({_id: new mongoose.Types.ObjectId(id)}).select("_id isClosed creatorName establishment total subtotal tax tip lineItems").then(function (receipt) {
+         Receipt.findOne({_id: new mongoose.Types.ObjectId(id)}).select("_id isClosed creatorVenmo creatorName establishment total subtotal tax tip lineItems").then(function (receipt) {
             if (!receipt) {
                console.log("Could not find receipt with id: " + request.body.receiptID);
                response.status(400).send('Receipt not found');
@@ -214,7 +215,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
              for (var item of receipt.lineItems) {
               lineItemsList.push({desc: item.desc, isChecked: item.payers.includes(username), payers: item.payers, qty:item.qty, price:item.price, lineTotal:item.lineTotal,});
              }
-             response.status(200).send({lineItems: lineItemsList, isClosed: receipt.isClosed, creatorName: receipt.creatorName, establishment: receipt.establishment, total: receipt.total, subtotal: receipt.subtotal, tax: receipt.tax, tip: receipt.tip});
+             response.status(200).send({lineItems: lineItemsList, isClosed: receipt.isClosed, creatorVenmo: receipt.creatorVenmo, creatorName: receipt.creatorName, establishment: receipt.establishment, total: receipt.total, subtotal: receipt.subtotal, tax: receipt.tax, tip: receipt.tip});
            }
          });
       });

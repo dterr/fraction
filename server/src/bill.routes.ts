@@ -109,6 +109,7 @@ billRouter.put("/:id", async (req, res) => {
        // Get orders and map to index
        // Get orders total from indices
        const payee: Payee = {
+         _venmo:req.body.venmo,
          _name:req.body.name,
          _orders: req.body.orders,
          _orderTotal: orderTotal

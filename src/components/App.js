@@ -22,10 +22,7 @@ class App extends React.Component {
   render() {
     return (
           <div className="App">
-              <header className="App-header">
-                <p>
-                  Hello! Welcome to Fraction 🧾
-                </p>     
+              <header className="App-header">  
                 <div>
                   <DominicForm sendBack={this.sendToParent} />
                   
