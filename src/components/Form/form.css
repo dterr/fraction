@@ -1,6 +1,6 @@
 /* Click button that sits at bottom of form click thru */
 #next-button {
-    background-color: #282c34;
+    background-color: #D33FFF;
     color: white;
     padding: 0.5rem 1rem;
     border: none;
@@ -13,13 +13,16 @@
 }
   
 #next-button:hover {
-    background-color: #3d444f;
+    background-color: #7C2AE8;
 }
 
 #form-file-upload {
     height: 16rem;
     width: 28rem;
     max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     position: relative;
 }
@@ -29,7 +32,7 @@
 }
 
 #form-file-text {
-    color: #282c34;
+    color: #7C2AE8;
 }
 
 #label-file-upload {
@@ -42,6 +45,7 @@
     border-style: dashed;
     border-color: #cbd5e1;
     background-color: #f8fafc;
+    flex-direction: column;
 }
 
 #label-file-upload.drag-active {
@@ -53,7 +57,6 @@
     padding: 0.25rem;
     font-size: 1rem;
     border: none;
-    font-family: 'Oswald', sans-serif;
     background-color: transparent;
 }
 
@@ -80,7 +83,7 @@
     border-style: dashed;
     border-color: #cbd5e1;
     background-color: #f8fafc;
-    color: #282c34;
+    color: #7C2AE8;
     margin-top: 1rem;
     width: 100%;
     max-width: 100%;
@@ -121,10 +124,12 @@
     background-color: #f8fafc;
     font-size: calc(10px + 2vmin);
     padding: 1.5vh;
-    color: black;
+    color: #3F0A74;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
     cursor:pointer;
+    flex-direction: column;
 }
 
 #unique-link:active {
-    background-color: #3d444f;
+    background-color: #D33FFF;
 }

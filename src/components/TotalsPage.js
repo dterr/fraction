@@ -119,6 +119,7 @@ class TotalsPage extends React.Component {
     return (
           <div className="App">
               <header className="App-header">
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 500, marginTop: 150 }}> 
                 {this.state.receipt?.isClosed && 
                   <header>
                     <div>
@@ -137,7 +138,6 @@ class TotalsPage extends React.Component {
                       {"."}
                     </div>
                     <br></br>
-                    <br></br>
                     {instruction}
                     <br></br>
                     <br></br>
@@ -146,7 +146,7 @@ class TotalsPage extends React.Component {
                     <p>If you're interested in learning more about our project, check out our wiki <a href="https://github.com/StanfordCS194/win2023-team15/wiki">here!</a>
 
                     </p>
-
+                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdnepDIkvs9_bxeAtZTTLcNpAxNNwLYg9Gvd2aQXDGIE1O0fQ/viewform?embedded=true" width="640" height="488" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
                   </header>
                 }
                 {!this.state.receipt?.isClosed && 
@@ -155,7 +155,7 @@ class TotalsPage extends React.Component {
                 </header>
                 }
 
-                  
+              </div>    
               </header>
           </div>
     );

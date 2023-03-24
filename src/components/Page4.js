@@ -103,7 +103,7 @@ class Page4 extends React.Component {
   }
 
   renderNameEntryBox() {
-    return <div>
+    return <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: 500 }}>
           <p>Sign in here to select the items that you ordered! <br></br> Use a name that is unique from anyone else's in your group.</p>
           <form onSubmit={this.handleNameSubmit}>
               <label>
