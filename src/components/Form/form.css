@@ -125,11 +125,15 @@
     font-size: calc(10px + 2vmin);
     padding: 1.5vh;
     color: #3F0A74;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    cursor:pointer;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    cursor: pointer;
     flex-direction: column;
-}
-
-#unique-link:active {
+    /* Mobile styling */
+    max-width: 90%; 
+    word-break: break-word;
+  }
+  
+  #unique-link:active {
     background-color: #D33FFF;
-}
+  }
+  
