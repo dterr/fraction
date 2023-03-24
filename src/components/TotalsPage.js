@@ -107,7 +107,7 @@ class TotalsPage extends React.Component {
         payers[payer] = payerTotal;
       }
       this.setState({payersDict:payers, receipt:receipt});
-    });
+    }).catch(err => (err.status + ": Could not retrieve receipt with id: " + receiptID));
   }
 
   render() {
