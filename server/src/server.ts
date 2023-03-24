@@ -3,10 +3,8 @@ import * as dotenv from "dotenv";
 import cors from "cors";
 import express from "express";
 import { billRouter } from "./bill.routes";
-import { connectToDatabase } from "./database";
 import ReceiptModel, { default as Receipt } from "./receipt";
 import { Bill, Item } from "./bill"
-
 import { getOCR, convertOCRToBill, convertHEIC, mergeDuplicateLineItems } from "./helpers";
 import multer from 'multer';
 
