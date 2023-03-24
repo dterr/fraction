@@ -125,7 +125,7 @@ mongoose.connect(ATLAS_URI, { useNewUrlParser: true, useUnifiedTopology: true })
           const result = await approvedReceipt.save();
           console.log("Successfully saved with id %O. Here is the receipt: %O", result.id, approvedReceipt);
           // Return response with success message
-          res.status(200).json({ message: `Receipt processed successfully!`, link: `https://fifteen.herokuapp.com/page4/${result.id}`});
+          res.status(200).json({ message: `Receipt processed successfully!`, link: `https://fifteen.herokuapp.com/selections/${result.id}`});
         } catch (error) {
           console.error(error);
           res.status(500).json({ error: "Error saving approved receipt" });
