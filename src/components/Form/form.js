@@ -25,7 +25,7 @@ function DominicForm({ sendBack }) {
     const [page, setPage] = useState(0);
     const [data, setData] = useState({
         name: '',
-        tip: '0',
+        tip: '',
         venmo: '',
         image: '',
     });
@@ -37,7 +37,7 @@ function DominicForm({ sendBack }) {
         'Upload your receipt here',
         'Let\'s get to know each other - what\'s your name?',
         'Let\'s get you paid back. What is your Venmo account?',
-        "One more question - Did you tip? If so, how much was it?",
+        "One more question - Did you tip? If so, how much was it? If not, please enter '0'.",
         ''
     ];
     
@@ -53,7 +53,7 @@ function DominicForm({ sendBack }) {
     const cleanForm = () => {
         setData({
             name: '',
-            tip: '0',
+            tip: '',
             venmo: '',
             image: '',
         });
@@ -140,11 +140,10 @@ function DominicForm({ sendBack }) {
                                 setData({venmo: '[Not entered]'});
                             }
                             setPage(page + 1);
-                            uploadForm();
                         } else if (page === 3) {
                             // Tip is not necessary.
                             if (data.tip === '') {
-                                setData({tip: 0});
+                                {data.tip = '0'}
                             }
                             setPage(page + 1);
                             uploadForm();

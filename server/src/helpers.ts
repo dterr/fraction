@@ -23,7 +23,6 @@ function sleep(ms: any) {
   });
 }
 
-
 // OCR RESPONSE CODES
 // 200 - Process request submitted successfully
 // 202 - Result available
@@ -91,7 +90,6 @@ export async function getOCR(ms: Number, filePath: String): Promise<any> {
   let ocrCode = 0
   let receiptBody = {}
 
-  
   while(ocrCode != 202) {
     let receipt = await axios(config2).then(function (response: any) {
       return response.data;
