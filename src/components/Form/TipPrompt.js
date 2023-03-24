@@ -1,6 +1,7 @@
 import React from "react";
 import "./form.css";
 
+// requests the tip associated with the receipt
 function TipPrompt({data, setData}) {
     return (
         <div>

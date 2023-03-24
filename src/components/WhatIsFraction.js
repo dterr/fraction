@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import './App.css';
 
+// Creates a short message that can be expanded upon click. 
+// Based on code found at https://www.geeksforgeeks.org/how-to-create-a-read-more-component-in-reactjs/
 const WhatIsFraction = ({children}) => {
     const text = children;
     const [whatIs, setWhatIs] = useState(true);

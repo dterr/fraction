@@ -26,6 +26,7 @@ class SelectionsPage extends React.Component {
     this.setState({username: this.state.nameboxValue});
   }
 
+  // create a checkbox for each item found in the receipt
   toggleCheckBoxChange(itemName) {
     const{handleCheckboxChange, label} = this.props;
     let newAllItems = this.state.allItems;
@@ -56,6 +57,7 @@ class SelectionsPage extends React.Component {
     );
   }
 
+  // get the list of items from the uploaded receipt 
   renderItems() {
     if (this.state.receiptID === '') {
       alert('No receipt ID found, did you paste the correct URL?');
@@ -84,6 +86,7 @@ class SelectionsPage extends React.Component {
     window.location.assign("/waiting/" + this.state.receiptID + "?username=" + this.state.username);
   }
 
+  // collect data necessary to build unique receipt 
   handleItemsSubmit(event) {
     if (this.state.username === "") {
       alert('No username found');

@@ -2,6 +2,7 @@ import React from "react";
 import "./form.css";
 import { useState } from 'react';
 
+// provides user with the unique link associated with their receipt
 function UniqueLink({link}) {
     const [copySuccess, setCopySuccess] = useState('');
 
